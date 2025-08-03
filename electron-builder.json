@@ -1,0 +1,14 @@
+{
+  "appId": "com.artiste.catalogue",
+  "productName": "CatalogueRaisonne",
+  "directories": {
+    "output": "dist_electron"
+  },
+  "files": [
+    "dist/**/*",
+    "package.json"
+  ],
+  "mac": {
+    "target": ["dmg", "zip"]
+  }
+}
