@@ -8,8 +8,12 @@ interface ArtworkListProps {
 }
 
 export default function ArtworkList({ onEdit }: ArtworkListProps) {
-  const { artworks, setArtworks, selectArtwork, selectedArtwork, viewMode, setViewMode } = useCatalogStore();
+  const { artworks, setArtworks, selectArtwork, selectedArtwork, viewMode, setViewMode, filters, clearFilters } = useCatalogStore();
   const parentRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    loadArtworks();
+  }, [filters]); // Re-load when filters change
 
   useEffect(() => {
     loadArtworks();
@@ -28,7 +32,7 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
 
   const loadArtworks = async () => {
     try {
-      const data = await callApi<Artwork[]>(window.api.listArtworks, {});
+      const data = await callApi<Artwork[]>(window.api.listArtworks, filters);
       setArtworks(data);
     } catch (error) {
       console.error('Error loading artworks:', error);
@@ -44,13 +48,34 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
     onEdit(artwork);
   };
 
+  const hasActiveFilters = () => {
+    return filters.collectionId ||
+           (filters.pigments && filters.pigments.length > 0) ||
+           (filters.papers && filters.papers.length > 0);
+  };
+
   if (artworks.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 text-dark-text-muted">
         <div className="text-center">
           <div className="text-6xl mb-4 opacity-50">🎨</div>
-          <div className="text-lg mb-2 text-dark-text-secondary">Aucune œuvre dans votre catalogue</div>
-          <div className="text-sm">Cliquez sur "Nouvelle œuvre" pour commencer</div>
+          {hasActiveFilters() ? (
+            <>
+              <div className="text-lg mb-2 text-dark-text-secondary">Aucune œuvre correspondant aux filtres</div>
+              <div className="text-sm mb-4">Essayez de modifier vos critères de recherche</div>
+              <button
+                onClick={clearFilters}
+                className="px-4 py-2 text-sm text-orange-400 hover:text-orange-300 hover:bg-orange-500/20 rounded-lg transition-all duration-200 border border-orange-500/30 hover:border-orange-500/50"
+              >
+                🔄 Afficher toutes les œuvres
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="text-lg mb-2 text-dark-text-secondary">Aucune œuvre dans votre catalogue</div>
+              <div className="text-sm">Cliquez sur "Nouvelle œuvre" pour commencer</div>
+            </>
+          )}
         </div>
       </div>
     );
@@ -59,9 +84,19 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
   return (
     <div ref={parentRef} className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-dark-text-primary">
-          Œuvres ({artworks.length})
-        </h2>
+        <div className="flex items-center gap-3">
+          <h2 className="text-xl font-semibold text-dark-text-primary">
+            Œuvres ({artworks.length})
+          </h2>
+          {hasActiveFilters() && (
+            <button
+              onClick={clearFilters}
+              className="px-3 py-1.5 text-sm text-orange-400 hover:text-orange-300 hover:bg-orange-500/20 rounded-lg transition-all duration-200 border border-orange-500/30 hover:border-orange-500/50"
+            >
+              🔄 Tout afficher
+            </button>
+          )}
+        </div>
 
         <div className="flex items-center gap-2">
           <button

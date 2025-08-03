@@ -7,7 +7,7 @@ import ArtworkEditor from './components/ArtworkEditor';
 import { useCatalogStore } from './store/catalogStore';
 
 function App() {
-  const { selectedArtwork, clearSelection } = useCatalogStore();
+  const { selectedArtwork, clearSelection, setFilters, filters } = useCatalogStore();
   const [showEditor, setShowEditor] = useState(false);
   const [editingArtwork, setEditingArtwork] = useState<any>(null);
   const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -38,11 +38,47 @@ function App() {
     setSidebarVisible(!sidebarVisible);
   };
 
+  const handleFilterByCollection = (collectionId: number) => {
+    // Toggle: if already filtered by this collection, clear the filter
+    if (filters.collectionId === collectionId) {
+      setFilters({ ...filters, collectionId: undefined });
+    } else {
+      setFilters({ ...filters, collectionId });
+    }
+  };
+
+  const handleFilterByPigment = (pigmentId: number) => {
+    // Toggle: if already filtered by this pigment, remove it, otherwise set it
+    const currentPigments = filters.pigments || [];
+    if (currentPigments.includes(pigmentId)) {
+      const newPigments = currentPigments.filter(id => id !== pigmentId);
+      setFilters({ ...filters, pigments: newPigments.length > 0 ? newPigments : undefined });
+    } else {
+      setFilters({ ...filters, pigments: [pigmentId] });
+    }
+  };
+
+  const handleFilterByPaper = (paperId: number) => {
+    // Toggle: if already filtered by this paper, remove it, otherwise set it
+    const currentPapers = filters.papers || [];
+    if (currentPapers.includes(paperId)) {
+      const newPapers = currentPapers.filter(id => id !== paperId);
+      setFilters({ ...filters, papers: newPapers.length > 0 ? newPapers : undefined });
+    } else {
+      setFilters({ ...filters, papers: [paperId] });
+    }
+  };
+
   return (
     <div className="flex h-screen bg-dark-bg text-dark-text-primary">
       {/* Sidebar - Always visible with toggle */}
       <div className={`${sidebarVisible ? 'block' : 'hidden'} h-full transition-all duration-300`}>
-        <Sidebar onNewArtwork={handleNewArtwork} />
+        <Sidebar
+          onNewArtwork={handleNewArtwork}
+          onFilterByCollection={handleFilterByCollection}
+          onFilterByPigment={handleFilterByPigment}
+          onFilterByPaper={handleFilterByPaper}
+        />
       </div>
 
       {/* Main content */}

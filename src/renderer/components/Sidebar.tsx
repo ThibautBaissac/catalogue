@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { callApi } from '../hooks/useApi';
 import { Collection, Pigment, Paper } from '../types';
+import { useCatalogStore } from '../store/catalogStore';
 import DataManager from './DataManager';
 import logoImg from '../assets/images/logo.jpg';
 
 interface SidebarProps {
   onNewArtwork: () => void;
+  onFilterByCollection: (collectionId: number) => void;
+  onFilterByPigment: (pigmentId: number) => void;
+  onFilterByPaper: (paperId: number) => void;
 }
 
-export default function Sidebar({ onNewArtwork }: SidebarProps) {
+export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterByPigment, onFilterByPaper }: SidebarProps) {
+  const { filters } = useCatalogStore();
   const [collections, setCollections] = useState<Collection[]>([]);
   const [pigments, setPigments] = useState<Pigment[]>([]);
   const [papers, setPapers] = useState<Paper[]>([]);
@@ -164,11 +169,22 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
                     Aucune collection
                   </div>
                 ) : (
-                  collections.map(collection => (
-                    <div key={collection.id} className="px-3 py-2 text-sm text-dark-text-secondary hover:bg-dark-hover cursor-pointer rounded-md transition-colors hover:text-dark-text-primary">
-                      {collection.name}
-                    </div>
-                  ))
+                  collections.map(collection => {
+                    const isActive = filters.collectionId === collection.id;
+                    return (
+                      <div
+                        key={collection.id}
+                        className={`px-3 py-2 text-sm cursor-pointer rounded-md transition-colors ${
+                          isActive
+                            ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40'
+                            : 'text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'
+                        }`}
+                        onClick={() => onFilterByCollection(collection.id)}
+                      >
+                        {collection.name}
+                      </div>
+                    );
+                  })
                 )}
               </div>
             )}
@@ -212,11 +228,22 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
                     Aucun pigment
                   </div>
                 ) : (
-                  pigments.map(pigment => (
-                    <div key={pigment.id} className="px-3 py-2 text-sm text-dark-text-secondary hover:bg-dark-hover cursor-pointer rounded-md transition-colors hover:text-dark-text-primary">
-                      {pigment.name}
-                    </div>
-                  ))
+                  pigments.map(pigment => {
+                    const isActive = filters.pigments?.includes(pigment.id);
+                    return (
+                      <div
+                        key={pigment.id}
+                        className={`px-3 py-2 text-sm cursor-pointer rounded-md transition-colors ${
+                          isActive
+                            ? 'bg-red-500/20 text-red-300 border border-red-500/40'
+                            : 'text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'
+                        }`}
+                        onClick={() => onFilterByPigment(pigment.id)}
+                      >
+                        {pigment.name}
+                      </div>
+                    );
+                  })
                 )}
               </div>
             )}
@@ -260,11 +287,22 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
                     Aucun papier
                   </div>
                 ) : (
-                  papers.map(paper => (
-                    <div key={paper.id} className="px-3 py-2 text-sm text-dark-text-secondary hover:bg-dark-hover cursor-pointer rounded-md transition-colors hover:text-dark-text-primary">
-                      {paper.name}
-                    </div>
-                  ))
+                  papers.map(paper => {
+                    const isActive = filters.papers?.includes(paper.id);
+                    return (
+                      <div
+                        key={paper.id}
+                        className={`px-3 py-2 text-sm cursor-pointer rounded-md transition-colors ${
+                          isActive
+                            ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/40'
+                            : 'text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'
+                        }`}
+                        onClick={() => onFilterByPaper(paper.id)}
+                      >
+                        {paper.name}
+                      </div>
+                    );
+                  })
                 )}
               </div>
             )}
