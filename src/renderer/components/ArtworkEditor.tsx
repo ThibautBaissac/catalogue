@@ -8,14 +8,15 @@ interface ArtworkEditorProps {
   onCancel: () => void;
 }
 
-export default function ArtworkEditor({ initial = {}, onSaved, onCancel }: ArtworkEditorProps) {
-  const [reference, setReference] = useState(initial.reference || '');
-  const [title, setTitle] = useState(initial.title || '');
-  const [description, setDescription] = useState(initial.description || '');
-  const [width, setWidth] = useState(initial.width || '');
-  const [height, setHeight] = useState(initial.height || '');
-  const [date, setDate] = useState(initial.date || '');
-  const [collectionId, setCollectionId] = useState(initial.collection_id || '');
+export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEditorProps) {
+  const artworkData = initial || {};
+  const [reference, setReference] = useState(artworkData.reference || '');
+  const [title, setTitle] = useState(artworkData.title || '');
+  const [description, setDescription] = useState(artworkData.description || '');
+  const [width, setWidth] = useState(artworkData.width || '');
+  const [height, setHeight] = useState(artworkData.height || '');
+  const [date, setDate] = useState(artworkData.date || '');
+  const [collectionId, setCollectionId] = useState(artworkData.collection_id || '');
   const [selectedPigments, setSelectedPigments] = useState<number[]>([]);
   const [selectedPapers, setSelectedPapers] = useState<number[]>([]);
 
@@ -25,7 +26,7 @@ export default function ArtworkEditor({ initial = {}, onSaved, onCancel }: Artwo
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const isEdit = !!initial.id;
+  const isEdit = !!artworkData.id;
 
   useEffect(() => {
     loadData();
@@ -43,7 +44,7 @@ export default function ArtworkEditor({ initial = {}, onSaved, onCancel }: Artwo
       setPapers(paps);
 
       if (isEdit) {
-        const full = await callApi(window.api.getArtworkFull, initial.id);
+        const full = await callApi(window.api.getArtworkFull, artworkData.id);
         setSelectedPigments(full.pigments.map((p: any) => p.id));
         setSelectedPapers(full.papers.map((p: any) => p.id));
       }
@@ -63,7 +64,7 @@ export default function ArtworkEditor({ initial = {}, onSaved, onCancel }: Artwo
     setError(null);
 
     try {
-      const artworkData = {
+      const submissionData = {
         reference: reference.trim(),
         title: title.trim() || null,
         description: description.trim() || null,
@@ -76,10 +77,10 @@ export default function ArtworkEditor({ initial = {}, onSaved, onCancel }: Artwo
       let artworkId: number;
 
       if (isEdit) {
-        await callApi(window.api.updateArtwork, { id: initial.id, updates: artworkData });
-        artworkId = initial.id;
+        await callApi(window.api.updateArtwork, { id: artworkData.id, updates: submissionData });
+        artworkId = artworkData.id;
       } else {
-        const result = await callApi(window.api.createArtwork, artworkData);
+        const result = await callApi(window.api.createArtwork, submissionData);
         artworkId = result.id;
       }
 
@@ -116,21 +117,21 @@ export default function ArtworkEditor({ initial = {}, onSaved, onCancel }: Artwo
   };
 
   return (
-    <div className="p-6 bg-white">
+    <div className="p-6 bg-dark-card text-dark-text-primary">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-gray-800">
+        <h2 className="text-xl font-semibold text-dark-text-primary">
           {isEdit ? 'Modifier l\'œuvre' : 'Nouvelle œuvre'}
         </h2>
         <button
           onClick={onCancel}
-          className="text-gray-400 hover:text-gray-600 text-xl"
+          className="text-dark-text-secondary hover:text-dark-text-primary text-xl"
         >
           ✕
         </button>
       </div>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+        <div className="mb-4 p-3 bg-red-900/20 border border-red-500/30 text-red-300 rounded">
           {error}
         </div>
       )}
@@ -138,45 +139,45 @@ export default function ArtworkEditor({ initial = {}, onSaved, onCancel }: Artwo
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
               Référence *
             </label>
             <input
               type="text"
               value={reference}
               onChange={(e) => setReference(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
               Titre
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-dark-text-secondary mb-1">
             Description
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
           />
         </div>
 
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
               Largeur (cm)
             </label>
             <input
@@ -184,11 +185,11 @@ export default function ArtworkEditor({ initial = {}, onSaved, onCancel }: Artwo
               step="0.1"
               value={width}
               onChange={(e) => setWidth(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
               Hauteur (cm)
             </label>
             <input
@@ -196,30 +197,30 @@ export default function ArtworkEditor({ initial = {}, onSaved, onCancel }: Artwo
               step="0.1"
               value={height}
               onChange={(e) => setHeight(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
               Date
             </label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
+          <label className="block text-sm font-medium text-dark-text-secondary mb-1">
             Collection
           </label>
           <select
             value={collectionId}
             onChange={(e) => setCollectionId(e.target.value)}
-            className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
             <option value="">Aucune collection</option>
             {collections.map(collection => (
@@ -232,17 +233,17 @@ export default function ArtworkEditor({ initial = {}, onSaved, onCancel }: Artwo
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-dark-text-secondary mb-2">
               Pigments
             </label>
-            <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-2">
+            <div className="max-h-32 overflow-y-auto bg-dark-hover border border-dark-border rounded-md p-2">
               {pigments.map(pigment => (
-                <label key={pigment.id} className="flex items-center space-x-2 py-1">
+                <label key={pigment.id} className="flex items-center space-x-2 py-1 text-dark-text-primary hover:bg-dark-border/50 rounded px-1">
                   <input
                     type="checkbox"
                     checked={selectedPigments.includes(pigment.id)}
                     onChange={() => togglePigment(pigment.id)}
-                    className="rounded border-gray-300"
+                    className="rounded border-dark-border bg-dark-hover text-blue-500 focus:ring-blue-500 focus:ring-offset-0"
                   />
                   <span className="text-sm">{pigment.name}</span>
                 </label>
@@ -251,17 +252,17 @@ export default function ArtworkEditor({ initial = {}, onSaved, onCancel }: Artwo
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-dark-text-secondary mb-2">
               Papiers
             </label>
-            <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-2">
+            <div className="max-h-32 overflow-y-auto bg-dark-hover border border-dark-border rounded-md p-2">
               {papers.map(paper => (
-                <label key={paper.id} className="flex items-center space-x-2 py-1">
+                <label key={paper.id} className="flex items-center space-x-2 py-1 text-dark-text-primary hover:bg-dark-border/50 rounded px-1">
                   <input
                     type="checkbox"
                     checked={selectedPapers.includes(paper.id)}
                     onChange={() => togglePaper(paper.id)}
-                    className="rounded border-gray-300"
+                    className="rounded border-dark-border bg-dark-hover text-blue-500 focus:ring-blue-500 focus:ring-offset-0"
                   />
                   <span className="text-sm">{paper.name}</span>
                 </label>
@@ -274,14 +275,14 @@ export default function ArtworkEditor({ initial = {}, onSaved, onCancel }: Artwo
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+            className="px-4 py-2 border border-dark-border text-dark-text-secondary rounded-md hover:bg-dark-hover hover:text-dark-text-primary transition-colors"
           >
             Annuler
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Enregistrement...' : (isEdit ? 'Enregistrer' : 'Créer')}
           </button>
