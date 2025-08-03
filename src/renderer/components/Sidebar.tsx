@@ -11,7 +11,9 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
   const [collections, setCollections] = useState<Collection[]>([]);
   const [pigments, setPigments] = useState<Pigment[]>([]);
   const [papers, setPapers] = useState<Paper[]>([]);
-  const [activeSection, setActiveSection] = useState<string>('');
+  const [collectionsOpen, setCollectionsOpen] = useState<boolean>(true);
+  const [pigmentsOpen, setPigmentsOpen] = useState<boolean>(true);
+  const [papersOpen, setPapersOpen] = useState<boolean>(true);
   const [showDataManager, setShowDataManager] = useState<'collections' | 'pigments' | 'papers' | null>(null);
 
   useEffect(() => {
@@ -34,7 +36,17 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
   };
 
   const toggleSection = (section: string) => {
-    setActiveSection(activeSection === section ? '' : section);
+    switch (section) {
+      case 'collections':
+        setCollectionsOpen(!collectionsOpen);
+        break;
+      case 'pigments':
+        setPigmentsOpen(!pigmentsOpen);
+        break;
+      case 'papers':
+        setPapersOpen(!papersOpen);
+        break;
+    }
   };
 
   const handleManageData = (type: 'collections' | 'pigments' | 'papers') => {
@@ -76,13 +88,12 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
 
   return (
     <>
-      <aside className="w-64 lg:w-72 bg-dark-card border-r border-dark-border flex flex-col shadow-xl">
+      <aside className="w-64 lg:w-72 h-full bg-dark-card border-r border-dark-border flex flex-col shadow-xl">
         {/* Header */}
         <div className="p-4 lg:p-6 border-b border-dark-border">
           <h1 className="font-bold text-lg lg:text-xl text-dark-text-primary">
-            🎨 Catalogue
+            🎨 Catalogue raisonné
           </h1>
-          <p className="text-xs text-dark-text-muted mt-1">Raisonné</p>
         </div>
 
         {/* New artwork button */}
@@ -125,13 +136,13 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
                   ⚙️
                 </button>
                 <span className="text-xs text-dark-text-muted transition-transform duration-200" style={{
-                  transform: activeSection === 'collections' ? 'rotate(180deg)' : 'rotate(0deg)'
+                  transform: collectionsOpen ? 'rotate(180deg)' : 'rotate(0deg)'
                 }}>
                   ▼
                 </span>
               </div>
             </div>
-            {activeSection === 'collections' && (
+            {collectionsOpen && (
               <div className="ml-6 mt-2 space-y-1">
                 {collections.length === 0 ? (
                   <div className="px-3 py-2 text-xs text-dark-text-muted italic">
@@ -173,13 +184,13 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
                   ⚙️
                 </button>
                 <span className="text-xs text-dark-text-muted transition-transform duration-200" style={{
-                  transform: activeSection === 'pigments' ? 'rotate(180deg)' : 'rotate(0deg)'
+                  transform: pigmentsOpen ? 'rotate(180deg)' : 'rotate(0deg)'
                 }}>
                   ▼
                 </span>
               </div>
             </div>
-            {activeSection === 'pigments' && (
+            {pigmentsOpen && (
               <div className="ml-6 mt-2 space-y-1">
                 {pigments.length === 0 ? (
                   <div className="px-3 py-2 text-xs text-dark-text-muted italic">
@@ -221,13 +232,13 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
                   ⚙️
                 </button>
                 <span className="text-xs text-dark-text-muted transition-transform duration-200" style={{
-                  transform: activeSection === 'papers' ? 'rotate(180deg)' : 'rotate(0deg)'
+                  transform: papersOpen ? 'rotate(180deg)' : 'rotate(0deg)'
                 }}>
                   ▼
                 </span>
               </div>
             </div>
-            {activeSection === 'papers' && (
+            {papersOpen && (
               <div className="ml-6 mt-2 space-y-1">
                 {papers.length === 0 ? (
                   <div className="px-3 py-2 text-xs text-dark-text-muted italic">

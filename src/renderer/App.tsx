@@ -10,6 +10,7 @@ function App() {
   const { selectedArtwork, clearSelection } = useCatalogStore();
   const [showEditor, setShowEditor] = useState(false);
   const [editingArtwork, setEditingArtwork] = useState<any>(null);
+  const [sidebarVisible, setSidebarVisible] = useState(true);
 
   const handleNewArtwork = () => {
     setEditingArtwork(null);
@@ -33,24 +34,47 @@ function App() {
     window.dispatchEvent(new CustomEvent('artwork-updated'));
   };
 
+  const toggleSidebar = () => {
+    setSidebarVisible(!sidebarVisible);
+  };
+
   return (
     <div className="flex h-screen bg-dark-bg text-dark-text-primary">
-      {/* Sidebar - Hidden on mobile, shown on md+ */}
-      <div className="hidden md:block">
+      {/* Sidebar - Always visible with toggle */}
+      <div className={`${sidebarVisible ? 'block' : 'hidden'} h-full transition-all duration-300`}>
         <Sidebar onNewArtwork={handleNewArtwork} />
-      </div>
-
-      {/* Mobile sidebar overlay */}
-      <div className="md:hidden fixed inset-0 z-40 flex">
-        {/* Mobile sidebar will be implemented here */}
       </div>
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Header with search */}
+        {/* Header with search and sidebar toggle */}
         <div className="bg-dark-card border-b border-dark-border shadow-sm">
-          <div className="p-3 md:p-4">
-            <SearchBar />
+          <div className="p-3 md:p-4 flex items-center gap-3">
+            {/* Sidebar toggle button */}
+            <button
+              onClick={toggleSidebar}
+              className="flex items-center justify-center w-8 h-8 rounded-lg bg-dark-hover hover:bg-dark-border text-dark-text-secondary hover:text-dark-text-primary transition-all duration-200"
+              title={sidebarVisible ? "Masquer la barre latérale" : "Afficher la barre latérale"}
+            >
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <rect x="3" y="3" width="18" height="18" rx="2"/>
+                <path d="M9 3v18"/>
+              </svg>
+            </button>
+
+            {/* Search bar */}
+            <div className="flex-1">
+              <SearchBar />
+            </div>
           </div>
         </div>
 
