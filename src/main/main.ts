@@ -16,7 +16,9 @@ function createWindow() {
   });
 
   if (process.env.NODE_ENV === 'development') {
-    mainWindow.loadURL('http://localhost:3000');
+    // Check for VITE_DEV_SERVER_URL or try common ports
+    const devUrl = process.env.VITE_DEV_SERVER_URL || 'http://localhost:3002';
+    mainWindow.loadURL(devUrl);
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
   }
