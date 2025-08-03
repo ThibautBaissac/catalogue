@@ -205,7 +205,7 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit }: Art
                 <div key={image.id} className="aspect-square bg-gray-100 dark:bg-dark-hover rounded border dark:border-dark-border overflow-hidden">
                   {image.thumbnail_path ? (
                     <img
-                      src={`file://${image.thumbnail_path}`}
+                      src={window.api.getImageUrl(image.thumbnail_path)}
                       alt="Thumbnail"
                       className="w-full h-full object-cover"
                     />

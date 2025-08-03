@@ -1,5 +1,7 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, protocol } from 'electron';
 import { join } from 'path';
+import { readFile } from 'fs/promises';
+import { extname } from 'path';
 import './ipc/handlers'; // Enregistre tous les handlers IPC
 
 let mainWindow: BrowserWindow | null;
@@ -29,6 +31,12 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  // Register custom protocol for serving images
+  protocol.registerFileProtocol('catalogue-image', (request, callback) => {
+    const filePath = decodeURIComponent(request.url.replace('catalogue-image://', ''));
+    callback(filePath);
+  });
+
   createWindow();
 });
 
