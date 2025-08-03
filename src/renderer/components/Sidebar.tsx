@@ -84,10 +84,10 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
           </h1>
           <p className="text-xs text-dark-text-muted mt-1">Raisonné</p>
         </div>
-        
+
         {/* New artwork button */}
         <div className="p-4">
-          <button 
+          <button
             onClick={onNewArtwork}
             className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 focus-ring"
           >
@@ -102,7 +102,7 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
         <nav className="flex-1 overflow-auto p-2 space-y-1 custom-scrollbar">
           {/* Collections */}
           <div className="mb-2">
-            <div 
+            <div
               className="px-3 py-2.5 rounded-lg hover:bg-dark-hover cursor-pointer flex items-center justify-between font-medium text-dark-text-primary transition-colors group"
               onClick={() => toggleSection('collections')}
             >
@@ -150,7 +150,7 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
 
           {/* Pigments */}
           <div className="mb-2">
-            <div 
+            <div
               className="px-3 py-2.5 rounded-lg hover:bg-dark-hover cursor-pointer flex items-center justify-between font-medium text-dark-text-primary transition-colors group"
               onClick={() => toggleSection('pigments')}
             >
@@ -198,7 +198,7 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
 
           {/* Papers */}
           <div className="mb-2">
-            <div 
+            <div
               className="px-3 py-2.5 rounded-lg hover:bg-dark-hover cursor-pointer flex items-center justify-between font-medium text-dark-text-primary transition-colors group"
               onClick={() => toggleSection('papers')}
             >
@@ -247,14 +247,14 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
 
         {/* Footer actions */}
         <div className="p-4 border-t border-dark-border space-y-2">
-          <button 
+          <button
             onClick={handleBackup}
             className="w-full text-sm text-dark-text-secondary hover:text-dark-text-primary py-2.5 px-3 hover:bg-dark-hover rounded-lg transition-all duration-200 flex items-center gap-2"
           >
             <span>💾</span>
             <span>Sauvegarde</span>
           </button>
-          <button 
+          <button
             onClick={handleRestore}
             className="w-full text-sm text-dark-text-secondary hover:text-dark-text-primary py-2.5 px-3 hover:bg-dark-hover rounded-lg transition-all duration-200 flex items-center gap-2"
           >

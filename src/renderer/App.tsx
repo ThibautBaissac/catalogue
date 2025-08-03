@@ -39,7 +39,7 @@ function App() {
       <div className="hidden md:block">
         <Sidebar onNewArtwork={handleNewArtwork} />
       </div>
-      
+
       {/* Mobile sidebar overlay */}
       <div className="md:hidden fixed inset-0 z-40 flex">
         {/* Mobile sidebar will be implemented here */}
@@ -53,14 +53,14 @@ function App() {
             <SearchBar />
           </div>
         </div>
-        
+
         {/* Content area */}
         <div className="flex-1 flex overflow-hidden">
           {/* Artwork list */}
           <div className="flex-1 p-3 md:p-4 overflow-auto custom-scrollbar">
             <ArtworkList onEdit={handleEditArtwork} />
           </div>
-          
+
           {/* Detail sidebar - Hidden on mobile when not selected */}
           {selectedArtwork && !showEditor && (
             <div className="hidden lg:block">

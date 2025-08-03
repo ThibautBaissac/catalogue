@@ -69,8 +69,8 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
           <div
             key={artwork.id}
             className={`border border-dark-border rounded-lg p-4 flex items-center gap-4 hover:shadow-xl transition-all duration-200 cursor-pointer bg-dark-card ${
-              selectedArtwork?.id === artwork.id 
-                ? 'ring-2 ring-blue-500 bg-blue-500/10 border-blue-500/50' 
+              selectedArtwork?.id === artwork.id
+                ? 'ring-2 ring-blue-500 bg-blue-500/10 border-blue-500/50'
                 : 'hover:bg-dark-hover hover:border-dark-border-light'
             }`}
             onClick={() => handleArtworkClick(artwork)}
