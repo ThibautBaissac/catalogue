@@ -13,10 +13,10 @@ export async function importImages(artworkId: number, filePath: string) {
   const destPath = path.join(destDir, path.basename(filePath));
   fs.copyFileSync(filePath, destPath);
 
-  const stmt = db.prepare(\`
+  const stmt = db.prepare(`
     INSERT OR IGNORE INTO artwork_images(artwork_id, file_path, hash)
     VALUES(?,?,?)
-  \`);
+  `);
   const info = stmt.run(artworkId, destPath, hash);
   return { id: info.lastInsertRowid, filePath: destPath, hash };
 }
@@ -29,8 +29,8 @@ export async function generateThumbnails({ id, filePath }: { id: number; filePat
     .resize({ width: 300 })
     .jpeg({ quality: 80 })
     .toFile(thumbPath);
-  const stmt = db.prepare(\`
+  const stmt = db.prepare(`
     UPDATE artwork_images SET thumbnail_path = ? WHERE id = ?
-  \`);
+  `);
   stmt.run(thumbPath, id);
 }

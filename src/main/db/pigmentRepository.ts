@@ -6,27 +6,27 @@ export interface PigmentCreateInput {
 }
 
 export function createPigment(input: PigmentCreateInput) {
-  const stmt = db.prepare(\`
+  const stmt = db.prepare(`
     INSERT INTO pigments (name, description)
     VALUES (@name, @description)
-  \`);
+  `);
   return stmt.run(input);
 }
 
 export function updatePigment(id: number, input: Partial<PigmentCreateInput>) {
   const sets = Object.keys(input)
-    .map((k) => \`\${k} = @\${k}\`)
+    .map((k) => `${k} = @${k}`)
     .join(', ');
   if (!sets) throw new Error('Nothing to update');
-  const sql = \`UPDATE pigments SET \${sets} WHERE id = @id\`;
+  const sql = `UPDATE pigments SET ${sets} WHERE id = @id`;
   const stmt = db.prepare(sql);
   return stmt.run({ ...input, id });
 }
 
 export function deletePigment(id: number) {
-  return db.prepare(\`DELETE FROM pigments WHERE id = ?\`).run(id);
+  return db.prepare(`DELETE FROM pigments WHERE id = ?`).run(id);
 }
 
 export function listPigments() {
-  return db.prepare(\`SELECT * FROM pigments ORDER BY name COLLATE NOCASE\`).all();
+  return db.prepare(`SELECT * FROM pigments ORDER BY name COLLATE NOCASE`).all();
 }
