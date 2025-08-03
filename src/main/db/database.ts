@@ -2,6 +2,7 @@ import Database from 'better-sqlite3';
 import { app } from 'electron';
 import { join } from 'path';
 import fs from 'fs';
+import { initializeTestData } from './initTestData';
 
 const userData = app.getPath('userData');
 if (!fs.existsSync(userData)) {
@@ -19,6 +20,11 @@ const artworkExists = tables.find((t: any) => t.name === 'artworks');
 if (!artworkExists) {
   const schema = fs.readFileSync(join(__dirname, 'schema.sql'), 'utf8');
   db.exec(schema);
+
+  // Initialize test data for development
+  if (process.env.NODE_ENV === 'development') {
+    initializeTestData();
+  }
 }
 
 export default db;

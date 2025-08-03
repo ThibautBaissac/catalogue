@@ -36,6 +36,77 @@ export function getArtworkById(id: number) {
   return db.prepare(`SELECT * FROM artworks WHERE id = ?`).get(id);
 }
 
+// Association management functions
+export function addPigmentToArtwork(artworkId: number, pigmentId: number) {
+  const stmt = db.prepare(`
+    INSERT OR IGNORE INTO artwork_pigments (artwork_id, pigment_id)
+    VALUES (?, ?)
+  `);
+  return stmt.run(artworkId, pigmentId);
+}
+
+export function removePigmentFromArtwork(artworkId: number, pigmentId: number) {
+  const stmt = db.prepare(`
+    DELETE FROM artwork_pigments
+    WHERE artwork_id = ? AND pigment_id = ?
+  `);
+  return stmt.run(artworkId, pigmentId);
+}
+
+export function setPigmentsForArtwork(artworkId: number, pigmentIds: number[]) {
+  const transaction = db.transaction(() => {
+    // Remove all existing pigments
+    db.prepare(`DELETE FROM artwork_pigments WHERE artwork_id = ?`).run(artworkId);
+
+    // Add new pigments
+    const insertStmt = db.prepare(`
+      INSERT INTO artwork_pigments (artwork_id, pigment_id)
+      VALUES (?, ?)
+    `);
+
+    for (const pigmentId of pigmentIds) {
+      insertStmt.run(artworkId, pigmentId);
+    }
+  });
+
+  transaction();
+}
+
+export function addPaperToArtwork(artworkId: number, paperId: number) {
+  const stmt = db.prepare(`
+    INSERT OR IGNORE INTO artwork_papers (artwork_id, paper_id)
+    VALUES (?, ?)
+  `);
+  return stmt.run(artworkId, paperId);
+}
+
+export function removePaperFromArtwork(artworkId: number, paperId: number) {
+  const stmt = db.prepare(`
+    DELETE FROM artwork_papers
+    WHERE artwork_id = ? AND paper_id = ?
+  `);
+  return stmt.run(artworkId, paperId);
+}
+
+export function setPapersForArtwork(artworkId: number, paperIds: number[]) {
+  const transaction = db.transaction(() => {
+    // Remove all existing papers
+    db.prepare(`DELETE FROM artwork_papers WHERE artwork_id = ?`).run(artworkId);
+
+    // Add new papers
+    const insertStmt = db.prepare(`
+      INSERT INTO artwork_papers (artwork_id, paper_id)
+      VALUES (?, ?)
+    `);
+
+    for (const paperId of paperIds) {
+      insertStmt.run(artworkId, paperId);
+    }
+  });
+
+  transaction();
+}
+
 export function listArtworks(filters: {
   query?: string;
   pigments?: number[];

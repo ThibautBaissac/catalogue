@@ -1,4 +1,4 @@
-export async function callApi(fn: (...args: any[]) => Promise<any>, ...args: any[]) {
+export async function callApi<T = any>(fn: (...args: any[]) => Promise<any>, ...args: any[]): Promise<T> {
   try {
     const res = await fn(...args);
     if (!res.success) throw new Error(res.error || 'Erreur inconnue');

@@ -1,0 +1,18 @@
+{
+  "name": "Launch Catalogue App",
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Electron",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/electron/cli.js",
+      "args": ["."],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "npm: build:main"
+    }
+  ]
+}

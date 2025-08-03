@@ -5,6 +5,8 @@ import {
   deleteArtwork,
   listArtworks,
   getArtworkFull,
+  setPigmentsForArtwork,
+  setPapersForArtwork,
 } from '../db/artworkRepository';
 import {
   createCollection,
@@ -140,6 +142,24 @@ ipcMain.handle('artwork.addImage', async (_, { artworkId, filePaths }) => {
       const img = await importImages(artworkId, fp);
       await generateThumbnails(img as any);
     }
+    return ok();
+  } catch (e: any) {
+    return fail(e.message);
+  }
+});
+
+ipcMain.handle('artwork.setPigments', (_, { artworkId, pigmentIds }) => {
+  try {
+    setPigmentsForArtwork(artworkId, pigmentIds);
+    return ok();
+  } catch (e: any) {
+    return fail(e.message);
+  }
+});
+
+ipcMain.handle('artwork.setPapers', (_, { artworkId, paperIds }) => {
+  try {
+    setPapersForArtwork(artworkId, paperIds);
     return ok();
   } catch (e: any) {
     return fail(e.message);
