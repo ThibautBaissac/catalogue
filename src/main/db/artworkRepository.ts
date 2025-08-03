@@ -163,7 +163,24 @@ export function listArtworks(filters: {
     if (filters.offset) sql += ' OFFSET ' + filters.offset;
   }
 
-  return db.prepare(sql).all(...params);
+  const artworks = db.prepare(sql).all(...params) as any[];
+
+  // For each artwork, get the first/primary image
+  const artworksWithImages = artworks.map(artwork => {
+    const primaryImage = db.prepare(`
+      SELECT * FROM artwork_images
+      WHERE artwork_id = ?
+      ORDER BY created_at ASC
+      LIMIT 1
+    `).get(artwork.id);
+
+    return {
+      ...artwork,
+      primaryImage: primaryImage || null
+    };
+  });
+
+  return artworksWithImages;
 }
 
 export function getArtworkFull(id: number) {

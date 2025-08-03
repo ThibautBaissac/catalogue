@@ -62,7 +62,7 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
         <h2 className="text-xl font-semibold text-dark-text-primary">
           Œuvres ({artworks.length})
         </h2>
-        
+
         <div className="flex items-center gap-2">
           <button
             onClick={() => setViewMode('list')}
@@ -99,8 +99,22 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
               }`}
               onClick={() => handleArtworkClick(artwork)}
             >
-              <div className="w-16 h-16 bg-dark-bg flex-shrink-0 flex items-center justify-center rounded border border-dark-border">
-                <div className="text-xs text-dark-text-muted font-mono">{artwork.reference}</div>
+              <div className="w-16 h-16 bg-dark-bg flex-shrink-0 flex items-center justify-center rounded border border-dark-border overflow-hidden">
+                {artwork.primaryImage?.thumbnail_path ? (
+                  <img
+                    src={window.api.getImageUrl(artwork.primaryImage.thumbnail_path)}
+                    alt={artwork.title || artwork.reference}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback to reference text if image fails to load
+                      (e.target as HTMLImageElement).style.display = 'none';
+                      (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                    }}
+                  />
+                ) : null}
+                <div className={`text-xs text-dark-text-muted font-mono ${artwork.primaryImage?.thumbnail_path ? 'hidden' : ''}`}>
+                  {artwork.reference}
+                </div>
               </div>
 
               <div className="flex-1 min-w-0">
@@ -149,8 +163,20 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
               }`}
               onClick={() => handleArtworkClick(artwork)}
             >
-              <div className="flex-1 flex items-center justify-center bg-dark-bg rounded border border-dark-border mb-2">
-                <div className="text-xs text-dark-text-muted font-mono text-center p-2">
+              <div className="flex-1 flex items-center justify-center bg-dark-bg rounded border border-dark-border mb-2 overflow-hidden">
+                {artwork.primaryImage?.thumbnail_path ? (
+                  <img
+                    src={window.api.getImageUrl(artwork.primaryImage.thumbnail_path)}
+                    alt={artwork.title || artwork.reference}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback to reference text if image fails to load
+                      (e.target as HTMLImageElement).style.display = 'none';
+                      (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                    }}
+                  />
+                ) : null}
+                <div className={`text-xs text-dark-text-muted font-mono text-center p-2 ${artwork.primaryImage?.thumbnail_path ? 'hidden' : ''}`}>
                   {artwork.reference}
                 </div>
               </div>
@@ -159,7 +185,7 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
                 <div className="font-semibold text-dark-text-primary text-sm truncate mb-1">
                   {artwork.title || artwork.reference}
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <div className="text-xs text-dark-text-muted">
                     {artwork.width && artwork.height && (

@@ -50,6 +50,28 @@ export function initializeTestData() {
       insertPaper.run('Clairefontaine Maya', 'Papier coloré grain léger');
     }
 
+    // Add some test artworks if none exist
+    const existingArtworks = db.prepare('SELECT COUNT(*) as count FROM artworks').get() as any;
+    if (existingArtworks.count === 0) {
+      const insertArtwork = db.prepare(`
+        INSERT INTO artworks (reference, title, description, width, height, date, collection_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `);
+
+      // Get collection IDs
+      const collectionsResult = db.prepare('SELECT id, name FROM collections').all() as any[];
+      const collections = collectionsResult.reduce((acc: any, col: any) => {
+        acc[col.name] = col.id;
+        return acc;
+      }, {});
+
+      insertArtwork.run('PAY001', 'Coucher de soleil sur la Loire', 'Aquarelle réalisée lors d\'une sortie en bord de Loire', 30, 40, '2024-02-15', collections['Série Paysages']);
+      insertArtwork.run('PAY002', 'Forêt d\'automne', 'Paysage forestier aux couleurs chaudes', 25, 35, '2024-03-08', collections['Série Paysages']);
+      insertArtwork.run('POR001', 'Portrait de Marie', 'Portrait d\'une amie, technique mixte', 20, 30, '2024-04-12', collections['Portraits']);
+      insertArtwork.run('ABS001', 'Mouvement bleu', 'Composition abstraite en nuances de bleu', 40, 50, '2024-07-01', collections['Abstractions']);
+      insertArtwork.run('ABS002', 'Formes en dialogue', 'Interaction de formes géométriques', 35, 45, '2024-07-15', collections['Abstractions']);
+    }
+
     console.log('Test data initialized successfully');
   } catch (error) {
     console.error('Error initializing test data:', error);

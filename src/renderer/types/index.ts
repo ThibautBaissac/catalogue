@@ -7,6 +7,7 @@ export interface Artwork {
   height?: number;
   date?: string;
   collection_id?: number | null;
+  primaryImage?: ArtworkImage | null;
 }
 
 export interface Collection {
