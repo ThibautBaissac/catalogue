@@ -92,32 +92,32 @@ export default function SearchBar() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rechercher par titre, référence ou description..."
-            className="w-full border border-gray-300 rounded-lg px-4 py-2 pl-10 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2 pl-10 text-dark-text-primary placeholder-dark-text-muted focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           />
-          <div className="absolute left-3 top-2.5 text-gray-400">
+          <div className="absolute left-3 top-2.5 text-dark-text-muted">
             🔍
           </div>
         </div>
 
         <button
           onClick={() => setShowFilters(!showFilters)}
-          className={`px-4 py-2 border rounded-lg transition-colors ${
+          className={`px-4 py-2 border rounded-lg transition-all duration-200 font-medium ${
             showFilters || hasActiveFilters
-              ? 'bg-blue-50 border-blue-300 text-blue-700'
-              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+              ? 'bg-blue-600/20 border-blue-500 text-blue-400 shadow-lg'
+              : 'border-dark-border text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'
           }`}
         >
-          Filtres {hasActiveFilters && `(${
-            (selectedPigments.length || 0) +
-            (selectedPapers.length || 0) +
-            (selectedCollection ? 1 : 0)
-          })`}
+          Filtres {hasActiveFilters && (
+            <span className="ml-1 bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full">
+              {(selectedPigments.length || 0) + (selectedPapers.length || 0) + (selectedCollection ? 1 : 0)}
+            </span>
+          )}
         </button>
 
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
-            className="px-3 py-2 text-sm text-gray-600 hover:text-gray-800 border border-gray-300 rounded-lg hover:bg-gray-50"
+            className="px-3 py-2 text-sm text-dark-text-secondary hover:text-dark-text-primary border border-dark-border rounded-lg hover:bg-dark-hover transition-all duration-200"
           >
             Effacer
           </button>
@@ -125,17 +125,17 @@ export default function SearchBar() {
       </div>
 
       {showFilters && (
-        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+        <div className="bg-dark-card border border-dark-border rounded-lg p-4 shadow-xl">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Collection Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-dark-text-primary mb-2">
                 Collection
               </label>
               <select
                 value={selectedCollection || ''}
                 onChange={(e) => setSelectedCollection(e.target.value ? parseInt(e.target.value) : null)}
-                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full bg-dark-bg border border-dark-border rounded-md px-3 py-2 text-sm text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               >
                 <option value="">Toutes les collections</option>
                 {collections.map(collection => (
@@ -148,19 +148,19 @@ export default function SearchBar() {
 
             {/* Pigments Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-dark-text-primary mb-2">
                 Pigments
               </label>
-              <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-2">
+              <div className="max-h-32 overflow-y-auto bg-dark-bg border border-dark-border rounded-md p-2 custom-scrollbar">
                 {pigments.map(pigment => (
-                  <label key={pigment.id} className="flex items-center space-x-2 py-1">
+                  <label key={pigment.id} className="flex items-center space-x-2 py-1 hover:bg-dark-hover rounded px-1 transition-colors cursor-pointer">
                     <input
                       type="checkbox"
                       checked={selectedPigments.includes(pigment.id)}
                       onChange={() => togglePigment(pigment.id)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-dark-border text-blue-600 focus:ring-blue-500 bg-dark-bg"
                     />
-                    <span className="text-sm">{pigment.name}</span>
+                    <span className="text-sm text-dark-text-secondary">{pigment.name}</span>
                   </label>
                 ))}
               </div>
@@ -168,19 +168,19 @@ export default function SearchBar() {
 
             {/* Papers Filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-dark-text-primary mb-2">
                 Papiers
               </label>
-              <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-2">
+              <div className="max-h-32 overflow-y-auto bg-dark-bg border border-dark-border rounded-md p-2 custom-scrollbar">
                 {papers.map(paper => (
-                  <label key={paper.id} className="flex items-center space-x-2 py-1">
+                  <label key={paper.id} className="flex items-center space-x-2 py-1 hover:bg-dark-hover rounded px-1 transition-colors cursor-pointer">
                     <input
                       type="checkbox"
                       checked={selectedPapers.includes(paper.id)}
                       onChange={() => togglePaper(paper.id)}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-dark-border text-blue-600 focus:ring-blue-500 bg-dark-bg"
                     />
-                    <span className="text-sm">{paper.name}</span>
+                    <span className="text-sm text-dark-text-secondary">{paper.name}</span>
                   </label>
                 ))}
               </div>
@@ -197,12 +197,12 @@ export default function SearchBar() {
             return pigment && (
               <span
                 key={`pigment-${pigmentId}`}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full"
+                className="inline-flex items-center gap-1 px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded-full border border-red-500/30"
               >
-                {pigment.name}
+                🎨 {pigment.name}
                 <button
                   onClick={() => togglePigment(pigmentId)}
-                  className="text-blue-600 hover:text-blue-800"
+                  className="text-red-400 hover:text-red-300 ml-1 w-3 h-3 flex items-center justify-center rounded-full hover:bg-red-500/20 transition-colors"
                 >
                   ×
                 </button>
@@ -215,12 +215,12 @@ export default function SearchBar() {
             return paper && (
               <span
                 key={`paper-${paperId}`}
-                className="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"
+                className="inline-flex items-center gap-1 px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded-full border border-yellow-500/30"
               >
-                {paper.name}
+                📄 {paper.name}
                 <button
                   onClick={() => togglePaper(paperId)}
-                  className="text-green-600 hover:text-green-800"
+                  className="text-yellow-400 hover:text-yellow-300 ml-1 w-3 h-3 flex items-center justify-center rounded-full hover:bg-yellow-500/20 transition-colors"
                 >
                   ×
                 </button>
@@ -229,11 +229,11 @@ export default function SearchBar() {
           })}
 
           {selectedCollection && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full">
-              {collections.find(c => c.id === selectedCollection)?.name}
+            <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-500/20 text-blue-400 text-xs rounded-full border border-blue-500/30">
+              📚 {collections.find(c => c.id === selectedCollection)?.name}
               <button
                 onClick={() => setSelectedCollection(null)}
-                className="text-purple-600 hover:text-purple-800"
+                className="text-blue-400 hover:text-blue-300 ml-1 w-3 h-3 flex items-center justify-center rounded-full hover:bg-blue-500/20 transition-colors"
               >
                 ×
               </button>

@@ -46,9 +46,10 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
 
   if (artworks.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 text-gray-500">
+      <div className="flex items-center justify-center h-64 text-dark-text-muted">
         <div className="text-center">
-          <div className="text-lg mb-2">Aucune œuvre dans votre catalogue</div>
+          <div className="text-6xl mb-4 opacity-50">🎨</div>
+          <div className="text-lg mb-2 text-dark-text-secondary">Aucune œuvre dans votre catalogue</div>
           <div className="text-sm">Cliquez sur "Nouvelle œuvre" pour commencer</div>
         </div>
       </div>
@@ -58,7 +59,7 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
   return (
     <div ref={parentRef} className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold text-gray-800">
+        <h2 className="text-xl font-semibold text-dark-text-primary">
           Œuvres ({artworks.length})
         </h2>
       </div>
@@ -67,38 +68,46 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
         {artworks.map((artwork) => (
           <div
             key={artwork.id}
-            className={`border rounded-lg p-4 flex items-center gap-4 hover:shadow-md transition-shadow cursor-pointer bg-white ${
-              selectedArtwork?.id === artwork.id ? 'ring-2 ring-blue-500 bg-blue-50' : ''
+            className={`border border-dark-border rounded-lg p-4 flex items-center gap-4 hover:shadow-xl transition-all duration-200 cursor-pointer bg-dark-card ${
+              selectedArtwork?.id === artwork.id 
+                ? 'ring-2 ring-blue-500 bg-blue-500/10 border-blue-500/50' 
+                : 'hover:bg-dark-hover hover:border-dark-border-light'
             }`}
             onClick={() => handleArtworkClick(artwork)}
           >
-            <div className="w-16 h-16 bg-gray-200 flex-shrink-0 flex items-center justify-center rounded">
-              <div className="text-xs text-gray-600 font-mono">{artwork.reference}</div>
+            <div className="w-16 h-16 bg-dark-bg flex-shrink-0 flex items-center justify-center rounded border border-dark-border">
+              <div className="text-xs text-dark-text-muted font-mono">{artwork.reference}</div>
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="font-semibold text-gray-900 truncate">
+              <div className="font-semibold text-dark-text-primary truncate">
                 {artwork.title || artwork.reference}
               </div>
               {artwork.description && (
-                <div className="text-sm text-gray-600 line-clamp-2 mt-1">
+                <div className="text-sm text-dark-text-secondary line-clamp-2 mt-1">
                   {artwork.description}
                 </div>
               )}
-              <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
+              <div className="flex items-center gap-4 mt-2 text-xs text-dark-text-muted">
                 {artwork.width && artwork.height && (
-                  <span>{artwork.width} × {artwork.height} cm</span>
+                  <span className="flex items-center gap-1">
+                    📏 {artwork.width} × {artwork.height} cm
+                  </span>
                 )}
-                {artwork.date && <span>{artwork.date}</span>}
+                {artwork.date && (
+                  <span className="flex items-center gap-1">
+                    📅 {artwork.date}
+                  </span>
+                )}
               </div>
             </div>
 
             <div className="flex items-center gap-2">
               <button
                 onClick={(e) => handleEditClick(e, artwork)}
-                className="px-3 py-1 text-sm text-blue-600 hover:bg-blue-100 rounded transition-colors"
+                className="px-3 py-1.5 text-sm text-blue-400 hover:text-blue-300 hover:bg-blue-500/20 rounded-lg transition-all duration-200 border border-blue-500/30 hover:border-blue-500/50"
               >
-                Éditer
+                ✏️ Éditer
               </button>
             </div>
           </div>

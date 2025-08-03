@@ -43,13 +43,11 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
 
   const handleCloseDataManager = () => {
     setShowDataManager(null);
-    loadData(); // Refresh data after closing manager
+    loadData();
   };
 
   const handleBackup = async () => {
     try {
-      // Note: In a real Electron app, you would use dialog.showSaveDialog
-      // For now, we'll use a fixed path as an example
       const userPath = `/Users/${process.env.USER || 'user'}/Desktop/catalogue-backup-${new Date().toISOString().split('T')[0]}.zip`;
       await callApi(window.api.backupCatalog, userPath);
       alert(`Sauvegarde créée : ${userPath}`);
@@ -64,12 +62,11 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
       if (!confirm('La restauration va écraser toutes les données actuelles. Continuer ?')) {
         return;
       }
-      // Note: In a real app, you would use dialog.showOpenDialog
       const filePath = prompt('Chemin vers le fichier de sauvegarde:');
       if (filePath) {
         await callApi(window.api.restoreCatalog, filePath);
         alert('Restauration effectuée avec succès');
-        loadData(); // Reload sidebar data
+        loadData();
       }
     } catch (error) {
       console.error('Error restoring backup:', error);
@@ -79,130 +76,190 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
 
   return (
     <>
-      <aside className="w-60 bg-white border-r flex flex-col">
-        <div className="p-4 font-bold border-b text-gray-800">
-          Catalogue Raisonné
+      <aside className="w-64 lg:w-72 bg-dark-card border-r border-dark-border flex flex-col shadow-xl">
+        {/* Header */}
+        <div className="p-4 lg:p-6 border-b border-dark-border">
+          <h1 className="font-bold text-lg lg:text-xl text-dark-text-primary">
+            🎨 Catalogue
+          </h1>
+          <p className="text-xs text-dark-text-muted mt-1">Raisonné</p>
         </div>
-
+        
+        {/* New artwork button */}
         <div className="p-4">
-          <button
+          <button 
             onClick={onNewArtwork}
-            className="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 focus-ring"
           >
-            + Nouvelle œuvre
+            <span className="flex items-center justify-center gap-2">
+              <span className="text-lg">+</span>
+              <span>Nouvelle œuvre</span>
+            </span>
           </button>
         </div>
 
-        <nav className="flex-1 overflow-auto p-2 space-y-2">
+        {/* Navigation sections */}
+        <nav className="flex-1 overflow-auto p-2 space-y-1 custom-scrollbar">
           {/* Collections */}
-          <div>
-            <div
-              className="px-3 py-2 rounded hover:bg-gray-100 cursor-pointer flex items-center justify-between font-medium text-gray-700"
+          <div className="mb-2">
+            <div 
+              className="px-3 py-2.5 rounded-lg hover:bg-dark-hover cursor-pointer flex items-center justify-between font-medium text-dark-text-primary transition-colors group"
               onClick={() => toggleSection('collections')}
             >
-              <span>Collections ({collections.length})</span>
+              <span className="flex items-center gap-2">
+                <span className="text-blue-400">📚</span>
+                <span>Collections</span>
+                <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">
+                  {collections.length}
+                </span>
+              </span>
               <div className="flex items-center gap-1">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handleManageData('collections');
                   }}
-                  className="text-xs text-blue-600 hover:text-blue-800"
+                  className="opacity-0 group-hover:opacity-100 text-xs text-blue-400 hover:text-blue-300 p-1 rounded transition-all"
                   title="Gérer les collections"
                 >
                   ⚙️
                 </button>
-                <span className="text-xs">{activeSection === 'collections' ? '−' : '+'}</span>
+                <span className="text-xs text-dark-text-muted transition-transform duration-200" style={{
+                  transform: activeSection === 'collections' ? 'rotate(180deg)' : 'rotate(0deg)'
+                }}>
+                  ▼
+                </span>
               </div>
             </div>
             {activeSection === 'collections' && (
-              <div className="ml-4 space-y-1">
-                {collections.map(collection => (
-                  <div key={collection.id} className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-50 cursor-pointer rounded">
-                    {collection.name}
+              <div className="ml-6 mt-2 space-y-1">
+                {collections.length === 0 ? (
+                  <div className="px-3 py-2 text-xs text-dark-text-muted italic">
+                    Aucune collection
                   </div>
-                ))}
+                ) : (
+                  collections.map(collection => (
+                    <div key={collection.id} className="px-3 py-2 text-sm text-dark-text-secondary hover:bg-dark-hover cursor-pointer rounded-md transition-colors hover:text-dark-text-primary">
+                      {collection.name}
+                    </div>
+                  ))
+                )}
               </div>
             )}
           </div>
 
           {/* Pigments */}
-          <div>
-            <div
-              className="px-3 py-2 rounded hover:bg-gray-100 cursor-pointer flex items-center justify-between font-medium text-gray-700"
+          <div className="mb-2">
+            <div 
+              className="px-3 py-2.5 rounded-lg hover:bg-dark-hover cursor-pointer flex items-center justify-between font-medium text-dark-text-primary transition-colors group"
               onClick={() => toggleSection('pigments')}
             >
-              <span>Pigments ({pigments.length})</span>
+              <span className="flex items-center gap-2">
+                <span className="text-red-400">🎨</span>
+                <span>Pigments</span>
+                <span className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full">
+                  {pigments.length}
+                </span>
+              </span>
               <div className="flex items-center gap-1">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handleManageData('pigments');
                   }}
-                  className="text-xs text-blue-600 hover:text-blue-800"
+                  className="opacity-0 group-hover:opacity-100 text-xs text-red-400 hover:text-red-300 p-1 rounded transition-all"
                   title="Gérer les pigments"
                 >
                   ⚙️
                 </button>
-                <span className="text-xs">{activeSection === 'pigments' ? '−' : '+'}</span>
+                <span className="text-xs text-dark-text-muted transition-transform duration-200" style={{
+                  transform: activeSection === 'pigments' ? 'rotate(180deg)' : 'rotate(0deg)'
+                }}>
+                  ▼
+                </span>
               </div>
             </div>
             {activeSection === 'pigments' && (
-              <div className="ml-4 space-y-1">
-                {pigments.map(pigment => (
-                  <div key={pigment.id} className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-50 cursor-pointer rounded">
-                    {pigment.name}
+              <div className="ml-6 mt-2 space-y-1">
+                {pigments.length === 0 ? (
+                  <div className="px-3 py-2 text-xs text-dark-text-muted italic">
+                    Aucun pigment
                   </div>
-                ))}
+                ) : (
+                  pigments.map(pigment => (
+                    <div key={pigment.id} className="px-3 py-2 text-sm text-dark-text-secondary hover:bg-dark-hover cursor-pointer rounded-md transition-colors hover:text-dark-text-primary">
+                      {pigment.name}
+                    </div>
+                  ))
+                )}
               </div>
             )}
           </div>
 
           {/* Papers */}
-          <div>
-            <div
-              className="px-3 py-2 rounded hover:bg-gray-100 cursor-pointer flex items-center justify-between font-medium text-gray-700"
+          <div className="mb-2">
+            <div 
+              className="px-3 py-2.5 rounded-lg hover:bg-dark-hover cursor-pointer flex items-center justify-between font-medium text-dark-text-primary transition-colors group"
               onClick={() => toggleSection('papers')}
             >
-              <span>Papiers ({papers.length})</span>
+              <span className="flex items-center gap-2">
+                <span className="text-yellow-400">📄</span>
+                <span>Papiers</span>
+                <span className="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded-full">
+                  {papers.length}
+                </span>
+              </span>
               <div className="flex items-center gap-1">
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
                     handleManageData('papers');
                   }}
-                  className="text-xs text-blue-600 hover:text-blue-800"
+                  className="opacity-0 group-hover:opacity-100 text-xs text-yellow-400 hover:text-yellow-300 p-1 rounded transition-all"
                   title="Gérer les papiers"
                 >
                   ⚙️
                 </button>
-                <span className="text-xs">{activeSection === 'papers' ? '−' : '+'}</span>
+                <span className="text-xs text-dark-text-muted transition-transform duration-200" style={{
+                  transform: activeSection === 'papers' ? 'rotate(180deg)' : 'rotate(0deg)'
+                }}>
+                  ▼
+                </span>
               </div>
             </div>
             {activeSection === 'papers' && (
-              <div className="ml-4 space-y-1">
-                {papers.map(paper => (
-                  <div key={paper.id} className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-50 cursor-pointer rounded">
-                    {paper.name}
+              <div className="ml-6 mt-2 space-y-1">
+                {papers.length === 0 ? (
+                  <div className="px-3 py-2 text-xs text-dark-text-muted italic">
+                    Aucun papier
                   </div>
-                ))}
+                ) : (
+                  papers.map(paper => (
+                    <div key={paper.id} className="px-3 py-2 text-sm text-dark-text-secondary hover:bg-dark-hover cursor-pointer rounded-md transition-colors hover:text-dark-text-primary">
+                      {paper.name}
+                    </div>
+                  ))
+                )}
               </div>
             )}
           </div>
         </nav>
 
-        <div className="p-4 border-t space-y-2">
-          <button
+        {/* Footer actions */}
+        <div className="p-4 border-t border-dark-border space-y-2">
+          <button 
             onClick={handleBackup}
-            className="w-full text-sm text-gray-600 hover:text-gray-800 py-1 hover:bg-gray-50 rounded transition-colors"
+            className="w-full text-sm text-dark-text-secondary hover:text-dark-text-primary py-2.5 px-3 hover:bg-dark-hover rounded-lg transition-all duration-200 flex items-center gap-2"
           >
-            💾 Sauvegarde
+            <span>💾</span>
+            <span>Sauvegarde</span>
           </button>
-          <button
+          <button 
             onClick={handleRestore}
-            className="w-full text-sm text-gray-600 hover:text-gray-800 py-1 hover:bg-gray-50 rounded transition-colors"
+            className="w-full text-sm text-dark-text-secondary hover:text-dark-text-primary py-2.5 px-3 hover:bg-dark-hover rounded-lg transition-all duration-200 flex items-center gap-2"
           >
-            📁 Restauration
+            <span>📁</span>
+            <span>Restauration</span>
           </button>
         </div>
       </aside>
