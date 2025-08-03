@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { callApi } from '../hooks/useApi';
 import { Collection, Pigment, Paper } from '../types';
 import DataManager from './DataManager';
+import logoImg from '../assets/images/logo.jpg';
 
 interface SidebarProps {
   onNewArtwork: () => void;
@@ -91,8 +92,22 @@ export default function Sidebar({ onNewArtwork }: SidebarProps) {
       <aside className="w-64 lg:w-72 h-full bg-dark-card border-r border-dark-border flex flex-col shadow-xl">
         {/* Header */}
         <div className="p-4 lg:p-6 border-b border-dark-border">
-          <h1 className="font-bold text-lg lg:text-xl text-dark-text-primary">
-            🎨 Catalogue raisonné
+          <h1 className="font-bold text-lg lg:text-xl text-dark-text-primary flex items-center gap-3">
+            <img
+              src={logoImg}
+              alt="Logo Pascal Thouvenin"
+              className="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover"
+              onError={(e) => {
+                // Fallback to initials if image fails to load
+                const target = e.currentTarget;
+                target.style.display = 'none';
+                const fallback = document.createElement('div');
+                fallback.className = 'w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white text-xs font-bold';
+                fallback.textContent = 'PT';
+                target.parentNode?.insertBefore(fallback, target);
+              }}
+            />
+            Pascal Thouvenin
           </h1>
         </div>
 
