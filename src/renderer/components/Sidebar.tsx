@@ -120,7 +120,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
         <div className="p-4">
           <button
             onClick={onNewArtwork}
-            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-4 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 focus-ring"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-3 rounded-lg font-medium transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105 focus-ring"
           >
             <span className="flex items-center justify-center gap-2">
               <span className="text-lg">+</span>
@@ -138,7 +138,6 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
               onClick={() => toggleSection('collections')}
             >
               <span className="flex items-center gap-2">
-                <span className="text-blue-400">📚</span>
                 <span>Collections</span>
                 <span className="text-xs bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded-full">
                   {collections.length}
@@ -197,7 +196,6 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
               onClick={() => toggleSection('pigments')}
             >
               <span className="flex items-center gap-2">
-                <span className="text-red-400">🎨</span>
                 <span>Pigments</span>
                 <span className="text-xs bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full">
                   {pigments.length}
@@ -256,7 +254,6 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
               onClick={() => toggleSection('papers')}
             >
               <span className="flex items-center gap-2">
-                <span className="text-yellow-400">📄</span>
                 <span>Papiers</span>
                 <span className="text-xs bg-yellow-500/20 text-yellow-400 px-2 py-0.5 rounded-full">
                   {papers.length}

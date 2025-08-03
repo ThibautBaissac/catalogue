@@ -243,13 +243,13 @@ export default function DataManager({ type, onClose }: DataManagerProps) {
                               onClick={() => handleEdit(item)}
                               className="text-blue-400 hover:text-blue-300 text-sm px-2 py-1 rounded hover:bg-blue-500/20 transition-all duration-200 flex items-center gap-1"
                             >
-                              ✏️ Éditer
+                              Éditer
                             </button>
                             <button
                               onClick={() => handleDelete(item)}
                               className="text-red-400 hover:text-red-300 text-sm px-2 py-1 rounded hover:bg-red-500/20 transition-all duration-200 flex items-center gap-1"
                             >
-                              🗑️ Supprimer
+                              Supprimer
                             </button>
                           </div>
                         </div>

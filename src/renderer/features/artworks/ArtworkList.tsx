@@ -5,9 +5,10 @@ import { Artwork } from '../../types';
 
 interface ArtworkListProps {
   onEdit: (artwork: Artwork) => void;
+  onView: (artwork: Artwork) => void;
 }
 
-export default function ArtworkList({ onEdit }: ArtworkListProps) {
+export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
   const { artworks, setArtworks, selectArtwork, selectedArtwork, viewMode, setViewMode, filters, clearFilters } = useCatalogStore();
   const parentRef = useRef<HTMLDivElement | null>(null);
 
@@ -46,6 +47,11 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
   const handleEditClick = (e: React.MouseEvent, artwork: Artwork) => {
     e.stopPropagation();
     onEdit(artwork);
+  };
+
+  const handleViewClick = (e: React.MouseEvent, artwork: Artwork) => {
+    e.stopPropagation();
+    onView(artwork);
   };
 
   const hasActiveFilters = () => {
@@ -107,7 +113,7 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
                 : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'
             }`}
           >
-            📋 Liste
+            Liste
           </button>
           <button
             onClick={() => setViewMode('grid')}
@@ -117,7 +123,7 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
                 : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'
             }`}
           >
-            🔲 Grille
+            Grille
           </button>
         </div>
       </div>
@@ -177,28 +183,34 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
 
               <div className="flex items-center gap-2">
                 <button
+                  onClick={(e) => handleViewClick(e, artwork)}
+                  className="px-3 py-1.5 text-sm text-green-400 hover:text-green-300 hover:bg-green-500/20 rounded-lg transition-all duration-200 border border-green-500/30 hover:border-green-500/50"
+                >
+                  Voir
+                </button>
+                <button
                   onClick={(e) => handleEditClick(e, artwork)}
                   className="px-3 py-1.5 text-sm text-blue-400 hover:text-blue-300 hover:bg-blue-500/20 rounded-lg transition-all duration-200 border border-blue-500/30 hover:border-blue-500/50"
                 >
-                  ✏️ Éditer
+                  Éditer
                 </button>
               </div>
             </div>
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))' }}>
           {artworks.map((artwork) => (
             <div
               key={artwork.id}
-              className={`border border-dark-border rounded-lg p-3 hover:shadow-xl transition-all duration-200 cursor-pointer bg-dark-card aspect-square flex flex-col ${
+              className={`border border-dark-border rounded-lg p-3 hover:shadow-xl transition-all duration-200 cursor-pointer bg-dark-card aspect-square flex flex-col min-w-[150px] ${
                 selectedArtwork?.id === artwork.id
                   ? 'ring-2 ring-blue-500 bg-blue-500/10 border-blue-500/50'
                   : 'hover:bg-dark-hover hover:border-dark-border-light'
               }`}
               onClick={() => handleArtworkClick(artwork)}
             >
-              <div className="flex-1 flex items-center justify-center bg-dark-bg rounded border border-dark-border mb-2 overflow-hidden">
+              <div className="flex-1 flex items-center justify-center bg-dark-bg rounded border border-dark-border mb-2 overflow-hidden min-h-[100px]">
                 {artwork.primaryImage?.thumbnail_path ? (
                   <img
                     src={window.api.getImageUrl(artwork.primaryImage.thumbnail_path)}
@@ -227,13 +239,22 @@ export default function ArtworkList({ onEdit }: ArtworkListProps) {
                       <span>{artwork.width}×{artwork.height}cm</span>
                     )}
                   </div>
-                  <button
-                    onClick={(e) => handleEditClick(e, artwork)}
-                    className="text-xs text-blue-400 hover:text-blue-300 p-1 rounded transition-all duration-200"
-                    title="Éditer"
-                  >
-                    ✏️
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={(e) => handleViewClick(e, artwork)}
+                      className="text-xs text-green-400 hover:text-green-300 p-1 rounded transition-all duration-200"
+                      title="Voir"
+                    >
+                      👁️
+                    </button>
+                    <button
+                      onClick={(e) => handleEditClick(e, artwork)}
+                      className="text-xs text-blue-400 hover:text-blue-300 p-1 rounded transition-all duration-200"
+                      title="Éditer"
+                    >
+                      ✏️
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

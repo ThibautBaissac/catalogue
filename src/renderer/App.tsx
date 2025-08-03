@@ -4,12 +4,15 @@ import ArtworkList from './features/artworks/ArtworkList';
 import SearchBar from './features/search/SearchBar';
 import ArtworkDetailSidebar from './components/ArtworkDetailSidebar';
 import ArtworkEditor from './components/ArtworkEditor';
+import ArtworkViewer from './components/ArtworkViewer';
 import { useCatalogStore } from './store/catalogStore';
 
 function App() {
   const { selectedArtwork, clearSelection, setFilters, filters } = useCatalogStore();
   const [showEditor, setShowEditor] = useState(false);
   const [editingArtwork, setEditingArtwork] = useState<any>(null);
+  const [showViewer, setShowViewer] = useState(false);
+  const [viewingArtwork, setViewingArtwork] = useState<any>(null);
   const [sidebarVisible, setSidebarVisible] = useState(true);
 
   const handleNewArtwork = () => {
@@ -22,9 +25,19 @@ function App() {
     setShowEditor(true);
   };
 
+  const handleViewArtwork = (artwork: any) => {
+    setViewingArtwork(artwork);
+    setShowViewer(true);
+  };
+
   const handleCloseEditor = () => {
     setShowEditor(false);
     setEditingArtwork(null);
+  };
+
+  const handleCloseViewer = () => {
+    setShowViewer(false);
+    setViewingArtwork(null);
   };
 
   const handleArtworkSaved = () => {
@@ -118,7 +131,7 @@ function App() {
         <div className="flex-1 flex overflow-hidden">
           {/* Artwork list */}
           <div className="flex-1 p-3 md:p-4 overflow-auto custom-scrollbar">
-            <ArtworkList onEdit={handleEditArtwork} />
+            <ArtworkList onEdit={handleEditArtwork} onView={handleViewArtwork} />
           </div>
 
           {/* Detail sidebar - Hidden on mobile when not selected */}
@@ -156,6 +169,18 @@ function App() {
             />
           </div>
         </div>
+      )}
+
+      {/* Artwork viewer modal */}
+      {showViewer && viewingArtwork && (
+        <ArtworkViewer
+          artwork={viewingArtwork}
+          onClose={handleCloseViewer}
+          onEdit={() => {
+            handleCloseViewer();
+            handleEditArtwork(viewingArtwork);
+          }}
+        />
       )}
     </div>
   );

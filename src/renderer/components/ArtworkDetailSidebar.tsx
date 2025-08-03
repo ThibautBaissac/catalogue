@@ -81,7 +81,7 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit }: Art
   const { artwork, images, pigments, papers, collection } = full;
 
   return (
-    <aside className="w-80 bg-white dark:bg-dark-card border-l dark:border-dark-border flex flex-col">
+    <aside className="w-80 h-full bg-white dark:bg-dark-card border-l dark:border-dark-border flex flex-col">
       <div className="p-4 border-b dark:border-dark-border">
         <div className="flex justify-between items-start">
           <h2 className="text-lg font-semibold text-gray-800 dark:text-dark-text-primary truncate">
@@ -231,7 +231,7 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit }: Art
           onClick={onEdit}
           className="w-full bg-blue-600 dark:bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
         >
-          Modifier
+          Éditer
         </button>
         <button
           onClick={handleDelete}
