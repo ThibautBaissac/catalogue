@@ -10,7 +10,9 @@
     "baseUrl": "./",
     "paths": { "@/*": ["src/*"] },
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true
   },
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }
