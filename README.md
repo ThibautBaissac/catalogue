@@ -8,10 +8,14 @@ Import pigments:
 sqlite3 "$(node -e "console.log(require('path').join(require('os').homedir(), 'Library', 'Application Support', 'catalogue', 'catalogue.db'))")" < seed_pigments.sql
 ```
 
-
 Import papers:
 ```bash
 sqlite3 "$(node -e "console.log(require('path').join(require('os').homedir(), 'Library', 'Application Support', 'catalogue', 'catalogue.db'))")" < seed_papers.sql
+```
+
+Import papers:
+```bash
+sqlite3 "$(node -e "console.log(require('path').join(require('os').homedir(), 'Library', 'Application Support', 'catalogue', 'catalogue.db'))")" < seed_types.sql
 ```
 
 # Catalogue Raisonné - Application Desktop
