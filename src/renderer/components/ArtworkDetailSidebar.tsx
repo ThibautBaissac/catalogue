@@ -85,7 +85,7 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit }: Art
       <div className="p-4 border-b dark:border-dark-border">
         <div className="flex justify-between items-start">
           <h2 className="text-lg font-semibold text-gray-800 dark:text-dark-text-primary truncate">
-            {artwork.title || artwork.reference}
+            {artwork.reference}
           </h2>
           <button
             onClick={onClose}
@@ -99,13 +99,6 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit }: Art
       <div className="flex-1 overflow-auto p-4 space-y-4">
         {/* Basic Info */}
         <div className="space-y-3">
-          <div>
-            <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Référence</span>
-            <div className="font-mono text-sm bg-gray-50 dark:bg-dark-hover text-gray-900 dark:text-dark-text-primary p-2 rounded">
-              {artwork.reference}
-            </div>
-          </div>
-
           {artwork.title && (
             <div>
               <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Titre</span>
