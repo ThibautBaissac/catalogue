@@ -1,3 +1,9 @@
+Import pigments:
+```bash
+sqlite3 "$(node -e "console.log(require('path').join(require('os').homedir(), 'Library', 'Application Support', 'catalogue', 'catalogue.db'))")" < pigments_import.sql
+```
+
+
 # Catalogue Raisonné - Application Desktop
 
 Application desktop pour artistes peintres permettant de constituer, visualiser, enrichir et sauvegarder un catalogue raisonné d'œuvres.
