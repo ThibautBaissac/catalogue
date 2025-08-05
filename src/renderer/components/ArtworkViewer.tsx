@@ -6,6 +6,7 @@ interface ArtworkViewerProps {
   artwork: Artwork;
   onClose: () => void;
   onEdit: () => void;
+  initialImageIndex?: number;
 }
 
 interface ArtworkFull {
@@ -23,7 +24,7 @@ interface ArtworkFull {
   collection?: { id: number; name: string; description?: string; date?: string } | null;
 }
 
-export default function ArtworkViewer({ artwork, onClose, onEdit }: ArtworkViewerProps) {
+export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIndex = 0 }: ArtworkViewerProps) {
   const [artworkFull, setArtworkFull] = useState<ArtworkFull | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -52,7 +53,7 @@ export default function ArtworkViewer({ artwork, onClose, onEdit }: ArtworkViewe
       setLoading(true);
       const data = await callApi<ArtworkFull>(window.api.getArtworkFull, artwork.id);
       setArtworkFull(data);
-      setCurrentImageIndex(0);
+      setCurrentImageIndex(initialImageIndex);
     } catch (error) {
       console.error('Error loading artwork details:', error);
     } finally {

@@ -5,9 +5,10 @@ interface ArtworkDetailSidebarProps {
   artworkId: number;
   onClose: () => void;
   onEdit: () => void;
+  onViewArtwork?: (artwork: any, imageIndex?: number) => void;
 }
 
-export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit }: ArtworkDetailSidebarProps) {
+export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onViewArtwork }: ArtworkDetailSidebarProps) {
   const [full, setFull] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -55,6 +56,12 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit }: Art
       window.dispatchEvent(new CustomEvent('artwork-updated'));
     } catch (error) {
       console.error('Error deleting artwork:', error);
+    }
+  };
+
+  const handleImageClick = (imageIndex: number) => {
+    if (onViewArtwork && full?.artwork) {
+      onViewArtwork(full.artwork, imageIndex);
     }
   };
 
@@ -194,8 +201,12 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit }: Art
 
           {images.length > 0 ? (
             <div className="grid grid-cols-2 gap-2 mt-2">
-              {images.map((image: any) => (
-                <div key={image.id} className="aspect-square bg-gray-100 dark:bg-dark-hover rounded border dark:border-dark-border overflow-hidden">
+              {images.map((image: any, index: number) => (
+                <div
+                  key={image.id}
+                  className="aspect-square bg-gray-100 dark:bg-dark-hover rounded border dark:border-dark-border overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 dark:hover:ring-blue-400 transition-all"
+                  onClick={() => handleImageClick(index)}
+                >
                   {image.thumbnail_path ? (
                     <img
                       src={window.api.getImageUrl(image.thumbnail_path)}

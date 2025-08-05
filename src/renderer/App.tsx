@@ -13,6 +13,7 @@ function App() {
   const [editingArtwork, setEditingArtwork] = useState<any>(null);
   const [showViewer, setShowViewer] = useState(false);
   const [viewingArtwork, setViewingArtwork] = useState<any>(null);
+  const [viewerImageIndex, setViewerImageIndex] = useState(0);
   const [sidebarVisible, setSidebarVisible] = useState(true);
 
   const handleNewArtwork = () => {
@@ -25,8 +26,9 @@ function App() {
     setShowEditor(true);
   };
 
-  const handleViewArtwork = (artwork: any) => {
+  const handleViewArtwork = (artwork: any, imageIndex: number = 0) => {
     setViewingArtwork(artwork);
+    setViewerImageIndex(imageIndex);
     setShowViewer(true);
   };
 
@@ -38,6 +40,7 @@ function App() {
   const handleCloseViewer = () => {
     setShowViewer(false);
     setViewingArtwork(null);
+    setViewerImageIndex(0);
   };
 
   const handleArtworkSaved = () => {
@@ -141,6 +144,7 @@ function App() {
                 artworkId={selectedArtwork.id}
                 onClose={clearSelection}
                 onEdit={() => handleEditArtwork(selectedArtwork)}
+                onViewArtwork={handleViewArtwork}
               />
             </div>
           )}
@@ -154,6 +158,7 @@ function App() {
             artworkId={selectedArtwork.id}
             onClose={clearSelection}
             onEdit={() => handleEditArtwork(selectedArtwork)}
+            onViewArtwork={handleViewArtwork}
           />
         </div>
       )}
@@ -180,6 +185,7 @@ function App() {
             handleCloseViewer();
             handleEditArtwork(viewingArtwork);
           }}
+          initialImageIndex={viewerImageIndex}
         />
       )}
     </div>
