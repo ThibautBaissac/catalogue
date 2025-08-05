@@ -33,7 +33,7 @@ Application desktop pour artistes peintres permettant de constituer, visualiser,
 ### Installation
 ```bash
 git clone <repository>
-cd my-catalogue-app
+cd catalogue
 npm install
 ```
 
@@ -89,7 +89,7 @@ Au premier lancement, l'application crée automatiquement :
 
 ### Stockage local
 ```
-~/Library/Application Support/my-catalogue-app/
+~/Library/Application Support/catalogue/
 ├── catalogue.db           # Base SQLite
 ├── catalogue.db-wal      # Write-Ahead Log
 ├── catalogue.db-shm      # Shared Memory
