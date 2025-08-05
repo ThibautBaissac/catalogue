@@ -8,12 +8,13 @@ export interface ArtworkCreateInput {
   height?: number;
   date?: string;
   collection_id?: number | null;
+  type_id?: number | null;
 }
 
 export function createArtwork(input: ArtworkCreateInput) {
   const stmt = db.prepare(`
-    INSERT INTO artworks (reference, title, description, width, height, date, collection_id)
-    VALUES (@reference, @title, @description, @width, @height, @date, @collection_id)
+    INSERT INTO artworks (reference, title, description, width, height, date, collection_id, type_id)
+    VALUES (@reference, @title, @description, @width, @height, @date, @collection_id, @type_id)
   `);
   return stmt.run(input);
 }
@@ -112,6 +113,7 @@ export function listArtworks(filters: {
   pigments?: number[];
   papers?: number[];
   collectionId?: number;
+  typeId?: number;
   dateRange?: { from?: string; to?: string };
   limit?: number;
   offset?: number;
@@ -141,6 +143,11 @@ export function listArtworks(filters: {
   if (filters.collectionId) {
     conditions.push(`a.collection_id = ?`);
     params.push(filters.collectionId);
+  }
+
+  if (filters.typeId) {
+    conditions.push(`a.type_id = ?`);
+    params.push(filters.typeId);
   }
 
   if (filters.dateRange) {
@@ -200,5 +207,8 @@ export function getArtworkFull(id: number) {
   const collection = artwork.collection_id
     ? db.prepare(`SELECT * FROM collections WHERE id = ?`).get(artwork.collection_id)
     : null;
-  return { artwork, pigments, papers, images, collection };
+  const type = artwork.type_id
+    ? db.prepare(`SELECT * FROM types WHERE id = ?`).get(artwork.type_id)
+    : null;
+  return { artwork, pigments, papers, images, collection, type };
 }

@@ -63,6 +63,15 @@ function App() {
     }
   };
 
+  const handleFilterByType = (typeId: number) => {
+    // Toggle: if already filtered by this type, clear the filter
+    if (filters.typeId === typeId) {
+      setFilters({ ...filters, typeId: undefined });
+    } else {
+      setFilters({ ...filters, typeId });
+    }
+  };
+
   const handleFilterByPigment = (pigmentId: number) => {
     // Toggle: if already filtered by this pigment, remove it, otherwise set it
     const currentPigments = filters.pigments || [];
@@ -92,6 +101,7 @@ function App() {
         <Sidebar
           onNewArtwork={handleNewArtwork}
           onFilterByCollection={handleFilterByCollection}
+          onFilterByType={handleFilterByType}
           onFilterByPigment={handleFilterByPigment}
           onFilterByPaper={handleFilterByPaper}
         />

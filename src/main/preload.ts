@@ -13,20 +13,25 @@ contextBridge.exposeInMainWorld('api', {
   setPigments: (params: { artworkId: number; pigmentIds: number[] }) => wrap('artwork.setPigments')(params),
   setPapers: (params: { artworkId: number; paperIds: number[] }) => wrap('artwork.setPapers')(params),
 
-  listCollections: () => wrap('collection.list')(),
+  listCollections: wrap('collection.list'),
   createCollection: (data: any) => wrap('collection.create')(data),
   updateCollection: (params: any) => wrap('collection.update')(params),
   deleteCollection: (id: number) => wrap('collection.delete')({ id }),
 
-  listPigments: () => wrap('pigment.list')(),
+  listPigments: wrap('pigment.list'),
   createPigment: (data: any) => wrap('pigment.create')(data),
   updatePigment: (params: any) => wrap('pigment.update')(params),
   deletePigment: (id: number) => wrap('pigment.delete')({ id }),
 
-  listPapers: () => wrap('paper.list')(),
+  listPapers: wrap('paper.list'),
   createPaper: (data: any) => wrap('paper.create')(data),
   updatePaper: (params: any) => wrap('paper.update')(params),
   deletePaper: (id: number) => wrap('paper.delete')({ id }),
+
+  listTypes: wrap('type.list'),
+  createType: (data: any) => wrap('type.create')(data),
+  updateType: (params: any) => wrap('type.update')(params),
+  deleteType: (id: number) => wrap('type.delete')({ id }),
 
   addImages: (params: { artworkId: number; filePaths: string[] }) => wrap('artwork.addImage')(params),
 

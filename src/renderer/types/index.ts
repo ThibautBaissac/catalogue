@@ -7,6 +7,7 @@ export interface Artwork {
   height?: number;
   date?: string;
   collection_id?: number | null;
+  type_id?: number | null;
   primaryImage?: ArtworkImage | null;
 }
 
@@ -24,6 +25,12 @@ export interface Pigment {
 }
 
 export interface Paper {
+  id: number;
+  name: string;
+  description?: string;
+}
+
+export interface Type {
   id: number;
   name: string;
   description?: string;

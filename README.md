@@ -18,6 +18,8 @@ Import types:
 sqlite3 "$(node -e "console.log(require('path').join(require('os').homedir(), 'Library', 'Application Support', 'catalogue', 'catalogue.db'))")" < seed_types.sql
 ```
 
+npx tsc src/main/main.ts src/main/preload.ts --outDir dist --target ES2020 --module commonjs --moduleResolution node --esModuleInterop --allowSyntheticDefaultImports --skipLibCheck
+
 # Catalogue Raisonné - Application Desktop
 
 Application desktop pour artistes peintres permettant de constituer, visualiser, enrichir et sauvegarder un catalogue raisonné d'œuvres.

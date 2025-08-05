@@ -19,6 +19,12 @@ CREATE TABLE IF NOT EXISTS collections (
   date DATE
 );
 
+CREATE TABLE IF NOT EXISTS types (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  description TEXT
+);
+
 CREATE TABLE IF NOT EXISTS artworks (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   reference TEXT NOT NULL UNIQUE,
@@ -28,7 +34,9 @@ CREATE TABLE IF NOT EXISTS artworks (
   height REAL,
   date DATE,
   collection_id INTEGER,
-  FOREIGN KEY(collection_id) REFERENCES collections(id) ON DELETE SET NULL
+  type_id INTEGER,
+  FOREIGN KEY(collection_id) REFERENCES collections(id) ON DELETE SET NULL,
+  FOREIGN KEY(type_id) REFERENCES types(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS artwork_papers (
@@ -59,6 +67,7 @@ CREATE TABLE IF NOT EXISTS artwork_images (
 
 CREATE INDEX IF NOT EXISTS idx_artworks_reference ON artworks(reference);
 CREATE INDEX IF NOT EXISTS idx_artworks_title ON artworks(title);
+CREATE INDEX IF NOT EXISTS idx_artworks_type ON artworks(type_id);
 CREATE INDEX IF NOT EXISTS idx_collections_date ON collections(date);
 CREATE INDEX IF NOT EXISTS idx_artwork_papers_artwork ON artwork_papers(artwork_id);
 CREATE INDEX IF NOT EXISTS idx_artwork_papers_paper ON artwork_papers(paper_id);

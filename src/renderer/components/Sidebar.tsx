@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { callApi } from '../hooks/useApi';
-import { Collection, Pigment, Paper } from '../types';
+import { Collection, Pigment, Paper, Type } from '../types';
 import { useCatalogStore } from '../store/catalogStore';
 import DataManager from './DataManager';
 import logoImg from '../assets/images/logo.jpg';
@@ -8,19 +8,22 @@ import logoImg from '../assets/images/logo.jpg';
 interface SidebarProps {
   onNewArtwork: () => void;
   onFilterByCollection: (collectionId: number) => void;
+  onFilterByType: (typeId: number) => void;
   onFilterByPigment: (pigmentId: number) => void;
   onFilterByPaper: (paperId: number) => void;
 }
 
-export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterByPigment, onFilterByPaper }: SidebarProps) {
+export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterByType, onFilterByPigment, onFilterByPaper }: SidebarProps) {
   const { filters } = useCatalogStore();
   const [collections, setCollections] = useState<Collection[]>([]);
+  const [types, setTypes] = useState<Type[]>([]);
   const [pigments, setPigments] = useState<Pigment[]>([]);
   const [papers, setPapers] = useState<Paper[]>([]);
   const [collectionsOpen, setCollectionsOpen] = useState<boolean>(true);
+  const [typesOpen, setTypesOpen] = useState<boolean>(true);
   const [pigmentsOpen, setPigmentsOpen] = useState<boolean>(true);
   const [papersOpen, setPapersOpen] = useState<boolean>(true);
-  const [showDataManager, setShowDataManager] = useState<'collections' | 'pigments' | 'papers' | null>(null);
+  const [showDataManager, setShowDataManager] = useState<'collections' | 'types' | 'pigments' | 'papers' | null>(null);
 
   useEffect(() => {
     loadData();
@@ -28,14 +31,16 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
 
   const loadData = async () => {
     try {
-      const [colls, pigs, paps] = await Promise.all([
+      const [colls, typs, pigs, paps] = await Promise.all([
         callApi(window.api.listCollections),
+        callApi(window.api.listTypes),
         callApi(window.api.listPigments),
         callApi(window.api.listPapers)
       ]);
 
       // Sort alphabetically by name
       setCollections(colls.sort((a: Collection, b: Collection) => a.name.localeCompare(b.name)));
+      setTypes(typs.sort((a: Type, b: Type) => a.name.localeCompare(b.name)));
       setPigments(pigs.sort((a: Pigment, b: Pigment) => a.name.localeCompare(b.name)));
       setPapers(paps.sort((a: Paper, b: Paper) => a.name.localeCompare(b.name)));
     } catch (error) {
@@ -48,6 +53,9 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
       case 'collections':
         setCollectionsOpen(!collectionsOpen);
         break;
+      case 'types':
+        setTypesOpen(!typesOpen);
+        break;
       case 'pigments':
         setPigmentsOpen(!pigmentsOpen);
         break;
@@ -57,7 +65,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
     }
   };
 
-  const handleManageData = (type: 'collections' | 'pigments' | 'papers') => {
+  const handleManageData = (type: 'collections' | 'types' | 'pigments' | 'papers') => {
     setShowDataManager(type);
   };
 
@@ -183,6 +191,64 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                         onClick={() => onFilterByCollection(collection.id)}
                       >
                         {collection.name}
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* Types */}
+          <div className="mb-2">
+            <div
+              className="px-3 py-2.5 rounded-lg hover:bg-dark-hover cursor-pointer flex items-center justify-between font-medium text-dark-text-primary transition-colors group"
+              onClick={() => toggleSection('types')}
+            >
+              <span className="flex items-center gap-2">
+                <span>Types</span>
+                <span className="text-xs bg-green-500/20 text-green-400 px-2 py-0.5 rounded-full">
+                  {types.length}
+                </span>
+              </span>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleManageData('types');
+                  }}
+                  className="opacity-0 group-hover:opacity-100 text-xs text-green-400 hover:text-green-300 p-1 rounded transition-all"
+                  title="Gérer les types"
+                >
+                  ⚙️
+                </button>
+                <span className="text-xs text-dark-text-muted transition-transform duration-200" style={{
+                  transform: typesOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+                }}>
+                  ▼
+                </span>
+              </div>
+            </div>
+            {typesOpen && (
+              <div className="ml-6 mt-2 space-y-1">
+                {types.length === 0 ? (
+                  <div className="px-3 py-2 text-xs text-dark-text-muted italic">
+                    Aucun type
+                  </div>
+                ) : (
+                  types.map(type => {
+                    const isActive = filters.typeId === type.id;
+                    return (
+                      <div
+                        key={type.id}
+                        className={`px-3 py-2 text-sm cursor-pointer rounded-md transition-colors ${
+                          isActive
+                            ? 'bg-green-500/20 text-green-300 border border-green-500/40'
+                            : 'text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'
+                        }`}
+                        onClick={() => onFilterByType(type.id)}
+                      >
+                        {type.name}
                       </div>
                     );
                   })

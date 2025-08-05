@@ -16,6 +16,7 @@ import {
 } from '../db/collectionRepository';
 import { createPigment, listPigments, updatePigment, deletePigment } from '../db/pigmentRepository';
 import { createPaper, listPapers, updatePaper, deletePaper } from '../db/paperRepository';
+import { createType, listTypes, updateType, deleteType } from '../db/typeRepository';
 import { importImages, generateThumbnails } from '../utils/images';
 import { backup, restore } from '../utils/backup';
 
@@ -135,6 +136,20 @@ ipcMain.handle('paper.update', (_, { id, updates }) => {
 ipcMain.handle('paper.delete', (_, { id }) => {
   try { deletePaper(id); return ok(); } catch (e: any) { return fail(e.message); }
 });
+
+ipcMain.handle('type.list', () => {
+  try { return ok(listTypes()); } catch (e: any) { return fail(e.message); }
+});
+ipcMain.handle('type.create', (_, input) => {
+  try { return ok({ id: createType(input).lastInsertRowid }); } catch (e: any) { return fail(e.message); }
+});
+ipcMain.handle('type.update', (_, { id, updates }) => {
+  try { updateType(id, updates); return ok(); } catch (e: any) { return fail(e.message); }
+});
+ipcMain.handle('type.delete', (_, { id }) => {
+  try { deleteType(id); return ok(); } catch (e: any) { return fail(e.message); }
+});
+
 
 ipcMain.handle('artwork.addImage', async (_, { artworkId, filePaths }) => {
   try {
