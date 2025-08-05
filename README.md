@@ -1,3 +1,8 @@
+Import collections:
+```bash
+sqlite3 "$(node -e "console.log(require('path').join(require('os').homedir(), 'Library', 'Application Support', 'catalogue', 'catalogue.db'))")" < seed_collections.sql
+```
+
 Import pigments:
 ```bash
 sqlite3 "$(node -e "console.log(require('path').join(require('os').homedir(), 'Library', 'Application Support', 'catalogue', 'catalogue.db'))")" < seed_pigments.sql
