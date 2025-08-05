@@ -9,7 +9,7 @@ interface ArtworkListProps {
 }
 
 export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
-  const { artworks, setArtworks, selectArtwork, selectedArtwork, viewMode, setViewMode, filters, clearFilters } = useCatalogStore();
+  const { artworks, setArtworks, selectArtwork, selectedArtwork, viewMode, setViewMode, gridColumns, setGridColumns, filters, clearFilters } = useCatalogStore();
   const parentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -125,6 +125,26 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
           >
             Grille
           </button>
+
+          {viewMode === 'grid' && (
+            <div className="flex items-center gap-2 ml-4 pl-4 border-l border-dark-border">
+              <span className="text-sm text-dark-text-secondary">Colonnes:</span>
+              <input
+                type="range"
+                min="1"
+                max="10"
+                value={gridColumns}
+                onChange={(e) => setGridColumns(parseInt(e.target.value))}
+                className="w-20 h-2 bg-dark-border rounded-lg appearance-none cursor-pointer slider"
+                style={{
+                  background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((gridColumns - 1) / 9) * 100}%, #374151 ${((gridColumns - 1) / 9) * 100}%, #374151 100%)`
+                }}
+              />
+              <span className="text-sm text-dark-text-primary font-mono min-w-[1.5rem] text-center">
+                {gridColumns}
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -199,7 +219,7 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))' }}>
+        <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${gridColumns}, 1fr)` }}>
           {artworks.map((artwork) => (
             <div
               key={artwork.id}
