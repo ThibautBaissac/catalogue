@@ -1,3 +1,6 @@
+-- Clear existing pigments
+DELETE FROM pigments;
+
 -- Batch import of pigments
 INSERT OR IGNORE INTO pigments (name) VALUES
 ("Blanc de titane"),

@@ -13,7 +13,7 @@ Import papers:
 sqlite3 "$(node -e "console.log(require('path').join(require('os').homedir(), 'Library', 'Application Support', 'catalogue', 'catalogue.db'))")" < seed_papers.sql
 ```
 
-Import papers:
+Import types:
 ```bash
 sqlite3 "$(node -e "console.log(require('path').join(require('os').homedir(), 'Library', 'Application Support', 'catalogue', 'catalogue.db'))")" < seed_types.sql
 ```

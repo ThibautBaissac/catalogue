@@ -1,4 +1,7 @@
--- Batch import of pigments
+-- Clear existing types
+DELETE FROM types;
+
+-- Batch import of types
 INSERT OR IGNORE INTO types (name) VALUES
 ('Aquarelle'),
 ('Dessin'),

@@ -1,4 +1,7 @@
--- Batch import of pigments
+-- Clear existing papers
+DELETE FROM papers;
+
+-- Batch import of papers
 INSERT OR IGNORE INTO papers (name) VALUES
 ('Liant acrylique'),
 ('Mousseline'),

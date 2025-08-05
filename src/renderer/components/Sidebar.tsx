@@ -33,9 +33,11 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
         callApi(window.api.listPigments),
         callApi(window.api.listPapers)
       ]);
-      setCollections(colls);
-      setPigments(pigs);
-      setPapers(paps);
+
+      // Sort alphabetically by name
+      setCollections(colls.sort((a: Collection, b: Collection) => a.name.localeCompare(b.name)));
+      setPigments(pigs.sort((a: Pigment, b: Pigment) => a.name.localeCompare(b.name)));
+      setPapers(paps.sort((a: Paper, b: Paper) => a.name.localeCompare(b.name)));
     } catch (error) {
       console.error('Error loading sidebar data:', error);
     }

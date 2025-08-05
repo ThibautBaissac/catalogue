@@ -1,4 +1,7 @@
--- Batch import of pigments
+-- Clear existing collections
+DELETE FROM collections;
+
+-- Batch import of collections
 INSERT OR IGNORE INTO collections (name) VALUES
 ("À l'ombre du papillon"),
 ("À la dérobée, il va dénouer les ombres"),
