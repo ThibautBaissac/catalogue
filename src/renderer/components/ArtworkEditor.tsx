@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { callApi } from '../hooks/useApi';
-import { Collection, Pigment, Paper } from '../types';
+import { Collection, Pigment, Paper, Type } from '../types';
 
 interface ArtworkEditorProps {
   initial?: any;
@@ -17,10 +17,12 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
   const [height, setHeight] = useState(artworkData.height || '');
   const [date, setDate] = useState(artworkData.date || '');
   const [collectionId, setCollectionId] = useState(artworkData.collection_id || '');
+  const [typeId, setTypeId] = useState(artworkData.type_id || '');
   const [selectedPigments, setSelectedPigments] = useState<number[]>([]);
   const [selectedPapers, setSelectedPapers] = useState<number[]>([]);
 
   const [collections, setCollections] = useState<Collection[]>([]);
+  const [types, setTypes] = useState<Type[]>([]);
   const [pigments, setPigments] = useState<Pigment[]>([]);
   const [papers, setPapers] = useState<Paper[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -34,12 +36,14 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
 
   const loadData = async () => {
     try {
-      const [colls, pigs, paps] = await Promise.all([
+      const [colls, typs, pigs, paps] = await Promise.all([
         callApi<Collection[]>(window.api.listCollections),
+        callApi<Type[]>(window.api.listTypes),
         callApi<Pigment[]>(window.api.listPigments),
         callApi<Paper[]>(window.api.listPapers)
       ]);
       setCollections(colls);
+      setTypes(typs);
       setPigments(pigs);
       setPapers(paps);
 
@@ -71,7 +75,8 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
         width: width ? parseFloat(width as string) : null,
         height: height ? parseFloat(height as string) : null,
         date: date || null,
-        collection_id: collectionId || null
+        collection_id: collectionId || null,
+        type_id: typeId || null
       };
 
       let artworkId: number;
@@ -213,22 +218,42 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-dark-text-secondary mb-1">
-            Collection
-          </label>
-          <select
-            value={collectionId}
-            onChange={(e) => setCollectionId(e.target.value)}
-            className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-          >
-            <option value="">Aucune collection</option>
-            {collections.map(collection => (
-              <option key={collection.id} value={collection.id}>
-                {collection.name}
-              </option>
-            ))}
-          </select>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
+              Collection
+            </label>
+            <select
+              value={collectionId}
+              onChange={(e) => setCollectionId(e.target.value)}
+              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">Aucune collection</option>
+              {collections.map(collection => (
+                <option key={collection.id} value={collection.id}>
+                  {collection.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
+              Type
+            </label>
+            <select
+              value={typeId}
+              onChange={(e) => setTypeId(e.target.value)}
+              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">Aucun type</option>
+              {types.map(type => (
+                <option key={type.id} value={type.id}>
+                  {type.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 gap-4">

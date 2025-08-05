@@ -85,7 +85,7 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
     );
   }
 
-  const { artwork, images, pigments, papers, collection } = full;
+  const { artwork, images, pigments, papers, collection, type } = full;
 
   return (
     <aside className="w-80 h-full bg-white dark:bg-dark-card border-l dark:border-dark-border flex flex-col">
@@ -143,6 +143,13 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
             <div>
               <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Collection</span>
               <div className="text-sm text-gray-900 dark:text-dark-text-primary">{collection.name}</div>
+            </div>
+          )}
+
+          {type && (
+            <div>
+              <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Type</span>
+              <div className="text-sm text-gray-900 dark:text-dark-text-primary">{type.name}</div>
             </div>
           )}
         </div>

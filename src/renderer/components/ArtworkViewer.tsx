@@ -22,6 +22,7 @@ interface ArtworkFull {
   pigments: Array<{ id: number; name: string; description?: string }>;
   papers: Array<{ id: number; name: string; description?: string }>;
   collection?: { id: number; name: string; description?: string; date?: string } | null;
+  type?: { id: number; name: string; description?: string } | null;
 }
 
 export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIndex = 0 }: ArtworkViewerProps) {
@@ -195,6 +196,13 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
               <div className="flex items-center gap-2 text-sm">
                 <span className="text-dark-text-muted">📚</span>
                 <span className="text-dark-text-secondary">{artworkFull.collection.name}</span>
+              </div>
+            )}
+
+            {artworkFull.type && (
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-dark-text-muted">🏷️</span>
+                <span className="text-dark-text-secondary">{artworkFull.type.name}</span>
               </div>
             )}
           </div>
