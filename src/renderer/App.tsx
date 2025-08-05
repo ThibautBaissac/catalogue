@@ -101,11 +101,11 @@ function App() {
       <div className="flex-1 flex flex-col min-w-0">
         {/* Header with search and sidebar toggle */}
         <div className="bg-dark-card border-b border-dark-border shadow-sm">
-          <div className="p-3 md:p-4 flex items-center gap-3">
-            {/* Sidebar toggle button */}
+          <div className="p-3 md:p-4 flex items-start gap-3">
+            {/* Sidebar toggle button - aligned with search input */}
             <button
               onClick={toggleSidebar}
-              className="flex items-center justify-center w-8 h-8 rounded-lg bg-dark-hover hover:bg-dark-border text-dark-text-secondary hover:text-dark-text-primary transition-all duration-200"
+              className="flex items-center justify-center w-8 h-8 rounded-lg bg-dark-hover hover:bg-dark-border text-dark-text-secondary hover:text-dark-text-primary transition-all duration-200 mt-1"
               title={sidebarVisible ? "Masquer la barre latérale" : "Afficher la barre latérale"}
             >
               <svg
