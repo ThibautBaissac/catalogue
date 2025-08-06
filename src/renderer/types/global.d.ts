@@ -33,6 +33,7 @@ export interface ElectronAPI {
   deletePlace: (id: number) => Promise<any>;
 
   addImages: (params: { artworkId: number; filePaths: string[] }) => Promise<any>;
+  removeImage: (imageId: number) => Promise<any>;
 
   backupCatalog: (dest: string) => Promise<any>;
   restoreCatalog: (src: string) => Promise<any>;

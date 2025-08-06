@@ -18,7 +18,7 @@ import { createPigment, listPigments, updatePigment, deletePigment } from '../db
 import { createPaper, listPapers, updatePaper, deletePaper } from '../db/paperRepository';
 import { createType, listTypes, updateType, deleteType } from '../db/typeRepository';
 import { createPlace, listPlaces, updatePlace, deletePlace } from '../db/placeRepository';
-import { importImages, generateThumbnails } from '../utils/images';
+import { importImages, generateThumbnails, deleteImage } from '../utils/images';
 import { backup, restore } from '../utils/backup';
 
 function ok(data: any = null) {
@@ -170,6 +170,15 @@ ipcMain.handle('artwork.addImage', async (_, { artworkId, filePaths }) => {
       const img = await importImages(artworkId, fp);
       await generateThumbnails(img as any);
     }
+    return ok();
+  } catch (e: any) {
+    return fail(e.message);
+  }
+});
+
+ipcMain.handle('artwork.removeImage', (_, { imageId }) => {
+  try {
+    deleteImage(imageId);
     return ok();
   } catch (e: any) {
     return fail(e.message);

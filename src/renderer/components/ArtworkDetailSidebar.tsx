@@ -59,6 +59,21 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
     }
   };
 
+  const handleDeleteImage = async (imageId: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent clicking the image
+
+    if (!window.confirm('Êtes-vous sûr de vouloir supprimer cette image ?')) {
+      return;
+    }
+
+    try {
+      await callApi(() => window.api.removeImage(imageId));
+      load(); // Reload to show updated images
+    } catch (error) {
+      console.error('Error deleting image:', error);
+    }
+  };
+
   const handleImageClick = (imageIndex: number) => {
     if (onViewArtwork && full?.artwork) {
       onViewArtwork(full.artwork, imageIndex);
@@ -218,7 +233,7 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
               {images.map((image: any, index: number) => (
                 <div
                   key={image.id}
-                  className="aspect-square bg-gray-100 dark:bg-dark-hover rounded border dark:border-dark-border overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 dark:hover:ring-blue-400 transition-all"
+                  className="relative aspect-square bg-gray-100 dark:bg-dark-hover rounded border dark:border-dark-border overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 dark:hover:ring-blue-400 transition-all group"
                   onClick={() => handleImageClick(index)}
                 >
                   {image.thumbnail_path ? (
@@ -232,6 +247,15 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
                       Image
                     </div>
                   )}
+
+                  {/* Delete button */}
+                  <button
+                    onClick={(e) => handleDeleteImage(image.id, e)}
+                    className="absolute top-1 right-1 w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                    title="Supprimer l'image"
+                  >
+                    ✕
+                  </button>
                 </div>
               ))}
             </div>

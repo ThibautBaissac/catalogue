@@ -24,6 +24,10 @@ npx tsc src/main/main.ts src/main/preload.ts --outDir dist --target ES2020 --mod
 - `npm run package` : Package sans installeur
 - `npm run lint` : Vérification ESLint
 
+# Manually rebuild the preload script:
+tsc src/main/preload.ts --outDir dist --target E
+S2020 --module commonjs --moduleResolution node --esModuleInterop --allowS
+yntheticDefaultImports --skipLibCheck
 
 ### Package pour distribution
 ```bash

@@ -39,6 +39,7 @@ contextBridge.exposeInMainWorld('api', {
   deletePlace: (id: number) => wrap('place.delete')({ id }),
 
   addImages: (params: { artworkId: number; filePaths: string[] }) => wrap('artwork.addImage')(params),
+  removeImage: (imageId: number) => wrap('artwork.removeImage')({ imageId }),
 
   backupCatalog: (dest: string) => wrap('catalog.backup')({ destinationPath: dest }),
   restoreCatalog: (src: string) => wrap('catalog.restore')({ sourceZip: src }),

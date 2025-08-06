@@ -78,6 +78,27 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
     }
   };
 
+  const handleDeleteImage = async (imageId: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent changing the current image
+
+    if (!window.confirm('Êtes-vous sûr de vouloir supprimer cette image ?')) {
+      return;
+    }
+
+    try {
+      await callApi(() => window.api.removeImage(imageId));
+      // Reload artwork data to get updated images
+      await loadArtworkFull();
+
+      // Adjust current image index if necessary
+      if (artworkFull && currentImageIndex >= artworkFull.images.length) {
+        setCurrentImageIndex(Math.max(0, artworkFull.images.length - 1));
+      }
+    } catch (error) {
+      console.error('Error deleting image:', error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="fixed inset-0 bg-black/90 backdrop-blur-sm flex items-center justify-center z-50">
@@ -249,21 +270,34 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
               </h3>
               <div className="grid grid-cols-4 gap-2">
                 {artworkFull.images.map((image, index) => (
-                  <button
+                  <div
                     key={image.id}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`aspect-square rounded overflow-hidden border-2 transition-colors ${
-                      index === currentImageIndex
-                        ? 'border-blue-500'
-                        : 'border-dark-border hover:border-dark-border-light'
-                    }`}
+                    className="relative group"
                   >
-                    <img
-                      src={window.api.getImageUrl(image.thumbnail_path || image.file_path)}
-                      alt={`Image ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
+                    <button
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`w-full aspect-square rounded overflow-hidden border-2 transition-colors ${
+                        index === currentImageIndex
+                          ? 'border-blue-500'
+                          : 'border-dark-border hover:border-dark-border-light'
+                      }`}
+                    >
+                      <img
+                        src={window.api.getImageUrl(image.thumbnail_path || image.file_path)}
+                        alt={`Image ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </button>
+
+                    {/* Delete button */}
+                    <button
+                      onClick={(e) => handleDeleteImage(image.id, e)}
+                      className="absolute top-1 right-1 w-5 h-5 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                      title="Supprimer l'image"
+                    >
+                      ✕
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>

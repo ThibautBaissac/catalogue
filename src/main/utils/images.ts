@@ -34,3 +34,31 @@ export async function generateThumbnails({ id, filePath }: { id: number; filePat
   `);
   stmt.run(thumbPath, id);
 }
+
+export function deleteImage(imageId: number) {
+  // Get the image record to access file paths
+  const imageRecord = db.prepare(`
+    SELECT file_path, thumbnail_path FROM artwork_images WHERE id = ?
+  `).get(imageId) as { file_path: string; thumbnail_path: string | null } | undefined;
+
+  if (!imageRecord) {
+    throw new Error('Image not found');
+  }
+
+  // Delete the files if they exist
+  try {
+    if (imageRecord.file_path && fs.existsSync(imageRecord.file_path)) {
+      fs.unlinkSync(imageRecord.file_path);
+    }
+    if (imageRecord.thumbnail_path && fs.existsSync(imageRecord.thumbnail_path)) {
+      fs.unlinkSync(imageRecord.thumbnail_path);
+    }
+  } catch (error) {
+    console.warn('Error deleting image files:', error);
+    // Continue with database deletion even if file deletion fails
+  }
+
+  // Delete the database record
+  const stmt = db.prepare(`DELETE FROM artwork_images WHERE id = ?`);
+  return stmt.run(imageId);
+}
