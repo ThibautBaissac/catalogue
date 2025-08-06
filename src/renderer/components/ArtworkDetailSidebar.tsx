@@ -269,15 +269,23 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
 
       {/* Actions */}
       <div className="p-4 border-t dark:border-dark-border space-y-2">
+        {onViewArtwork && (
+          <button
+            onClick={() => onViewArtwork(artwork)}
+            className="w-full bg-green-600 dark:bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors"
+          >
+            Voir
+          </button>
+        )}
         <button
           onClick={onEdit}
-          className="w-full bg-blue-600 dark:bg-blue-700 text-white py-2 px-4 rounded hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+          className="w-full bg-blue-600 dark:bg-blue-700 text-white py-2 px-4 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
         >
           Éditer
         </button>
         <button
           onClick={handleDelete}
-          className="w-full bg-red-600 dark:bg-red-700 text-white py-2 px-4 rounded hover:bg-red-700 dark:hover:bg-red-600 transition-colors"
+          className="w-full border-2 border-red-600 dark:border-red-500 text-red-600 dark:text-red-500 py-2 px-4 rounded-lg hover:bg-red-600 hover:text-white dark:hover:bg-red-500 dark:hover:text-white transition-colors"
         >
           Supprimer
         </button>
