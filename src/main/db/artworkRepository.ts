@@ -124,8 +124,8 @@ export function listArtworks(filters: {
   let base = `SELECT DISTINCT a.* FROM artworks a`;
 
   if (filters.query) {
-    base += ` JOIN artworks_fts f ON f.rowid = a.id`;
-    conditions.push(`f MATCH ?`);
+    base += ` JOIN artworks_fts fts ON fts.rowid = a.id`;
+    conditions.push(`artworks_fts MATCH ?`);
     params.push(filters.query + '*');
   }
 
