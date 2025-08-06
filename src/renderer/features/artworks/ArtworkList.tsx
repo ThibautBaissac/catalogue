@@ -172,7 +172,7 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
                   <img
                     src={window.api.getImageUrl(artwork.primaryImage.thumbnail_path)}
                     alt={artwork.title || artwork.reference}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                     onError={(e) => {
                       // Fallback to reference text if image fails to load
                       (e.target as HTMLImageElement).style.display = 'none';
@@ -242,7 +242,7 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
                   <img
                     src={window.api.getImageUrl(artwork.primaryImage.thumbnail_path)}
                     alt={artwork.title || artwork.reference}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                     onError={(e) => {
                       // Fallback to reference text if image fails to load
                       (e.target as HTMLImageElement).style.display = 'none';

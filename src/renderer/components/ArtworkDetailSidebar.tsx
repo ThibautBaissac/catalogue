@@ -240,7 +240,7 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
                     <img
                       src={window.api.getImageUrl(image.thumbnail_path)}
                       alt="Thumbnail"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-xs text-gray-500 dark:text-dark-text-muted">

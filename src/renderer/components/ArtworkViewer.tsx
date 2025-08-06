@@ -667,7 +667,7 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
                       <img
                         src={window.api.getImageUrl(image.thumbnail_path || image.file_path)}
                         alt={`Image ${index + 1}`}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-contain"
                       />
                     </button>
 
