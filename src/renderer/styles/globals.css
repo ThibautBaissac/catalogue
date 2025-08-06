@@ -85,6 +85,7 @@ html, body {
   border-radius: 4px;
   outline: none;
   transition: all 0.2s ease;
+  background: #404040;
 }
 
 .slider::-webkit-slider-thumb {
@@ -119,4 +120,19 @@ html, body {
 .slider::-moz-range-thumb:hover {
   background: #2563eb;
   transform: scale(1.1);
+}
+
+.slider:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.slider:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+  background: #6b7280;
+}
+
+.slider:disabled::-moz-range-thumb {
+  cursor: not-allowed;
+  background: #6b7280;
 }
