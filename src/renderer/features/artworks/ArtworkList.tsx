@@ -9,7 +9,7 @@ interface ArtworkListProps {
 }
 
 export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
-  const { artworks, setArtworks, selectArtwork, selectedArtwork, viewMode, setViewMode, gridColumns, setGridColumns, filters, clearFilters } = useCatalogStore();
+  const { artworks, setArtworks, selectArtwork, selectedArtwork, viewMode, setViewMode, gridColumns, setGridColumns, filters, setFilters, clearFilters } = useCatalogStore();
   const parentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -59,7 +59,12 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
            filters.typeId ||
            filters.placeId ||
            (filters.pigments && filters.pigments.length > 0) ||
-           (filters.papers && filters.papers.length > 0);
+           (filters.papers && filters.papers.length > 0) ||
+           filters.noCollection ||
+           filters.noType ||
+           filters.noPlace ||
+           filters.noPigments ||
+           filters.noPapers;
   };
 
   if (artworks.length === 0) {

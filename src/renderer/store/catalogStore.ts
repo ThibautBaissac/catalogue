@@ -10,6 +10,11 @@ interface ArtworkFilters {
   pigments?: number[];
   papers?: number[];
   query?: string;
+  noCollection?: boolean;
+  noType?: boolean;
+  noPlace?: boolean;
+  noPigments?: boolean;
+  noPapers?: boolean;
 }
 
 interface CatalogState {

@@ -116,6 +116,11 @@ export function listArtworks(filters: {
   typeId?: number;
   placeId?: number;
   dateRange?: { from?: string; to?: string };
+  noCollection?: boolean;
+  noType?: boolean;
+  noPlace?: boolean;
+  noPigments?: boolean;
+  noPapers?: boolean;
   limit?: number;
   offset?: number;
 } = {}) {
@@ -154,6 +159,27 @@ export function listArtworks(filters: {
   if (filters.placeId) {
     conditions.push(`a.place_id = ?`);
     params.push(filters.placeId);
+  }
+
+  // Handle "no" filters
+  if (filters.noCollection) {
+    conditions.push(`a.collection_id IS NULL`);
+  }
+
+  if (filters.noType) {
+    conditions.push(`a.type_id IS NULL`);
+  }
+
+  if (filters.noPlace) {
+    conditions.push(`a.place_id IS NULL`);
+  }
+
+  if (filters.noPigments) {
+    conditions.push(`a.id NOT IN (SELECT DISTINCT artwork_id FROM artwork_pigments)`);
+  }
+
+  if (filters.noPapers) {
+    conditions.push(`a.id NOT IN (SELECT DISTINCT artwork_id FROM artwork_papers)`);
   }
 
   if (filters.dateRange) {
