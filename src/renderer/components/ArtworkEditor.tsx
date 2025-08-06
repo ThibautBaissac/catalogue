@@ -223,7 +223,7 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-dark-text-secondary mb-1">
               Collection
@@ -262,7 +262,7 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
 
           <div>
             <label className="block text-sm font-medium text-dark-text-secondary mb-1">
-              Place
+              Lieu
             </label>
             <select
               value={placeId}
