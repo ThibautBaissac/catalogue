@@ -36,6 +36,11 @@ export interface Type {
   description?: string;
 }
 
+export interface Place {
+  id: number;
+  name: string;
+}
+
 export interface ArtworkImage {
   id: number;
   artwork_id: number;

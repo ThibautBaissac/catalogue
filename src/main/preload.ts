@@ -33,6 +33,11 @@ contextBridge.exposeInMainWorld('api', {
   updateType: (params: any) => wrap('type.update')(params),
   deleteType: (id: number) => wrap('type.delete')({ id }),
 
+  listPlaces: wrap('place.list'),
+  createPlace: (data: any) => wrap('place.create')(data),
+  updatePlace: (params: any) => wrap('place.update')(params),
+  deletePlace: (id: number) => wrap('place.delete')({ id }),
+
   addImages: (params: { artworkId: number; filePaths: string[] }) => wrap('artwork.addImage')(params),
 
   backupCatalog: (dest: string) => wrap('catalog.backup')({ destinationPath: dest }),

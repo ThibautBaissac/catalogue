@@ -17,6 +17,7 @@ import {
 import { createPigment, listPigments, updatePigment, deletePigment } from '../db/pigmentRepository';
 import { createPaper, listPapers, updatePaper, deletePaper } from '../db/paperRepository';
 import { createType, listTypes, updateType, deleteType } from '../db/typeRepository';
+import { createPlace, listPlaces, updatePlace, deletePlace } from '../db/placeRepository';
 import { importImages, generateThumbnails } from '../utils/images';
 import { backup, restore } from '../utils/backup';
 
@@ -150,6 +151,18 @@ ipcMain.handle('type.delete', (_, { id }) => {
   try { deleteType(id); return ok(); } catch (e: any) { return fail(e.message); }
 });
 
+ipcMain.handle('place.list', () => {
+  try { return ok(listPlaces()); } catch (e: any) { return fail(e.message); }
+});
+ipcMain.handle('place.create', (_, input) => {
+  try { return ok({ id: createPlace(input).lastInsertRowid }); } catch (e: any) { return fail(e.message); }
+});
+ipcMain.handle('place.update', (_, { id, updates }) => {
+  try { updatePlace(id, updates); return ok(); } catch (e: any) { return fail(e.message); }
+});
+ipcMain.handle('place.delete', (_, { id }) => {
+  try { deletePlace(id); return ok(); } catch (e: any) { return fail(e.message); }
+});
 
 ipcMain.handle('artwork.addImage', async (_, { artworkId, filePaths }) => {
   try {

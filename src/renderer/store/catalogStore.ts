@@ -6,6 +6,7 @@ type ViewMode = 'list' | 'grid';
 interface ArtworkFilters {
   collectionId?: number;
   typeId?: number;
+  placeId?: number;
   pigments?: number[];
   papers?: number[];
   query?: string;

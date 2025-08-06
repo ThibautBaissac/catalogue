@@ -114,6 +114,7 @@ export function listArtworks(filters: {
   papers?: number[];
   collectionId?: number;
   typeId?: number;
+  placeId?: number;
   dateRange?: { from?: string; to?: string };
   limit?: number;
   offset?: number;
@@ -148,6 +149,11 @@ export function listArtworks(filters: {
   if (filters.typeId) {
     conditions.push(`a.type_id = ?`);
     params.push(filters.typeId);
+  }
+
+  if (filters.placeId) {
+    conditions.push(`a.place_id = ?`);
+    params.push(filters.placeId);
   }
 
   if (filters.dateRange) {
@@ -210,5 +216,8 @@ export function getArtworkFull(id: number) {
   const type = artwork.type_id
     ? db.prepare(`SELECT * FROM types WHERE id = ?`).get(artwork.type_id)
     : null;
-  return { artwork, pigments, papers, images, collection, type };
+  const place = artwork.place_id
+    ? db.prepare(`SELECT * FROM places WHERE id = ?`).get(artwork.place_id)
+    : null;
+  return { artwork, pigments, papers, images, collection, type, place };
 }

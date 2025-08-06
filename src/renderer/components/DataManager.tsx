@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { callApi } from '../hooks/useApi';
-import { Collection, Pigment, Paper, Type } from '../types';
+import { Collection, Pigment, Paper, Type, Place } from '../types';
 
 interface DataManagerProps {
-  type: 'collections' | 'pigments' | 'papers' | 'types';
+  type: 'collections' | 'pigments' | 'papers' | 'types' | 'places';
   onClose: () => void;
 }
 
@@ -18,7 +18,8 @@ export default function DataManager({ type, onClose }: DataManagerProps) {
     collections: 'Collections',
     pigments: 'Pigments',
     papers: 'Papiers',
-    types: 'Types'
+    types: 'Types',
+    places: 'Places'
   }[type];
 
   const apiMethods = {
@@ -45,6 +46,12 @@ export default function DataManager({ type, onClose }: DataManagerProps) {
       create: window.api.createType,
       update: window.api.updateType,
       delete: window.api.deleteType
+    },
+    places: {
+      list: window.api.listPlaces,
+      create: window.api.createPlace,
+      update: window.api.updatePlace,
+      delete: window.api.deletePlace
     }
   }[type];
 

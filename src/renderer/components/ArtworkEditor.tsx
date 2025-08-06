@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { callApi } from '../hooks/useApi';
-import { Collection, Pigment, Paper, Type } from '../types';
+import { Collection, Pigment, Paper, Type, Place } from '../types';
 
 interface ArtworkEditorProps {
   initial?: any;
@@ -18,11 +18,13 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
   const [date, setDate] = useState(artworkData.date || '');
   const [collectionId, setCollectionId] = useState(artworkData.collection_id || '');
   const [typeId, setTypeId] = useState(artworkData.type_id || '');
+  const [placeId, setPlaceId] = useState(artworkData.place_id || '');
   const [selectedPigments, setSelectedPigments] = useState<number[]>([]);
   const [selectedPapers, setSelectedPapers] = useState<number[]>([]);
 
   const [collections, setCollections] = useState<Collection[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
+  const [places, setPlaces] = useState<Place[]>([]);
   const [pigments, setPigments] = useState<Pigment[]>([]);
   const [papers, setPapers] = useState<Paper[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -36,16 +38,18 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
 
   const loadData = async () => {
     try {
-      const [colls, typs, pigs, paps] = await Promise.all([
+      const [colls, typs, pigs, paps, placs] = await Promise.all([
         callApi<Collection[]>(window.api.listCollections),
         callApi<Type[]>(window.api.listTypes),
         callApi<Pigment[]>(window.api.listPigments),
-        callApi<Paper[]>(window.api.listPapers)
+        callApi<Paper[]>(window.api.listPapers),
+        callApi<Place[]>(window.api.listPlaces)
       ]);
       setCollections(colls);
       setTypes(typs);
       setPigments(pigs);
       setPapers(paps);
+      setPlaces(placs);
 
       if (isEdit) {
         const full = await callApi(window.api.getArtworkFull, artworkData.id);
@@ -76,7 +80,8 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
         height: height ? parseFloat(height as string) : null,
         date: date || null,
         collection_id: collectionId || null,
-        type_id: typeId || null
+        type_id: typeId || null,
+        place_id: placeId || null
       };
 
       let artworkId: number;
@@ -236,7 +241,7 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
               ))}
             </select>
           </div>
-          
+
           <div>
             <label className="block text-sm font-medium text-dark-text-secondary mb-1">
               Type
@@ -250,6 +255,24 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
               {types.map(type => (
                 <option key={type.id} value={type.id}>
                   {type.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
+              Place
+            </label>
+            <select
+              value={placeId}
+              onChange={(e) => setPlaceId(e.target.value)}
+              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">Aucun lieu</option>
+              {places.map(place => (
+                <option key={place.id} value={place.id}>
+                  {place.name}
                 </option>
               ))}
             </select>

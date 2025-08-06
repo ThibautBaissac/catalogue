@@ -27,6 +27,11 @@ export interface ElectronAPI {
   updateType: (params: any) => Promise<any>;
   deleteType: (id: number) => Promise<any>;
 
+  listPlaces: () => Promise<any>;
+  createPlace: (data: any) => Promise<any>;
+  updatePlace: (params: any) => Promise<any>;
+  deletePlace: (id: number) => Promise<any>;
+
   addImages: (params: { artworkId: number; filePaths: string[] }) => Promise<any>;
 
   backupCatalog: (dest: string) => Promise<any>;

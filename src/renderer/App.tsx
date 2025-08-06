@@ -94,6 +94,15 @@ function App() {
     }
   };
 
+  const handleFilterByPlace = (placeId: number) => {
+    // Toggle: if already filtered by this place, clear the filter
+    if (filters.placeId === placeId) {
+      setFilters({ ...filters, placeId: undefined });
+    } else {
+      setFilters({ ...filters, placeId });
+    }
+  };
+
   return (
     <div className="flex h-screen bg-dark-bg text-dark-text-primary">
       {/* Sidebar - Always visible with toggle */}
@@ -104,6 +113,7 @@ function App() {
           onFilterByType={handleFilterByType}
           onFilterByPigment={handleFilterByPigment}
           onFilterByPaper={handleFilterByPaper}
+          onFilterByPlace={handleFilterByPlace}
         />
       </div>
 
