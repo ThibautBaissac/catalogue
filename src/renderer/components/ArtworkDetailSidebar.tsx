@@ -36,7 +36,12 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
       const paths = files.map((f: any) => f.path).filter(Boolean);
 
       if (paths.length > 0) {
+        const wasEmpty = (full?.images?.length || 0) === 0;
         await callApi(window.api.addImages, { artworkId: full.artwork.id, filePaths: paths });
+        // If it was the first image, the backend sets it as preview: refresh list
+        if (wasEmpty) {
+          window.dispatchEvent(new CustomEvent('artwork-updated'));
+        }
         load(); // Reload to show new images
       }
     } catch (error) {
