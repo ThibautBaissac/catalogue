@@ -128,6 +128,13 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
             </div>
           )}
 
+          {artwork.owner && (
+            <div>
+              <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Propriétaire</span>
+              <div className="text-sm text-gray-900 dark:text-dark-text-primary">{artwork.owner}</div>
+            </div>
+          )}
+
           {artwork.description && (
             <div>
               <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Description</span>

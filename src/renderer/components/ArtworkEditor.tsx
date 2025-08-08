@@ -13,6 +13,7 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
   const [reference, setReference] = useState(artworkData.reference || '');
   const [title, setTitle] = useState(artworkData.title || '');
   const [description, setDescription] = useState(artworkData.description || '');
+  const [owner, setOwner] = useState(artworkData.owner || '');
   const [width, setWidth] = useState(artworkData.width || '');
   const [height, setHeight] = useState(artworkData.height || '');
   const [date, setDate] = useState(artworkData.date || '');
@@ -76,6 +77,7 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
         reference: reference.trim(),
         title: title.trim() || null,
         description: description.trim() || null,
+  owner: owner.trim() || null,
         width: width ? parseFloat(width as string) : null,
         height: height ? parseFloat(height as string) : null,
         date: date || null,
@@ -172,6 +174,18 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
             />
           </div>
         </div>
+
+          <div>
+            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
+              Propriétaire
+            </label>
+            <input
+              type="text"
+              value={owner}
+              onChange={(e) => setOwner(e.target.value)}
+              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
 
         <div>
           <label className="block text-sm font-medium text-dark-text-secondary mb-1">

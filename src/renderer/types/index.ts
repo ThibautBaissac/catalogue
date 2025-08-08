@@ -3,11 +3,13 @@ export interface Artwork {
   reference: string;
   title?: string;
   description?: string;
+  owner?: string | null;
   width?: number;
   height?: number;
   date?: string;
   collection_id?: number | null;
   type_id?: number | null;
+  place_id?: number | null;
   primaryImage?: ArtworkImage | null;
 }
 

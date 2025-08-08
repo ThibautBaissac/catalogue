@@ -579,6 +579,13 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
           <div className="mb-6 space-y-3">
             <h3 className="text-sm font-semibold text-dark-text-primary">Détails</h3>
 
+            {artwork.owner && (
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-dark-text-muted">👤</span>
+                <span className="text-dark-text-secondary">{artwork.owner}</span>
+              </div>
+            )}
+
             {artwork.width && artwork.height && (
               <div className="flex items-center gap-2 text-sm">
                 <span className="text-dark-text-muted">📏</span>
@@ -608,6 +615,7 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
                 <span className="text-dark-text-secondary">{artworkFull.type.name}</span>
               </div>
             )}
+
           </div>
 
           {/* Pigments */}

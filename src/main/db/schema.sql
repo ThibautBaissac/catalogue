@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS artworks (
   reference TEXT NOT NULL UNIQUE,
   title TEXT,
   description TEXT,
+  owner TEXT,
   width REAL,
   height REAL,
   date DATE,

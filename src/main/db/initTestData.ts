@@ -54,8 +54,8 @@ export function initializeTestData() {
     const existingArtworks = db.prepare('SELECT COUNT(*) as count FROM artworks').get() as any;
     if (existingArtworks.count === 0) {
       const insertArtwork = db.prepare(`
-        INSERT INTO artworks (reference, title, description, width, height, date, collection_id)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO artworks (reference, title, description, owner, width, height, date, collection_id, type_id, place_id)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `);
 
       // Get collection IDs
@@ -65,11 +65,11 @@ export function initializeTestData() {
         return acc;
       }, {});
 
-      insertArtwork.run('PAY001', 'Coucher de soleil sur la Loire', 'Aquarelle réalisée lors d\'une sortie en bord de Loire', 30, 40, '2024-02-15', collections['Série Paysages']);
-      insertArtwork.run('PAY002', 'Forêt d\'automne', 'Paysage forestier aux couleurs chaudes', 25, 35, '2024-03-08', collections['Série Paysages']);
-      insertArtwork.run('POR001', 'Portrait de Marie', 'Portrait d\'une amie, technique mixte', 20, 30, '2024-04-12', collections['Portraits']);
-      insertArtwork.run('ABS001', 'Mouvement bleu', 'Composition abstraite en nuances de bleu', 40, 50, '2024-07-01', collections['Abstractions']);
-      insertArtwork.run('ABS002', 'Formes en dialogue', 'Interaction de formes géométriques', 35, 45, '2024-07-15', collections['Abstractions']);
+  insertArtwork.run('PAY001', 'Coucher de soleil sur la Loire', 'Aquarelle réalisée lors d\'une sortie en bord de Loire', null, 30, 40, '2024-02-15', collections['Série Paysages'], null, null);
+  insertArtwork.run('PAY002', 'Forêt d\'automne', 'Paysage forestier aux couleurs chaudes', null, 25, 35, '2024-03-08', collections['Série Paysages'], null, null);
+  insertArtwork.run('POR001', 'Portrait de Marie', 'Portrait d\'une amie, technique mixte', null, 20, 30, '2024-04-12', collections['Portraits'], null, null);
+  insertArtwork.run('ABS001', 'Mouvement bleu', 'Composition abstraite en nuances de bleu', null, 40, 50, '2024-07-01', collections['Abstractions'], null, null);
+  insertArtwork.run('ABS002', 'Formes en dialogue', 'Interaction de formes géométriques', null, 35, 45, '2024-07-15', collections['Abstractions'], null, null);
     }
 
     console.log('Test data initialized successfully');

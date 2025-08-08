@@ -4,17 +4,19 @@ export interface ArtworkCreateInput {
   reference: string;
   title?: string;
   description?: string;
+  owner?: string | null;
   width?: number;
   height?: number;
   date?: string;
   collection_id?: number | null;
   type_id?: number | null;
+  place_id?: number | null;
 }
 
 export function createArtwork(input: ArtworkCreateInput) {
   const stmt = db.prepare(`
-    INSERT INTO artworks (reference, title, description, width, height, date, collection_id, type_id)
-    VALUES (@reference, @title, @description, @width, @height, @date, @collection_id, @type_id)
+    INSERT INTO artworks (reference, title, description, owner, width, height, date, collection_id, type_id, place_id)
+    VALUES (@reference, @title, @description, @owner, @width, @height, @date, @collection_id, @type_id, @place_id)
   `);
   return stmt.run(input);
 }
