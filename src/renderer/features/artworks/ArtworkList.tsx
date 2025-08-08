@@ -97,7 +97,7 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
 
   return (
     <div ref={parentRef} className="space-y-4">
-  <div className="flex justify-between items-center sticky top-0 z-20 bg-dark-bg border-b border-dark-border py-2">
+  <div className="flex justify-between items-center sticky top-0 z-20 bg-dark-bg border-b border-dark-border px-4 py-2">
         <div className="flex items-center gap-3">
           <h2 className="text-xl font-semibold text-dark-text-primary">
             Œuvres ({artworks.length})
@@ -227,7 +227,7 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
           ))}
         </div>
       ) : (
-        <div className="grid gap-4" style={{ gridTemplateColumns: `repeat(${gridColumns}, 1fr)` }}>
+        <div className="grid gap-4 px-4" style={{ gridTemplateColumns: `repeat(${gridColumns}, 1fr)` }}>
           {artworks.map((artwork) => (
             <div
               key={artwork.id}
