@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS places (
 
 CREATE TABLE IF NOT EXISTS artworks (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  reference TEXT NOT NULL UNIQUE,
+  reference TEXT NOT NULL,
   title TEXT,
   description TEXT,
   owner TEXT,
