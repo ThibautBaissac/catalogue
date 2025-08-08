@@ -10,6 +10,7 @@ contextBridge.exposeInMainWorld('api', {
   deleteArtwork: (id: number) => wrap('artwork.delete')({ id }),
   listArtworks: (filters: any) => wrap('artwork.list')(filters),
   getArtworkFull: (id: number) => wrap('artwork.getFull')({ id }),
+  listYears: wrap('artwork.listYears'),
   setPigments: (params: { artworkId: number; pigmentIds: number[] }) => wrap('artwork.setPigments')(params),
   setPapers: (params: { artworkId: number; paperIds: number[] }) => wrap('artwork.setPapers')(params),
 

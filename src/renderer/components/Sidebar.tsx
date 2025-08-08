@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { callApi } from '../hooks/useApi';
 import { Collection, Pigment, Paper, Type, Place } from '../types';
 import { useCatalogStore } from '../store/catalogStore';
@@ -15,17 +15,19 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterByType, onFilterByPlace, onFilterByPigment, onFilterByPaper }: SidebarProps) {
-  const { filters } = useCatalogStore();
+  const { filters, setFilters } = useCatalogStore();
   const [collections, setCollections] = useState<Collection[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
   const [places, setPlaces] = useState<Place[]>([]);
   const [pigments, setPigments] = useState<Pigment[]>([]);
   const [papers, setPapers] = useState<Paper[]>([]);
-  const [collectionsOpen, setCollectionsOpen] = useState<boolean>(true);
-  const [typesOpen, setTypesOpen] = useState<boolean>(true);
-  const [placesOpen, setPlacesOpen] = useState<boolean>(true);
-  const [pigmentsOpen, setPigmentsOpen] = useState<boolean>(true);
-  const [papersOpen, setPapersOpen] = useState<boolean>(true);
+  const [years, setYears] = useState<{ year: number; count: number }[]>([]);
+  const [collectionsOpen, setCollectionsOpen] = useState<boolean>(false);
+  const [typesOpen, setTypesOpen] = useState<boolean>(false);
+  const [placesOpen, setPlacesOpen] = useState<boolean>(false);
+  const [pigmentsOpen, setPigmentsOpen] = useState<boolean>(false);
+  const [papersOpen, setPapersOpen] = useState<boolean>(false);
+  const [yearsOpen, setYearsOpen] = useState<boolean>(false);
   const [showDataManager, setShowDataManager] = useState<'collections' | 'types' | 'pigments' | 'papers' | 'places' | null>(null);
 
   useEffect(() => {
@@ -34,12 +36,13 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
 
   const loadData = async () => {
     try {
-      const [colls, typs, pigs, paps, placs] = await Promise.all([
+      const [colls, typs, pigs, paps, placs, yrs] = await Promise.all([
         callApi(window.api.listCollections),
         callApi(window.api.listTypes),
         callApi(window.api.listPigments),
         callApi(window.api.listPapers),
-        callApi(window.api.listPlaces)
+        callApi(window.api.listPlaces),
+        callApi(window.api.listYears)
       ]);
 
       // Sort alphabetically by name
@@ -48,6 +51,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
       setPlaces(placs.sort((a: Place, b: Place) => a.name.localeCompare(b.name)));
       setPigments(pigs.sort((a: Pigment, b: Pigment) => a.name.localeCompare(b.name)));
       setPapers(paps.sort((a: Paper, b: Paper) => a.name.localeCompare(b.name)));
+      setYears(yrs);
     } catch (error) {
       console.error('Error loading sidebar data:', error);
     }
@@ -70,11 +74,24 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
       case 'places':
         setPlacesOpen(!placesOpen);
         break;
+      case 'years':
+        setYearsOpen(!yearsOpen);
+        break;
     }
   };
 
   const handleManageData = (type: 'collections' | 'types' | 'pigments' | 'papers' | 'places') => {
     setShowDataManager(type);
+  };
+
+  const toggleYear = (year: number) => {
+    const current = filters.years || [];
+    if (current.includes(year)) {
+      const next = current.filter(y => y !== year);
+      setFilters({ ...filters, years: next.length ? next : undefined });
+    } else {
+      setFilters({ ...filters, years: [...current, year] });
+    }
   };
 
   const handleCloseDataManager = () => {
@@ -109,6 +126,15 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
       alert('Erreur lors de la restauration');
     }
   };
+
+  // Build a continuous range of years from min to max, excluding years with 0 artworks
+  const yearsRange = useMemo(() => {
+    if (!years || years.length === 0) return [] as { year: number; count: number }[];
+    
+    // Only include years that actually have artworks (count > 0)
+    const filteredYears = years.filter(y => y.count > 0);
+    return filteredYears;
+  }, [years]);
 
   return (
     <>
@@ -149,6 +175,50 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
 
         {/* Navigation sections */}
         <nav className="flex-1 overflow-auto p-2 space-y-1 custom-scrollbar">
+          {/* Years */}
+          <div className="mb-2">
+            <div
+              className="px-3 py-2.5 rounded-lg hover:bg-dark-hover cursor-pointer flex items-center justify-between font-medium text-dark-text-primary transition-colors group"
+              onClick={() => toggleSection('years')}
+            >
+              <span className="flex items-center gap-2">
+                <span>Années</span>
+                <span className="text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full">
+                  {yearsRange.length}
+                </span>
+              </span>
+              <span className="text-xs text-dark-text-muted transition-transform duration-200" style={{
+                transform: yearsOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+              }}>
+                ▼
+              </span>
+            </div>
+            {yearsOpen && (
+              <div className="ml-6 mt-2 space-y-1">
+                {yearsRange.length === 0 ? (
+                  <div className="px-3 py-2 text-xs text-dark-text-muted italic">Aucune année</div>
+                ) : (
+                  yearsRange.map(({ year, count }) => {
+                    const active = filters.years?.includes(year);
+                    return (
+                      <div
+                        key={year}
+                        className={`px-3 py-2 text-sm cursor-pointer rounded-md transition-colors flex items-center justify-between ${
+                          active
+                            ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
+                            : 'text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'
+                        }`}
+                        onClick={() => toggleYear(year)}
+                      >
+                        <span>{year}</span>
+                        <span className="text-xs opacity-60">{count}</span>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            )}
+          </div>
           {/* Collections */}
           <div className="mb-2">
             <div

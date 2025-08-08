@@ -58,6 +58,7 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
     return filters.collectionId ||
            filters.typeId ||
            filters.placeId ||
+           (filters.years && filters.years.length > 0) ||
            (filters.pigments && filters.pigments.length > 0) ||
            (filters.papers && filters.papers.length > 0) ||
            filters.noCollection ||

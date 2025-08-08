@@ -4,6 +4,7 @@ export interface ElectronAPI {
   deleteArtwork: (id: number) => Promise<any>;
   listArtworks: (filters: any) => Promise<any>;
   getArtworkFull: (id: number) => Promise<any>;
+  listYears: () => Promise<{ year: number; count: number }[]>;
   setPigments: (params: { artworkId: number; pigmentIds: number[] }) => Promise<any>;
   setPapers: (params: { artworkId: number; paperIds: number[] }) => Promise<any>;
 

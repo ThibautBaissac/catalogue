@@ -10,6 +10,7 @@ interface ArtworkFilters {
   pigments?: number[];
   papers?: number[];
   query?: string;
+  years?: number[]; // selected years filter
   noCollection?: boolean;
   noType?: boolean;
   noPlace?: boolean;

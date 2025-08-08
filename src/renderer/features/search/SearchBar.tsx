@@ -4,8 +4,6 @@ import { useCatalogStore } from '../../store/catalogStore';
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');
-  const [dateFrom, setDateFrom] = useState('');
-  const [dateTo, setDateTo] = useState('');
   const [showFilters, setShowFilters] = useState(false);
 
   const { setArtworks, filters, setFilters } = useCatalogStore();
@@ -15,18 +13,14 @@ export default function SearchBar() {
       doSearch();
     }, 300);
     return () => clearTimeout(timeout);
-  }, [query, dateFrom, dateTo]);
+  }, [query]);
 
   const doSearch = async () => {
     try {
       const filters: any = {};
 
       if (query.trim()) filters.query = query.trim();
-      if (dateFrom || dateTo) {
-        filters.dateRange = {};
-        if (dateFrom) filters.dateRange.from = dateFrom;
-        if (dateTo) filters.dateRange.to = dateTo;
-      }
+  // date filters removed; year-based filtering is handled via sidebar
 
       const results = await callApi(window.api.listArtworks, filters);
       setArtworks(results);
@@ -37,12 +31,10 @@ export default function SearchBar() {
 
   const clearFilters = () => {
     setQuery('');
-    setDateFrom('');
-    setDateTo('');
     setFilters({});
   };
 
-  const hasActiveFilters = query || dateFrom || dateTo ||
+  const hasActiveFilters = query ||
     filters.noCollection || filters.noType || filters.noPlace ||
     filters.noPigments || filters.noPapers;
 
@@ -72,8 +64,7 @@ export default function SearchBar() {
         >
           Filtres {hasActiveFilters && (
             <span className="ml-1 bg-blue-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-              {(dateFrom ? 1 : 0) + (dateTo ? 1 : 0) +
-               (filters.noCollection ? 1 : 0) + (filters.noType ? 1 : 0) +
+              {(filters.noCollection ? 1 : 0) + (filters.noType ? 1 : 0) +
                (filters.noPlace ? 1 : 0) + (filters.noPigments ? 1 : 0) +
                (filters.noPapers ? 1 : 0)}
             </span>
@@ -90,36 +81,8 @@ export default function SearchBar() {
         )}
       </div>
 
-      {showFilters && (
+  {showFilters && (
         <div className="bg-dark-card border border-dark-border rounded-lg p-4 shadow-xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            {/* Date From Filter */}
-            <div>
-              <label className="block text-sm font-medium text-dark-text-primary mb-2">
-                Date de début
-              </label>
-              <input
-                type="date"
-                value={dateFrom}
-                onChange={(e) => setDateFrom(e.target.value)}
-                className="w-full bg-dark-bg border border-dark-border rounded-md px-3 py-2 text-sm text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-              />
-            </div>
-
-            {/* Date To Filter */}
-            <div>
-              <label className="block text-sm font-medium text-dark-text-primary mb-2">
-                Date de fin
-              </label>
-              <input
-                type="date"
-                value={dateTo}
-                onChange={(e) => setDateTo(e.target.value)}
-                className="w-full bg-dark-bg border border-dark-border rounded-md px-3 py-2 text-sm text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-              />
-            </div>
-          </div>
-
           {/* "No" filters section */}
           <div>
             <label className="block text-sm font-medium text-dark-text-primary mb-3">
@@ -182,32 +145,8 @@ export default function SearchBar() {
       )}
 
       {/* Active filters display */}
-      {hasActiveFilters && (
+  {hasActiveFilters && (
         <div className="flex flex-wrap gap-2">
-          {dateFrom && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full border border-green-500/30">
-              📅 À partir de {dateFrom}
-              <button
-                onClick={() => setDateFrom('')}
-                className="text-green-400 hover:text-green-300 ml-1 w-3 h-3 flex items-center justify-center rounded-full hover:bg-green-500/20 transition-colors"
-              >
-                ×
-              </button>
-            </span>
-          )}
-
-          {dateTo && (
-            <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-500/20 text-purple-400 text-xs rounded-full border border-purple-500/30">
-              📅 Jusqu'à {dateTo}
-              <button
-                onClick={() => setDateTo('')}
-                className="text-purple-400 hover:text-purple-300 ml-1 w-3 h-3 flex items-center justify-center rounded-full hover:bg-purple-500/20 transition-colors"
-              >
-                ×
-              </button>
-            </span>
-          )}
-
           {filters.noCollection && (
             <span className="inline-flex items-center gap-1 px-2 py-1 bg-orange-500/20 text-orange-400 text-xs rounded-full border border-orange-500/30">
               � Sans collection

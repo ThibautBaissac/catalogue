@@ -31,6 +31,17 @@
 				"$tsc"
 			],
 			"group": "build"
+		},
+		{
+			"label": "npm: build:main",
+			"type": "shell",
+			"command": "npm",
+			"args": [
+				"run",
+				"build:main"
+			],
+			"isBackground": false,
+			"group": "build"
 		}
 	]
 }

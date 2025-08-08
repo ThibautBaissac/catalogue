@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "npm run build:main && concurrently \"vite\" \"NODE_ENV=development electron .\"",
     "build": "npm run build:main && vite build && electron-builder",
-    "build:main": "tsc src/main/**/*.ts --outDir dist --target ES2020 --module commonjs --moduleResolution node --esModuleInterop --allowSyntheticDefaultImports --skipLibCheck && cp src/main/db/schema.sql dist/db/",
+    "build:main": "tsc src/main/*.ts src/main/**/*.ts --outDir dist --target ES2020 --module commonjs --moduleResolution node --esModuleInterop --allowSyntheticDefaultImports --skipLibCheck && cp src/main/db/schema.sql dist/db/",
     "package": "electron-builder --dir",
     "lint": "eslint . --ext .ts,.tsx",
     "rebuild": "npx @electron/rebuild",

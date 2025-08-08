@@ -118,6 +118,7 @@ export function listArtworks(filters: {
   typeId?: number;
   placeId?: number;
   dateRange?: { from?: string; to?: string };
+  years?: number[];
   noCollection?: boolean;
   noType?: boolean;
   noPlace?: boolean;
@@ -129,6 +130,17 @@ export function listArtworks(filters: {
   const conditions: string[] = [];
   const params: any[] = [];
   let base = `SELECT DISTINCT a.* FROM artworks a`;
+
+  // Robust SQL expression to extract a 4-digit year from various date formats
+  // Supports: ISO dates (YYYY-MM-DD), bracketed years like [2007], and strings like 10.1995
+  const yearExpr = `CAST(COALESCE(
+      NULLIF(strftime('%Y', a.date), ''),
+      CASE 
+        WHEN a.date GLOB '*[0-9][0-9][0-9][0-9]' THEN substr(a.date, length(a.date) - 3, 4)
+        WHEN instr(a.date, '19') > 0 AND substr(a.date, instr(a.date, '19'), 4) GLOB '[0-9][0-9][0-9][0-9]' THEN substr(a.date, instr(a.date, '19'), 4)
+        WHEN instr(a.date, '20') > 0 AND substr(a.date, instr(a.date, '20'), 4) GLOB '[0-9][0-9][0-9][0-9]' THEN substr(a.date, instr(a.date, '20'), 4)
+      END
+    ) AS INTEGER)`;
 
   if (filters.query) {
     base += ` JOIN artworks_fts fts ON fts.rowid = a.id`;
@@ -195,9 +207,17 @@ export function listArtworks(filters: {
     }
   }
 
+  if (filters.years && filters.years.length) {
+    // Match artworks whose extracted year is in the selected list (ignore invalid years outside 1000-2100)
+    conditions.push(
+      `${yearExpr} BETWEEN 1000 AND 2100 AND ${yearExpr} IN (${filters.years.map(() => '?').join(',')})`
+    );
+    params.push(...filters.years);
+  }
+
   let sql = base;
   if (conditions.length) sql += ' WHERE ' + conditions.join(' AND ');
-  sql += ' ORDER BY a.date DESC NULLS LAST, a.title COLLATE NOCASE';
+  sql += ' ORDER BY CAST(a.reference AS INTEGER) DESC NULLS LAST, a.title COLLATE NOCASE';
 
   if (filters.limit) {
     sql += ' LIMIT ' + filters.limit;
@@ -206,7 +226,7 @@ export function listArtworks(filters: {
 
   const artworks = db.prepare(sql).all(...params) as any[];
 
-  // For each artwork, get the first/primary image
+  // For each artwork, get the first image
   const artworksWithImages = artworks.map(artwork => {
     const primaryImage = db.prepare(`
       SELECT * FROM artwork_images
@@ -222,6 +242,31 @@ export function listArtworks(filters: {
   });
 
   return artworksWithImages;
+}
+
+export function listArtworkYears(): { year: number; count: number }[] {
+  // Use the same robust year extraction logic as in listArtworks
+  const sql = `
+    WITH yrs AS (
+      SELECT CAST(COALESCE(
+        NULLIF(strftime('%Y', date), ''),
+        CASE 
+          WHEN date GLOB '*[0-9][0-9][0-9][0-9]' THEN substr(date, length(date) - 3, 4)
+          WHEN instr(date, '19') > 0 AND substr(date, instr(date, '19'), 4) GLOB '[0-9][0-9][0-9][0-9]' THEN substr(date, instr(date, '19'), 4)
+          WHEN instr(date, '20') > 0 AND substr(date, instr(date, '20'), 4) GLOB '[0-9][0-9][0-9][0-9]' THEN substr(date, instr(date, '20'), 4)
+        END
+      ) AS INTEGER) AS year
+      FROM artworks
+      WHERE date IS NOT NULL AND TRIM(date) != ''
+    )
+    SELECT year, COUNT(*) as count
+    FROM yrs
+    WHERE year BETWEEN 1000 AND 2100
+    GROUP BY year
+    ORDER BY year DESC
+  `;
+  const rows = db.prepare(sql).all() as { year: number; count: number }[];
+  return rows;
 }
 
 export function getArtworkFull(id: number) {

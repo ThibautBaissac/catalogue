@@ -7,6 +7,7 @@ import {
   getArtworkFull,
   setPigmentsForArtwork,
   setPapersForArtwork,
+  listArtworkYears,
 } from '../db/artworkRepository';
 import {
   createCollection,
@@ -70,6 +71,15 @@ ipcMain.handle('artwork.getFull', (event, { id }) => {
     const full = getArtworkFull(id);
     if (!full) return fail('Œuvre introuvable');
     return ok(full);
+  } catch (e: any) {
+    return fail(e.message);
+  }
+});
+
+ipcMain.handle('artwork.listYears', () => {
+  try {
+    const years = listArtworkYears();
+    return ok(years);
   } catch (e: any) {
     return fail(e.message);
   }
