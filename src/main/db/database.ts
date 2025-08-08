@@ -1,16 +1,11 @@
 import Database from 'better-sqlite3';
-import { app } from 'electron';
 import { join } from 'path';
 import fs from 'fs';
 import { initializeTestData } from './initTestData';
+import { getDatabasePath } from '../utils/paths';
 
-// Use a stable application data folder so the DB path is consistent in dev/prod
-const appDataBase = app.getPath('appData');
-const appDataDir = join(appDataBase, 'catalogue');
-if (!fs.existsSync(appDataDir)) {
-  fs.mkdirSync(appDataDir, { recursive: true });
-}
-const dbPath = join(appDataDir, 'catalogue.db');
+// DB path centralized
+const dbPath = getDatabasePath();
 const db = new Database(dbPath);
 
 // Active WAL pour meilleure sécurité et résilience

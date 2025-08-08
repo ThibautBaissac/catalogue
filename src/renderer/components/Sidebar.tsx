@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { callApi } from '../hooks/useApi';
-import { Collection, Pigment, Paper, Type, Place } from '../types';
+import { Collection, Pigment, Paper, Type, Place } from '@shared/types';
 import { useCatalogStore } from '../store/catalogStore';
 import DataManager from './DataManager';
 import logoImg from '../assets/images/logo.jpg';

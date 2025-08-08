@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { Artwork } from '../types';
+import { Artwork } from '@shared/types';
 
 type ViewMode = 'list' | 'grid';
 

@@ -1,7 +1,5 @@
 import { app, BrowserWindow, protocol } from 'electron';
 import { join } from 'path';
-import { readFile } from 'fs/promises';
-import { extname } from 'path';
 import './ipc/handlers'; // Enregistre tous les handlers IPC
 
 let mainWindow: BrowserWindow | null;

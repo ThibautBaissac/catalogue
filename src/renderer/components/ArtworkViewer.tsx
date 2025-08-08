@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { callApi } from '../hooks/useApi';
-import { Artwork } from '../types';
+import { Artwork } from '@shared/types';
 
 interface ArtworkViewerProps {
   artwork: Artwork;

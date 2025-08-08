@@ -1,45 +1,46 @@
+import type { Artwork, ArtworkFilters, ArtworkFull, Collection, Pigment, Paper, Type, Place } from '@shared/types';
+
 export interface ElectronAPI {
-  createArtwork: (data: any) => Promise<any>;
-  updateArtwork: (params: { id: number; updates: any }) => Promise<any>;
-  deleteArtwork: (id: number) => Promise<any>;
-  listArtworks: (filters: any) => Promise<any>;
-  getArtworkFull: (id: number) => Promise<any>;
+  createArtwork: (data: Partial<Artwork>) => Promise<{ id: number }>;
+  updateArtwork: (params: { id: number; updates: Partial<Artwork> }) => Promise<void>;
+  deleteArtwork: (id: number) => Promise<void>;
+  listArtworks: (filters: ArtworkFilters) => Promise<Artwork[]>;
+  getArtworkFull: (id: number) => Promise<ArtworkFull>;
   listYears: () => Promise<{ year: number; count: number }[]>;
-  setPigments: (params: { artworkId: number; pigmentIds: number[] }) => Promise<any>;
-  setPapers: (params: { artworkId: number; paperIds: number[] }) => Promise<any>;
+  setPigments: (params: { artworkId: number; pigmentIds: number[] }) => Promise<void>;
+  setPapers: (params: { artworkId: number; paperIds: number[] }) => Promise<void>;
 
-  listCollections: () => Promise<any>;
-  createCollection: (data: any) => Promise<any>;
-  updateCollection: (params: any) => Promise<any>;
-  deleteCollection: (id: number) => Promise<any>;
+  listCollections: () => Promise<Collection[]>;
+  createCollection: (data: Partial<Collection>) => Promise<{ id: number }>;
+  updateCollection: (params: { id: number; updates: Partial<Collection> }) => Promise<void>;
+  deleteCollection: (id: number) => Promise<void>;
 
-  listPigments: () => Promise<any>;
-  createPigment: (data: any) => Promise<any>;
-  updatePigment: (params: any) => Promise<any>;
-  deletePigment: (id: number) => Promise<any>;
+  listPigments: () => Promise<Pigment[]>;
+  createPigment: (data: Partial<Pigment>) => Promise<{ id: number }>;
+  updatePigment: (params: { id: number; updates: Partial<Pigment> }) => Promise<void>;
+  deletePigment: (id: number) => Promise<void>;
 
-  listPapers: () => Promise<any>;
-  createPaper: (data: any) => Promise<any>;
-  updatePaper: (params: any) => Promise<any>;
-  deletePaper: (id: number) => Promise<any>;
+  listPapers: () => Promise<Paper[]>;
+  createPaper: (data: Partial<Paper>) => Promise<{ id: number }>;
+  updatePaper: (params: { id: number; updates: Partial<Paper> }) => Promise<void>;
+  deletePaper: (id: number) => Promise<void>;
 
-  listTypes: () => Promise<any>;
-  createType: (data: any) => Promise<any>;
-  updateType: (params: any) => Promise<any>;
-  deleteType: (id: number) => Promise<any>;
+  listTypes: () => Promise<Type[]>;
+  createType: (data: Partial<Type>) => Promise<{ id: number }>;
+  updateType: (params: { id: number; updates: Partial<Type> }) => Promise<void>;
+  deleteType: (id: number) => Promise<void>;
 
-  listPlaces: () => Promise<any>;
-  createPlace: (data: any) => Promise<any>;
-  updatePlace: (params: any) => Promise<any>;
-  deletePlace: (id: number) => Promise<any>;
+  listPlaces: () => Promise<Place[]>;
+  createPlace: (data: Partial<Place>) => Promise<{ id: number }>;
+  updatePlace: (params: { id: number; updates: Partial<Place> }) => Promise<void>;
+  deletePlace: (id: number) => Promise<void>;
 
-  addImages: (params: { artworkId: number; filePaths: string[] }) => Promise<any>;
-  removeImage: (imageId: number) => Promise<any>;
-  setPreviewImage: (params: { artworkId: number; imageId: number | null }) => Promise<any>;
-  setPreviewImage: (params: { artworkId: number; imageId: number | null }) => Promise<any>;
+  addImages: (params: { artworkId: number; filePaths: string[] }) => Promise<void>;
+  removeImage: (imageId: number) => Promise<void>;
+  setPreviewImage: (params: { artworkId: number; imageId: number | null }) => Promise<void>;
 
-  backupCatalog: (dest: string) => Promise<any>;
-  restoreCatalog: (src: string) => Promise<any>;
+  backupCatalog: (dest: string) => Promise<void>;
+  restoreCatalog: (src: string) => Promise<void>;
 
   // Helper function to convert file paths to custom protocol URLs
   getImageUrl: (filePath: string) => string | undefined;

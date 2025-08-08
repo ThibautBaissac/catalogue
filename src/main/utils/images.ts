@@ -3,13 +3,12 @@ import crypto from 'crypto';
 import path from 'path';
 import fs from 'fs';
 import db from '../db/database';
+import { getArtworkOriginalsDir, getArtworkThumbsDir } from './paths';
 
 export async function importImages(artworkId: number, filePath: string) {
   const buffer = fs.readFileSync(filePath);
   const hash = crypto.createHash('sha1').update(buffer).digest('hex');
-  const userData = path.join(require('electron').app.getPath('userData'));
-  const destDir = path.join(userData, 'catalogue', 'images', String(artworkId), 'originals');
-  fs.mkdirSync(destDir, { recursive: true });
+  const destDir = getArtworkOriginalsDir(artworkId);
   const destPath = path.join(destDir, path.basename(filePath));
   fs.copyFileSync(filePath, destPath);
 
@@ -37,8 +36,8 @@ export async function importImages(artworkId: number, filePath: string) {
 }
 
 export async function generateThumbnails({ id, filePath }: { id: number; filePath: string; hash: string; }) {
-  const thumbDir = path.join(path.dirname(filePath).replace('originals', 'thumbnails'));
-  fs.mkdirSync(thumbDir, { recursive: true });
+  const artworkId = db.prepare(`SELECT artwork_id FROM artwork_images WHERE id = ?`).get(id) as { artwork_id: number } | undefined;
+  const thumbDir = artworkId ? getArtworkThumbsDir(artworkId.artwork_id) : path.join(path.dirname(filePath).replace('originals', 'thumbnails'));
   const thumbPath = path.join(thumbDir, path.basename(filePath, path.extname(filePath)) + '.jpg');
   await sharp(filePath)
     .resize({ width: 300 })

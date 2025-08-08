@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { useCatalogStore } from '../../store/catalogStore';
 import { callApi } from '../../hooks/useApi';
-import { Artwork } from '../../types';
+import { Artwork } from '@shared/types';
 
 interface ArtworkListProps {
   onEdit: (artwork: Artwork) => void;

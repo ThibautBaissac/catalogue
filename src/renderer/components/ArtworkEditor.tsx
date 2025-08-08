@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { callApi } from '../hooks/useApi';
-import { Collection, Pigment, Paper, Type, Place } from '../types';
+import { Collection, Pigment, Paper, Type, Place } from '@shared/types';
 
 interface ArtworkEditorProps {
   initial?: any;
