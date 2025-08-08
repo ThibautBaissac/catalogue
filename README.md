@@ -11,6 +11,8 @@ sqlite3 "$(node -e "console.log(require('path').join(require('os').homedir(), 'L
 sqlite3 "$(node -e "console.log(require('path').join(require('os').homedir(), 'Library', 'Application Support', 'catalogue', 'catalogue.db'))")" < seed_places.sql
 
 sqlite3 "$(node -e "console.log(require('path').join(require('os').homedir(), 'Library', 'Application Support', 'catalogue', 'catalogue.db'))")" < seed_artworks.sql
+
+npm run seed:images --silent -- --dir="/Users/thibautbaissac/Desktop/2024”
 ```
 
 ### Scripts disponibles
