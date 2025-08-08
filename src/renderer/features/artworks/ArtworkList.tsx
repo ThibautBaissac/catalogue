@@ -139,7 +139,7 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
               <span className="text-sm text-dark-text-secondary">Colonnes:</span>
               <input
                 type="range"
-                min="1"
+                min="2"
                 max="10"
                 value={gridColumns}
                 onChange={(e) => setGridColumns(parseInt(e.target.value))}

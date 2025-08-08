@@ -11,7 +11,7 @@ function getTargetDir(): string {
   const flagVal = argDirFlag ? argDirFlag.split('=')[1] : undefined;
   const positional = process.argv[2];
   // Default to user's provided folder if nothing else
-  return flagVal || positional || '/Users/thibautbaissac/Desktop/2024';
+  return flagVal || positional || '/Users/thibautbaissac/Desktop/PT_images';
 }
 
 function* walkSync(dir: string): Generator<string> {
