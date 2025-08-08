@@ -130,7 +130,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
   // Build a continuous range of years from min to max, excluding years with 0 artworks
   const yearsRange = useMemo(() => {
     if (!years || years.length === 0) return [] as { year: number; count: number }[];
-    
+
     // Only include years that actually have artworks (count > 0)
     const filteredYears = years.filter(y => y.count > 0);
     return filteredYears;

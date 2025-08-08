@@ -28,6 +28,19 @@ if (!artworkExists) {
   if (process.env.NODE_ENV === 'development') {
     initializeTestData();
   }
+} else {
+  // Handle schema migrations for existing databases
+  const columns = db.prepare(`PRAGMA table_info(artworks)`).all();
+  const hasPreviewImageId = columns.find((col: any) => col.name === 'preview_image_id');
+
+  if (!hasPreviewImageId) {
+    console.log('Migrating database: adding preview_image_id column to artworks table');
+    db.prepare(`
+      ALTER TABLE artworks
+      ADD COLUMN preview_image_id INTEGER
+      REFERENCES artwork_images(id) ON DELETE SET NULL
+    `).run();
+  }
 }
 
 export default db;

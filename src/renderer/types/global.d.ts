@@ -35,6 +35,8 @@ export interface ElectronAPI {
 
   addImages: (params: { artworkId: number; filePaths: string[] }) => Promise<any>;
   removeImage: (imageId: number) => Promise<any>;
+  setPreviewImage: (params: { artworkId: number; imageId: number | null }) => Promise<any>;
+  setPreviewImage: (params: { artworkId: number; imageId: number | null }) => Promise<any>;
 
   backupCatalog: (dest: string) => Promise<any>;
   restoreCatalog: (src: string) => Promise<any>;

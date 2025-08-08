@@ -42,9 +42,11 @@ CREATE TABLE IF NOT EXISTS artworks (
   collection_id INTEGER,
   type_id INTEGER,
   place_id INTEGER,
+  preview_image_id INTEGER,
   FOREIGN KEY(collection_id) REFERENCES collections(id) ON DELETE SET NULL,
   FOREIGN KEY(type_id) REFERENCES types(id) ON DELETE SET NULL,
-  FOREIGN KEY(place_id) REFERENCES places(id) ON DELETE SET NULL
+  FOREIGN KEY(place_id) REFERENCES places(id) ON DELETE SET NULL,
+  FOREIGN KEY(preview_image_id) REFERENCES artwork_images(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS artwork_papers (

@@ -8,6 +8,7 @@ import {
   setPigmentsForArtwork,
   setPapersForArtwork,
   listArtworkYears,
+  setPreviewImage,
 } from '../db/artworkRepository';
 import {
   createCollection,
@@ -207,6 +208,15 @@ ipcMain.handle('artwork.setPigments', (_, { artworkId, pigmentIds }) => {
 ipcMain.handle('artwork.setPapers', (_, { artworkId, paperIds }) => {
   try {
     setPapersForArtwork(artworkId, paperIds);
+    return ok();
+  } catch (e: any) {
+    return fail(e.message);
+  }
+});
+
+ipcMain.handle('artwork.setPreviewImage', (_, { artworkId, imageId }) => {
+  try {
+    setPreviewImage(artworkId, imageId);
     return ok();
   } catch (e: any) {
     return fail(e.message);

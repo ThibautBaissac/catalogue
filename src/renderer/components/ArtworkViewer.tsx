@@ -356,6 +356,12 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
   const handleDeleteImage = async (imageId: number, e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent changing the current image
 
+    // Prevent deletion if it's the only image (and therefore preview by rule)
+    if (artworkFull && artworkFull.images.length === 1) {
+      alert('Impossible de supprimer la seule image de l’œuvre.');
+      return;
+    }
+
     if (!window.confirm('Êtes-vous sûr de vouloir supprimer cette image ?')) {
       return;
     }
@@ -371,6 +377,26 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
       }
     } catch (error) {
       console.error('Error deleting image:', error);
+    }
+  };
+
+  const handleSetPreviewImage = async (imageId: number | null, e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    // If only one image, do not allow unsetting preview
+    if (artworkFull && artworkFull.images.length === 1 && imageId === null) {
+      return;
+    }
+
+    try {
+      await callApi(() => window.api.setPreviewImage({ artworkId: artwork.id, imageId }));
+      // Reload artwork data to get updated preview
+      await loadArtworkFull();
+
+      // Dispatch event to notify other components that the artwork was updated
+      window.dispatchEvent(new CustomEvent('artwork-updated'));
+    } catch (error) {
+      console.error('Error setting preview image:', error);
     }
   };
 
@@ -665,7 +691,10 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
                     className="relative group"
                   >
                     <button
-                      onClick={() => setCurrentImageIndex(index)}
+                      onClick={() => {
+                        // Only change the displayed image
+                        setCurrentImageIndex(index);
+                      }}
                       className={`w-full aspect-square rounded overflow-hidden border-2 transition-colors ${
                         index === currentImageIndex
                           ? 'border-blue-500'
@@ -679,16 +708,58 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
                       />
                     </button>
 
-                    {/* Delete button */}
-                    <button
-                      onClick={(e) => handleDeleteImage(image.id, e)}
-                      className="absolute top-1 right-1 w-5 h-5 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-                      title="Supprimer l'image"
-                    >
-                      ✕
-                    </button>
+                    {/* Preview star: indicator for current preview; clickable green star for others */}
+                    {artworkFull.artwork.preview_image_id === image.id ? (
+                      <div
+                        className="absolute top-1 left-1 w-5 h-5 bg-green-600 text-white rounded-full flex items-center justify-center text-xs"
+                        title="Image de prévisualisation"
+                      >
+                        ★
+                      </div>
+                    ) : (
+                      <button
+                        onClick={(e) => handleSetPreviewImage(image.id, e)}
+                        className="absolute top-1 left-1 w-5 h-5 bg-green-600/80 hover:bg-green-600 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                        title="Définir comme prévisualisation"
+                      >
+                        ★
+                      </button>
+                    )}
+
+                    {/* Action buttons */}
+                    <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {/* Delete button */}
+                      <button
+                        onClick={(e) => handleDeleteImage(image.id, e)}
+                        className="w-5 h-5 bg-red-600 hover:bg-red-700 text-white rounded-full flex items-center justify-center text-xs transition-colors"
+                        title="Supprimer l'image"
+                      >
+                        ✕
+                      </button>
+                    </div>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* Single image preview info (no toggle; single image is always preview) */}
+          {artworkFull.images.length === 1 && (
+            <div className="mb-6">
+              <h3 className="text-sm font-semibold text-dark-text-primary mb-3">
+                Image de prévisualisation
+              </h3>
+              <div className="flex items-center gap-3 p-3 bg-dark-bg-secondary rounded-lg">
+                <div className="flex-shrink-0">
+                  <img
+                    src={window.api.getImageUrl(artworkFull.images[0].thumbnail_path || artworkFull.images[0].file_path)}
+                    alt="Image"
+                    className="w-12 h-12 object-contain rounded border border-dark-border"
+                  />
+                </div>
+                <div className="flex-1 text-sm text-dark-text-secondary">
+                  Cette image est utilisée comme prévisualisation
+                </div>
               </div>
             </div>
           )}

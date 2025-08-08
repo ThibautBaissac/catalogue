@@ -41,6 +41,7 @@ contextBridge.exposeInMainWorld('api', {
 
   addImages: (params: { artworkId: number; filePaths: string[] }) => wrap('artwork.addImage')(params),
   removeImage: (imageId: number) => wrap('artwork.removeImage')({ imageId }),
+  setPreviewImage: (params: { artworkId: number; imageId: number | null }) => wrap('artwork.setPreviewImage')(params),
 
   backupCatalog: (dest: string) => wrap('catalog.backup')({ destinationPath: dest }),
   restoreCatalog: (src: string) => wrap('catalog.restore')({ sourceZip: src }),

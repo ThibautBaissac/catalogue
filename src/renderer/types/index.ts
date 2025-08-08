@@ -10,6 +10,7 @@ export interface Artwork {
   collection_id?: number | null;
   type_id?: number | null;
   place_id?: number | null;
+  preview_image_id?: number | null;
   primaryImage?: ArtworkImage | null;
 }
 

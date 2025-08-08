@@ -18,6 +18,21 @@ export async function importImages(artworkId: number, filePath: string) {
     VALUES(?,?,?)
   `);
   const info = stmt.run(artworkId, destPath, hash);
+
+  // If this is the first image for the artwork, set it as the preview image
+  try {
+    const { count } = db.prepare(`
+      SELECT COUNT(*) as count FROM artwork_images WHERE artwork_id = ?
+    `).get(artworkId) as { count: number };
+    if (count === 1 && typeof info.lastInsertRowid === 'number') {
+      db.prepare(`
+        UPDATE artworks SET preview_image_id = ? WHERE id = ?
+      `).run(info.lastInsertRowid, artworkId);
+    }
+  } catch (e) {
+    // Non-fatal; continue
+    console.warn('Failed to set preview image on first import:', e);
+  }
   return { id: info.lastInsertRowid, filePath: destPath, hash };
 }
 
@@ -36,13 +51,37 @@ export async function generateThumbnails({ id, filePath }: { id: number; filePat
 }
 
 export function deleteImage(imageId: number) {
-  // Get the image record to access file paths
+  // Get the image record to access file paths and artwork
   const imageRecord = db.prepare(`
-    SELECT file_path, thumbnail_path FROM artwork_images WHERE id = ?
-  `).get(imageId) as { file_path: string; thumbnail_path: string | null } | undefined;
+    SELECT id, artwork_id, file_path, thumbnail_path FROM artwork_images WHERE id = ?
+  `).get(imageId) as { id: number; artwork_id: number; file_path: string; thumbnail_path: string | null } | undefined;
 
   if (!imageRecord) {
     throw new Error('Image not found');
+  }
+
+  // Safety: prevent deletion if it's the only image
+  const { cnt } = db.prepare(`SELECT COUNT(*) as cnt FROM artwork_images WHERE artwork_id = ?`).get(imageRecord.artwork_id) as { cnt: number };
+  if (cnt <= 1) {
+    throw new Error("Cannot delete the only image of an artwork");
+  }
+
+  // If this image is the current preview, decide a replacement before deletion
+  try {
+    const art = db.prepare(`SELECT preview_image_id FROM artworks WHERE id = ?`).get(imageRecord.artwork_id) as { preview_image_id: number | null } | undefined;
+    if (art && art.preview_image_id === imageRecord.id) {
+      // Find another image to promote as preview (prefer the earliest by created_at)
+      const replacement = db.prepare(`
+        SELECT id FROM artwork_images
+        WHERE artwork_id = ? AND id != ?
+        ORDER BY created_at ASC
+        LIMIT 1
+      `).get(imageRecord.artwork_id, imageRecord.id) as { id: number } | undefined;
+      const newPreview = replacement ? replacement.id : null;
+      db.prepare(`UPDATE artworks SET preview_image_id = ? WHERE id = ?`).run(newPreview, imageRecord.artwork_id);
+    }
+  } catch (e) {
+    console.warn('Failed to update preview on image deletion:', e);
   }
 
   // Delete the files if they exist

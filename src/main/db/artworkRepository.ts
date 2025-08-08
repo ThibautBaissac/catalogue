@@ -11,12 +11,13 @@ export interface ArtworkCreateInput {
   collection_id?: number | null;
   type_id?: number | null;
   place_id?: number | null;
+  preview_image_id?: number | null;
 }
 
 export function createArtwork(input: ArtworkCreateInput) {
   const stmt = db.prepare(`
-    INSERT INTO artworks (reference, title, description, owner, width, height, date, collection_id, type_id, place_id)
-    VALUES (@reference, @title, @description, @owner, @width, @height, @date, @collection_id, @type_id, @place_id)
+    INSERT INTO artworks (reference, title, description, owner, width, height, date, collection_id, type_id, place_id, preview_image_id)
+    VALUES (@reference, @title, @description, @owner, @width, @height, @date, @collection_id, @type_id, @place_id, @preview_image_id)
   `);
   return stmt.run(input);
 }
@@ -135,7 +136,7 @@ export function listArtworks(filters: {
   // Supports: ISO dates (YYYY-MM-DD), bracketed years like [2007], and strings like 10.1995
   const yearExpr = `CAST(COALESCE(
       NULLIF(strftime('%Y', a.date), ''),
-      CASE 
+      CASE
         WHEN a.date GLOB '*[0-9][0-9][0-9][0-9]' THEN substr(a.date, length(a.date) - 3, 4)
         WHEN instr(a.date, '19') > 0 AND substr(a.date, instr(a.date, '19'), 4) GLOB '[0-9][0-9][0-9][0-9]' THEN substr(a.date, instr(a.date, '19'), 4)
         WHEN instr(a.date, '20') > 0 AND substr(a.date, instr(a.date, '20'), 4) GLOB '[0-9][0-9][0-9][0-9]' THEN substr(a.date, instr(a.date, '20'), 4)
@@ -226,14 +227,27 @@ export function listArtworks(filters: {
 
   const artworks = db.prepare(sql).all(...params) as any[];
 
-  // For each artwork, get the first image
+  // For each artwork, get the preview image or the first image if no preview is set
   const artworksWithImages = artworks.map(artwork => {
-    const primaryImage = db.prepare(`
-      SELECT * FROM artwork_images
-      WHERE artwork_id = ?
-      ORDER BY created_at ASC
-      LIMIT 1
-    `).get(artwork.id);
+    let primaryImage;
+
+    if (artwork.preview_image_id) {
+      // Get the specific preview image
+      primaryImage = db.prepare(`
+        SELECT * FROM artwork_images
+        WHERE id = ? AND artwork_id = ?
+      `).get(artwork.preview_image_id, artwork.id);
+    }
+
+    // If no preview image is set or the preview image doesn't exist, get the first image
+    if (!primaryImage) {
+      primaryImage = db.prepare(`
+        SELECT * FROM artwork_images
+        WHERE artwork_id = ?
+        ORDER BY created_at ASC
+        LIMIT 1
+      `).get(artwork.id);
+    }
 
     return {
       ...artwork,
@@ -250,7 +264,7 @@ export function listArtworkYears(): { year: number; count: number }[] {
     WITH yrs AS (
       SELECT CAST(COALESCE(
         NULLIF(strftime('%Y', date), ''),
-        CASE 
+        CASE
           WHEN date GLOB '*[0-9][0-9][0-9][0-9]' THEN substr(date, length(date) - 3, 4)
           WHEN instr(date, '19') > 0 AND substr(date, instr(date, '19'), 4) GLOB '[0-9][0-9][0-9][0-9]' THEN substr(date, instr(date, '19'), 4)
           WHEN instr(date, '20') > 0 AND substr(date, instr(date, '20'), 4) GLOB '[0-9][0-9][0-9][0-9]' THEN substr(date, instr(date, '20'), 4)
@@ -293,4 +307,25 @@ export function getArtworkFull(id: number) {
     ? db.prepare(`SELECT * FROM places WHERE id = ?`).get(artwork.place_id)
     : null;
   return { artwork, pigments, papers, images, collection, type, place };
+}
+
+export function setPreviewImage(artworkId: number, imageId: number | null) {
+  // Verify that the image belongs to the artwork (if imageId is not null)
+  if (imageId !== null) {
+    const image = db.prepare(`
+      SELECT * FROM artwork_images
+      WHERE id = ? AND artwork_id = ?
+    `).get(imageId, artworkId);
+
+    if (!image) {
+      throw new Error('Image does not belong to this artwork');
+    }
+  }
+
+  const stmt = db.prepare(`
+    UPDATE artworks
+    SET preview_image_id = ?
+    WHERE id = ?
+  `);
+  return stmt.run(imageId, artworkId);
 }
