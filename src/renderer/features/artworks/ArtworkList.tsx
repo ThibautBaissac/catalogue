@@ -97,7 +97,7 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
 
   return (
     <div ref={parentRef} className="space-y-4">
-      <div className="flex justify-between items-center">
+  <div className="flex justify-between items-center sticky top-0 z-20 bg-dark-bg border-b border-dark-border py-2">
         <div className="flex items-center gap-3">
           <h2 className="text-xl font-semibold text-dark-text-primary">
             Œuvres ({artworks.length})

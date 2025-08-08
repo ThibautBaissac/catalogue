@@ -153,7 +153,7 @@ function App() {
         {/* Content area */}
         <div className="flex-1 flex overflow-hidden">
           {/* Artwork list */}
-          <div className="flex-1 p-3 md:p-4 overflow-auto custom-scrollbar">
+          <div className="flex-1 px-3 md:px-4 overflow-auto custom-scrollbar">
             <ArtworkList onEdit={handleEditArtwork} onView={handleViewArtwork} />
           </div>
 
