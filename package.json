@@ -11,7 +11,8 @@
     "package": "electron-builder --dir",
     "lint": "eslint . --ext .ts,.tsx",
     "rebuild": "npx electron-builder install-app-deps",
-    "postinstall": "electron-builder install-app-deps"
+  "postinstall": "electron-builder install-app-deps",
+  "generate:icon": "node scripts/generate-icon.js src/renderer/assets/images/logo.jpg"
   },
   "dependencies": {
   "archiver": "^5.3.0",

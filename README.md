@@ -17,6 +17,8 @@ npm run seed:images --silent -- --dir="/Users/thibautbaissac/Desktop/PT_images"
 
 ### Scripts disponibles
 ```
+npm run generate:icon
+
 npm run build:main
 
 npx tsc src/main/main.ts src/main/preload.ts --outDir dist --target ES2020 --module commonjs --moduleResolution node --esModuleInterop --allowSyntheticDefaultImports --skipLibCheck

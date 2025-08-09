@@ -14,8 +14,9 @@
     "node_modules/@img/**"
   ],
   "mac": {
-    "target": ["dmg", "zip"],
-    "artifactName": "${productName}-${version}-${os}.${ext}"
+  "target": ["dmg", "zip"],
+  "artifactName": "${productName}-${version}-${os}.${ext}",
+  "icon": "build/icons/icon.icns"
   },
   "extraResources": [
     { "from": "node_modules/@img", "to": "node_modules/@img" }
