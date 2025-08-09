@@ -47,6 +47,12 @@ contextBridge.exposeInMainWorld('api', {
   restoreCatalog: (src: string) => wrap('catalog.restore')({ sourceZip: src }),
 
   getDesktopPath: () => wrap('system.desktopPath')(),
+  showSaveDialog: (defaultPath?: string) => wrap('system.showSaveDialog')({ defaultPath }),
+  onBackupProgress: (cb: (p: { processedBytes: number; totalBytes?: number; processedFiles: number; totalFiles?: number; percent?: number }) => void) => {
+    const listener = (_: any, data: any) => cb(data);
+    ipcRenderer.on('catalog.backupProgress', listener);
+    return () => ipcRenderer.removeListener('catalog.backupProgress', listener);
+  },
 
   // Helper function to convert file paths to custom protocol URLs
   getImageUrl: (filePath: string) => filePath ? `catalogue-image://${encodeURIComponent(filePath)}` : undefined,

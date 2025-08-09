@@ -1,4 +1,4 @@
-import { ipcMain, app } from 'electron';
+import { ipcMain, app, dialog, BrowserWindow } from 'electron';
 import { registerIpc } from './register';
 import {
   createArtwork,
@@ -95,9 +95,30 @@ registerIpc('artwork.setPapers', ({ artworkId, paperIds }: any) => { setPapersFo
 
 registerIpc('artwork.setPreviewImage', ({ artworkId, imageId }: any) => { setPreviewImage(artworkId, imageId); });
 
-registerIpc('catalog.backup', async ({ destinationPath }: any) => { await backup(destinationPath); });
+registerIpc('catalog.backup', async ({ destinationPath }: any) => {
+  const win = BrowserWindow.getFocusedWindow();
+  await backup(destinationPath, (p) => {
+    win?.webContents.send('catalog.backupProgress', p);
+  });
+});
 
 registerIpc('catalog.restore', async ({ sourceZip }: any) => { await restore(sourceZip); });
 
 // System helpers
 registerIpc('system.desktopPath', () => app.getPath('desktop'));
+registerIpc('system.showSaveDialog', async (opts: { defaultPath?: string } | undefined) => {
+  const win = BrowserWindow.getFocusedWindow();
+  const result = await (win ? dialog.showSaveDialog(win, {
+    title: 'Choisir le fichier de sauvegarde',
+    buttonLabel: 'Sauvegarder',
+    defaultPath: opts?.defaultPath,
+    filters: [{ name: 'Archive ZIP', extensions: ['zip'] }],
+  }) : dialog.showSaveDialog({
+    title: 'Choisir le fichier de sauvegarde',
+    buttonLabel: 'Sauvegarder',
+    defaultPath: opts?.defaultPath,
+    filters: [{ name: 'Archive ZIP', extensions: ['zip'] }],
+  }));
+  if (result.canceled) return null;
+  return result.filePath || null;
+});

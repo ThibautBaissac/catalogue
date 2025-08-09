@@ -32,6 +32,8 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
   const [papersOpen, setPapersOpen] = useState<boolean>(false);
   const [yearsOpen, setYearsOpen] = useState<boolean>(false);
   const [showDataManager, setShowDataManager] = useState<'collections' | 'types' | 'pigments' | 'papers' | 'places' | null>(null);
+  const [backupProgress, setBackupProgress] = useState<{ percent?: number; processedBytes: number; totalBytes?: number } | null>(null);
+  const [isBackingUp, setIsBackingUp] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -115,10 +117,23 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
   const handleBackup = async () => {
     try {
   const desktop = await callApi(window.api.getDesktopPath);
-  const filename = `catalogue-backup-${new Date().toISOString().split('T')[0]}.zip`;
-  const backupPath = `${desktop.replace(/\/$/, '')}/${filename}`;
-  await callApi(window.api.backupCatalog, backupPath);
-  alert(`Sauvegarde créée : ${backupPath}`);
+  const defaultPath = `${desktop.replace(/\/$/, '')}/catalogue-backup-${new Date().toISOString().split('T')[0]}.zip`;
+  const chosen = await callApi(window.api.showSaveDialog, defaultPath);
+  if (!chosen) return; // user canceled
+      setIsBackingUp(true);
+      setBackupProgress({ percent: 0, processedBytes: 0 });
+      const unsubscribe = window.api.onBackupProgress((p) => {
+        setBackupProgress({ percent: p.percent, processedBytes: p.processedBytes, totalBytes: p.totalBytes });
+        if (p.percent === 100) {
+          setTimeout(() => {
+            setIsBackingUp(false);
+            setBackupProgress(null);
+            alert(`Sauvegarde créée : ${chosen}`);
+            unsubscribe();
+          }, 300);
+        }
+      });
+      await callApi(window.api.backupCatalog, chosen);
     } catch (error) {
       console.error('Error creating backup:', error);
       alert('Erreur lors de la sauvegarde');
@@ -623,13 +638,24 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
 
         {/* Footer actions */}
         <div className="p-4 border-t border-dark-border space-y-2">
-          <button
-            onClick={handleBackup}
-            className="w-full text-sm text-dark-text-secondary hover:text-dark-text-primary py-2.5 px-3 hover:bg-dark-hover rounded-lg transition-all duration-200 flex items-center gap-2"
-          >
-            <span>💾</span>
-            <span>Sauvegarde</span>
-          </button>
+          <div className="space-y-2">
+            <button
+              onClick={handleBackup}
+              disabled={isBackingUp}
+              className={`w-full text-sm py-2.5 px-3 rounded-lg transition-all duration-200 flex items-center gap-2 ${isBackingUp ? 'bg-dark-hover text-dark-text-muted cursor-default' : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover'}`}
+            >
+              <span>💾</span>
+              <span>{isBackingUp ? 'Sauvegarde en cours...' : 'Sauvegarde'}</span>
+            </button>
+            {backupProgress && (
+              <div className="w-full bg-dark-hover rounded h-2 overflow-hidden">
+                <div
+                  className="h-full bg-indigo-500 transition-all duration-200"
+                  style={{ width: `${backupProgress.percent ?? 0}%` }}
+                />
+              </div>
+            )}
+          </div>
           <button
             onClick={handleRestore}
             className="w-full text-sm text-dark-text-secondary hover:text-dark-text-primary py-2.5 px-3 hover:bg-dark-hover rounded-lg transition-all duration-200 flex items-center gap-2"
