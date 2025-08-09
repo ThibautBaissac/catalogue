@@ -28,5 +28,11 @@ export function deletePigment(id: number) {
 }
 
 export function listPigments() {
-  return db.prepare(`SELECT * FROM pigments ORDER BY name COLLATE NOCASE`).all();
+  return db.prepare(`
+    SELECT p.*, COUNT(ap.artwork_id) as artwork_count
+    FROM pigments p
+    LEFT JOIN artwork_pigments ap ON ap.pigment_id = p.id
+    GROUP BY p.id
+    ORDER BY p.name COLLATE NOCASE ASC
+  `).all();
 }

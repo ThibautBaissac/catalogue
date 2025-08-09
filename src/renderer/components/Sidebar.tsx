@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { callApi } from '../hooks/useApi';
 import { Collection, Pigment, Paper, Type, Place } from '@shared/types';
+import { useLookupStore } from '../store/lookupStore';
 import { useCatalogStore } from '../store/catalogStore';
 import DataManager from './DataManager';
 import logoImg from '../assets/images/logo.jpg';
@@ -19,11 +20,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
   // Search & simple filters state (moved from former SearchBar)
   const [query, setQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
-  const [collections, setCollections] = useState<Collection[]>([]);
-  const [types, setTypes] = useState<Type[]>([]);
-  const [places, setPlaces] = useState<Place[]>([]);
-  const [pigments, setPigments] = useState<Pigment[]>([]);
-  const [papers, setPapers] = useState<Paper[]>([]);
+  const { collections, types, places, pigments, papers, load: loadLookups, refresh: refreshLookups, loading: lookupsLoading } = useLookupStore();
   const [years, setYears] = useState<{ year: number; count: number }[]>([]);
   const [collectionsOpen, setCollectionsOpen] = useState<boolean>(false);
   const [typesOpen, setTypesOpen] = useState<boolean>(false);
@@ -35,9 +32,8 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
   const [backupProgress, setBackupProgress] = useState<{ percent?: number; processedBytes: number; totalBytes?: number } | null>(null);
   const [isBackingUp, setIsBackingUp] = useState(false);
 
-  useEffect(() => {
-    loadData();
-  }, []);
+  // Initial load: include years + lookups
+  useEffect(() => { loadData(); }, []);
 
   // Debounced query update -> filters
   useEffect(() => {
@@ -51,25 +47,10 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
 
   const loadData = async () => {
     try {
-      const [colls, typs, pigs, paps, placs, yrs] = await Promise.all([
-        callApi(window.api.listCollections),
-        callApi(window.api.listTypes),
-        callApi(window.api.listPigments),
-        callApi(window.api.listPapers),
-        callApi(window.api.listPlaces),
-        callApi(window.api.listYears)
-      ]);
-
-      // Sort alphabetically by name
-      setCollections(colls.sort((a: Collection, b: Collection) => a.name.localeCompare(b.name)));
-      setTypes(typs.sort((a: Type, b: Type) => a.name.localeCompare(b.name)));
-      setPlaces(placs.sort((a: Place, b: Place) => a.name.localeCompare(b.name)));
-      setPigments(pigs.sort((a: Pigment, b: Pigment) => a.name.localeCompare(b.name)));
-      setPapers(paps.sort((a: Paper, b: Paper) => a.name.localeCompare(b.name)));
+      const yrs = await callApi(window.api.listYears);
       setYears(yrs);
-    } catch (error) {
-      console.error('Error loading sidebar data:', error);
-    }
+      await loadLookups();
+    } catch (error) { console.error('Error loading sidebar data:', error); }
   };
 
   const toggleSection = (section: string) => {
@@ -109,10 +90,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
     }
   };
 
-  const handleCloseDataManager = () => {
-    setShowDataManager(null);
-    loadData();
-  };
+  const handleCloseDataManager = () => { setShowDataManager(null); refreshLookups(); loadData(); };
 
   const handleBackup = async () => {
     try {
@@ -383,7 +361,10 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                     Aucune collection
                   </div>
                 ) : (
-                  collections.map(collection => {
+                  collections
+                    .slice()
+                    .sort((a,b)=>a.name.localeCompare(b.name))
+                    .map(collection => {
                     const isActive = filters.collectionId === collection.id;
                     return (
                       <div
@@ -395,7 +376,12 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                         }`}
                         onClick={() => onFilterByCollection(collection.id)}
                       >
-                        {collection.name}
+                        <span className="flex items-center justify-between gap-2">
+                          <span className="truncate max-w-[120px]">{collection.name}</span>
+                          {typeof collection.artwork_count === 'number' && (
+                            <span className="text-[10px] opacity-60">{collection.artwork_count}</span>
+                          )}
+                        </span>
                       </div>
                     );
                   })
@@ -441,7 +427,10 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                     Aucun type
                   </div>
                 ) : (
-                  types.map(type => {
+                  types
+                    .slice()
+                    .sort((a,b)=>a.name.localeCompare(b.name))
+                    .map(type => {
                     const isActive = filters.typeId === type.id;
                     return (
                       <div
@@ -453,7 +442,12 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                         }`}
                         onClick={() => onFilterByType(type.id)}
                       >
-                        {type.name}
+                        <span className="flex items-center justify-between gap-2">
+                          <span className="truncate max-w-[120px]">{type.name}</span>
+                          {typeof type.artwork_count === 'number' && (
+                            <span className="text-[10px] opacity-60">{type.artwork_count}</span>
+                          )}
+                        </span>
                       </div>
                     );
                   })
@@ -499,7 +493,10 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                     Aucun pigment
                   </div>
                 ) : (
-                  pigments.map(pigment => {
+                  pigments
+                    .slice()
+                    .sort((a,b)=>a.name.localeCompare(b.name))
+                    .map(pigment => {
                     const isActive = filters.pigments?.includes(pigment.id);
                     return (
                       <div
@@ -511,7 +508,12 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                         }`}
                         onClick={() => onFilterByPigment(pigment.id)}
                       >
-                        {pigment.name}
+                        <span className="flex items-center justify-between gap-2">
+                          <span className="truncate max-w-[120px]">{pigment.name}</span>
+                          {typeof pigment.artwork_count === 'number' && (
+                            <span className="text-[10px] opacity-60">{pigment.artwork_count}</span>
+                          )}
+                        </span>
                       </div>
                     );
                   })
@@ -557,7 +559,10 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                     Aucun papier
                   </div>
                 ) : (
-                  papers.map(paper => {
+                  papers
+                    .slice()
+                    .sort((a,b)=>a.name.localeCompare(b.name))
+                    .map(paper => {
                     const isActive = filters.papers?.includes(paper.id);
                     return (
                       <div
@@ -569,7 +574,12 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                         }`}
                         onClick={() => onFilterByPaper(paper.id)}
                       >
-                        {paper.name}
+                        <span className="flex items-center justify-between gap-2">
+                          <span className="truncate max-w-[120px]">{paper.name}</span>
+                          {typeof paper.artwork_count === 'number' && (
+                            <span className="text-[10px] opacity-60">{paper.artwork_count}</span>
+                          )}
+                        </span>
                       </div>
                     );
                   })
@@ -615,7 +625,10 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                     Aucun Lieu
                   </div>
                 ) : (
-                  places.map(place => {
+                  places
+                    .slice()
+                    .sort((a,b)=>a.name.localeCompare(b.name))
+                    .map(place => {
                     const isActive = filters.placeId === place.id;
                     return (
                       <div
@@ -626,7 +639,12 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                           }`}
                         onClick={() => onFilterByPlace(place.id)}
                       >
-                        {place.name}
+                        <span className="flex items-center justify-between gap-2">
+                          <span className="truncate max-w-[120px]">{place.name}</span>
+                          {typeof place.artwork_count === 'number' && (
+                            <span className="text-[10px] opacity-60">{place.artwork_count}</span>
+                          )}
+                        </span>
                       </div>
                     );
                   })

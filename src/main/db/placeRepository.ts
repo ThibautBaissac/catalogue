@@ -27,5 +27,11 @@ export function deletePlace(id: number) {
 }
 
 export function listPlaces() {
-  return db.prepare(`SELECT * FROM places`).all();
+  return db.prepare(`
+    SELECT p.*, COUNT(a.id) as artwork_count
+    FROM places p
+    LEFT JOIN artworks a ON a.place_id = p.id
+    GROUP BY p.id
+    ORDER BY p.name COLLATE NOCASE ASC
+  `).all();
 }

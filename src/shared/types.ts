@@ -19,29 +19,34 @@ export interface Collection {
   name: string;
   description?: string;
   date?: string;
+  artwork_count?: number; // optional count of artworks using this collection
 }
 
 export interface Pigment {
   id: number;
   name: string;
   description?: string;
+  artwork_count?: number;
 }
 
 export interface Paper {
   id: number;
   name: string;
   description?: string;
+  artwork_count?: number;
 }
 
 export interface Type {
   id: number;
   name: string;
   description?: string;
+  artwork_count?: number;
 }
 
 export interface Place {
   id: number;
   name: string;
+  artwork_count?: number;
 }
 
 export interface ArtworkImage {

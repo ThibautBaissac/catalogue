@@ -28,5 +28,11 @@ export function deletePaper(id: number) {
 }
 
 export function listPapers() {
-  return db.prepare(`SELECT * FROM papers ORDER BY name COLLATE NOCASE`).all();
+  return db.prepare(`
+    SELECT p.*, COUNT(ap.artwork_id) as artwork_count
+    FROM papers p
+    LEFT JOIN artwork_papers ap ON ap.paper_id = p.id
+    GROUP BY p.id
+    ORDER BY p.name COLLATE NOCASE ASC
+  `).all();
 }

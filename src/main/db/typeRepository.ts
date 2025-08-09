@@ -29,5 +29,11 @@ export function deleteType(id: number) {
 }
 
 export function listTypes() {
-  return db.prepare(`SELECT * FROM types ORDER BY name DESC`).all();
+  return db.prepare(`
+    SELECT t.*, COUNT(a.id) as artwork_count
+    FROM types t
+    LEFT JOIN artworks a ON a.type_id = t.id
+    GROUP BY t.id
+    ORDER BY t.name COLLATE NOCASE ASC
+  `).all();
 }

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useRef, useCallback, useMemo } from 'react';
+import { useLookupStore } from '../../store/lookupStore';
 import { useCatalogStore } from '../../store/catalogStore';
 import { callApi } from '../../hooks/useApi';
 import { Artwork } from '@shared/types';
@@ -12,6 +13,7 @@ interface ArtworkListProps {
 
 export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVisible }: ArtworkListProps) {
   const { artworks, setArtworks, appendArtworks, resetArtworks, hasMore, totalArtworks, loadingArtworks, setLoadingArtworks, selectArtwork, selectedArtwork, viewMode, setViewMode, gridColumns, setGridColumns, filters, setFilters, clearFilters } = useCatalogStore();
+  const { collections, types, places, pigments, papers, load: loadLookups, loading: lookupsLoading } = useLookupStore();
   const parentRef = useRef<HTMLDivElement | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const lengthRef = useRef(0);
@@ -27,6 +29,8 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
 
   useEffect(() => {
     loadArtworks(true);
+
+  loadLookups();
 
     // Listen for artwork updates
     const handleArtworkUpdate = () => {
@@ -107,6 +111,120 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
            filters.noPapers;
   };
 
+  // Build chip definitions for active filters
+  const activeFilterChips = useMemo(() => {
+    const chips: { key: string; label: string; remove: () => void; color?: string }[] = [];
+    if (filters.collectionId) {
+      const c = collections.find(c => c.id === filters.collectionId);
+      chips.push({
+        key: 'collectionId',
+        label: c ? `Collection: ${c.name}` : `Collection #${filters.collectionId}`,
+        remove: () => setFilters({ ...filters, collectionId: undefined }),
+        color: 'blue'
+      });
+    }
+    if (filters.typeId) {
+      const t = types.find(t => t.id === filters.typeId);
+      chips.push({
+        key: 'typeId',
+        label: t ? `Type: ${t.name}` : `Type #${filters.typeId}`,
+        remove: () => setFilters({ ...filters, typeId: undefined }),
+        color: 'green'
+      });
+    }
+    if (filters.placeId) {
+      const p = places.find(p => p.id === filters.placeId);
+      chips.push({
+        key: 'placeId',
+        label: p ? `Lieu: ${p.name}` : `Lieu #${filters.placeId}`,
+        remove: () => setFilters({ ...filters, placeId: undefined }),
+        color: 'green'
+      });
+    }
+    if (filters.pigments && filters.pigments.length) {
+      filters.pigments.forEach(id => {
+        const pig = pigments.find(p => p.id === id);
+        chips.push({
+          key: `pigment-${id}`,
+            label: pig ? `Pigment: ${pig.name}` : `Pigment #${id}`,
+          remove: () => {
+            const next = (filters.pigments || []).filter(pid => pid !== id);
+            setFilters({ ...filters, pigments: next.length ? next : undefined });
+          },
+          color: 'red'
+        });
+      });
+    }
+    if (filters.papers && filters.papers.length) {
+      filters.papers.forEach(id => {
+        const pap = papers.find(p => p.id === id);
+        chips.push({
+          key: `paper-${id}`,
+          label: pap ? `Papier: ${pap.name}` : `Papier #${id}`,
+          remove: () => {
+            const next = (filters.papers || []).filter(pid => pid !== id);
+            setFilters({ ...filters, papers: next.length ? next : undefined });
+          },
+          color: 'yellow'
+        });
+      });
+    }
+    if (filters.years && filters.years.length) {
+      filters.years.forEach(year => {
+        chips.push({
+          key: `year-${year}`,
+          label: `Année: ${year}`,
+          remove: () => {
+            const next = (filters.years || []).filter(y => y !== year);
+            setFilters({ ...filters, years: next.length ? next : undefined });
+          },
+          color: 'purple'
+        });
+      });
+    }
+    if (filters.noCollection) {
+      chips.push({
+        key: 'noCollection',
+        label: 'Sans collection',
+        remove: () => setFilters({ ...filters, noCollection: false }),
+        color: 'orange'
+      });
+    }
+    if (filters.noType) {
+      chips.push({
+        key: 'noType',
+        label: 'Sans type',
+        remove: () => setFilters({ ...filters, noType: false }),
+        color: 'orange'
+      });
+    }
+    if (filters.noPlace) {
+      chips.push({
+        key: 'noPlace',
+        label: 'Sans lieu',
+        remove: () => setFilters({ ...filters, noPlace: false }),
+        color: 'orange'
+      });
+    }
+    if (filters.noPigments) {
+      chips.push({
+        key: 'noPigments',
+        label: 'Sans pigments',
+        remove: () => setFilters({ ...filters, noPigments: false }),
+        color: 'orange'
+      });
+    }
+    if (filters.noPapers) {
+      chips.push({
+        key: 'noPapers',
+        label: 'Sans papiers',
+        remove: () => setFilters({ ...filters, noPapers: false }),
+        color: 'orange'
+      });
+    }
+    return chips;
+  }, [filters, collections, types, places, pigments, papers, setFilters]);
+
   if (artworks.length === 0) {
     return (
       <div className="flex items-center justify-center h-64 text-dark-text-muted">
@@ -136,8 +254,9 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
 
   return (
     <div ref={parentRef} className="space-y-4">
-      <div className="flex justify-between items-center sticky top-0 z-20 bg-dark-card border-b border-dark-border px-4 py-2">
-        <div className="flex items-center gap-3">
+      <div className="flex justify-between items-start sticky top-0 z-20 bg-dark-card border-b border-dark-border px-4 py-2">
+        <div className="flex flex-col gap-1 flex-1 min-w-0">
+          <div className="flex items-center gap-3 flex-wrap">
           <button
             onClick={onToggleSidebar}
             className="flex items-center justify-center w-8 h-8 rounded-lg bg-dark-hover hover:bg-dark-border text-dark-text-secondary hover:text-dark-text-primary transition-all duration-200"
@@ -157,17 +276,49 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
               <path d="M9 3v18" />
             </svg>
           </button>
-          <h2 className="text-xl font-semibold text-dark-text-primary">
-            Œuvres ({artworks.length}{totalArtworks > artworks.length ? ` / ${totalArtworks}` : ''})
-          </h2>
-          {hasActiveFilters() && (
-            <button
-              onClick={clearFilters}
-              className="px-3 py-1.5 text-sm text-orange-400 hover:text-orange-300 hover:bg-orange-500/20 rounded-lg transition-all duration-200 border border-orange-500/30 hover:border-orange-500/50"
-            >
-              🔄 Tout afficher
-            </button>
-          )}
+            <h2 className="text-xl font-semibold text-dark-text-primary whitespace-nowrap">
+              Œuvres ({artworks.length}{totalArtworks > artworks.length ? ` / ${totalArtworks}` : ''})
+            </h2>
+            {(lookupsLoading) && (
+              <div className="flex items-center gap-2 flex-wrap animate-pulse">
+                {Array.from({ length: 3 }).map((_,i)=>(
+                  <span key={i} className="h-6 w-28 rounded-full bg-dark-hover border border-dark-border" />
+                ))}
+              </div>
+            )}
+            {(!lookupsLoading && activeFilterChips.length > 0) && (
+              <div className="flex items-center gap-2 flex-wrap">
+                {activeFilterChips.map(chip => (
+                  <span
+                    key={chip.key}
+                    className={`group inline-flex items-center max-w-xs truncate px-2 py-1 text-[11px] rounded-full border cursor-default select-none transition-all duration-200 
+                      ${chip.color === 'blue' ? 'bg-blue-500/15 text-blue-300 border-blue-500/30' : ''}
+                      ${chip.color === 'green' ? 'bg-green-500/15 text-green-300 border-green-500/30' : ''}
+                      ${chip.color === 'red' ? 'bg-red-500/15 text-red-300 border-red-500/30' : ''}
+                      ${chip.color === 'yellow' ? 'bg-yellow-500/15 text-yellow-300 border-yellow-500/30' : ''}
+                      ${chip.color === 'purple' ? 'bg-purple-500/15 text-purple-300 border-purple-500/30' : ''}
+                      ${chip.color === 'orange' ? 'bg-orange-500/15 text-orange-300 border-orange-500/30' : ''}
+                    `}
+                    title={chip.label}
+                  >
+                    <span className="truncate">{chip.label}</span>
+                    <button
+                      onClick={chip.remove}
+                      className="ml-1 text-xs opacity-70 group-hover:opacity-100 hover:scale-110 transition-all" aria-label={`Retirer ${chip.label}`}
+                    >
+                      ×
+                    </button>
+                  </span>
+                ))}
+                <button
+                  onClick={clearFilters}
+                  className="h-6 px-2 text-[11px] inline-flex items-center bg-orange-500/10 text-orange-400 border border-orange-500/30 rounded-full hover:bg-orange-500/20 hover:text-orange-300 transition"
+                >
+                  Effacer tout
+                </button>
+              </div>
+            )}
+          </div>
         </div>
 
         <div className="flex items-center gap-2">
@@ -211,7 +362,7 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
               </span>
             </div>
           )}
-        </div>
+  </div>
       </div>
 
       {viewMode === 'list' ? (

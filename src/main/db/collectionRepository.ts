@@ -29,5 +29,11 @@ export function deleteCollection(id: number) {
 }
 
 export function listCollections() {
-  return db.prepare(`SELECT * FROM collections ORDER BY date DESC`).all();
+  return db.prepare(`
+    SELECT c.*, COUNT(a.id) as artwork_count
+    FROM collections c
+    LEFT JOIN artworks a ON a.collection_id = c.id
+    GROUP BY c.id
+    ORDER BY c.date DESC
+  `).all();
 }
