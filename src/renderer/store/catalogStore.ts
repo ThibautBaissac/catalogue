@@ -1,22 +1,7 @@
 import { create } from 'zustand';
-import { Artwork } from '@shared/types';
+import { Artwork, ArtworkFilters } from '@shared/types';
 
 type ViewMode = 'list' | 'grid';
-
-interface ArtworkFilters {
-  collectionId?: number;
-  typeId?: number;
-  placeId?: number;
-  pigments?: number[];
-  papers?: number[];
-  query?: string;
-  years?: number[]; // selected years filter
-  noCollection?: boolean;
-  noType?: boolean;
-  noPlace?: boolean;
-  noPigments?: boolean;
-  noPapers?: boolean;
-}
 
 interface CatalogState {
   artworks: Artwork[];

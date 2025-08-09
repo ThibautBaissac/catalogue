@@ -1,4 +1,6 @@
 import db from './database';
+import { yearExtractionExpr } from './sqlFragments';
+import { addPrimaryImages } from './artworkService';
 
 export interface ArtworkCreateInput {
   reference: string;
@@ -132,16 +134,7 @@ export function listArtworks(filters: {
   const params: any[] = [];
   let base = `SELECT DISTINCT a.* FROM artworks a`;
 
-  // Robust SQL expression to extract a 4-digit year from various date formats
-  // Supports: ISO dates (YYYY-MM-DD), bracketed years like [2007], and strings like 10.1995
-  const yearExpr = `CAST(COALESCE(
-      NULLIF(strftime('%Y', a.date), ''),
-      CASE
-        WHEN a.date GLOB '*[0-9][0-9][0-9][0-9]' THEN substr(a.date, length(a.date) - 3, 4)
-        WHEN instr(a.date, '19') > 0 AND substr(a.date, instr(a.date, '19'), 4) GLOB '[0-9][0-9][0-9][0-9]' THEN substr(a.date, instr(a.date, '19'), 4)
-        WHEN instr(a.date, '20') > 0 AND substr(a.date, instr(a.date, '20'), 4) GLOB '[0-9][0-9][0-9][0-9]' THEN substr(a.date, instr(a.date, '20'), 4)
-      END
-    ) AS INTEGER)`;
+  const yearExpr = yearExtractionExpr;
 
   if (filters.query) {
     base += ` JOIN artworks_fts fts ON fts.rowid = a.id`;
@@ -239,33 +232,7 @@ export function listArtworks(filters: {
     total = row?.cnt ?? artworks.length;
   }
 
-  // For each artwork, get the preview image or the first image if no preview is set
-  const artworksWithImages = artworks.map(artwork => {
-    let primaryImage;
-
-    if (artwork.preview_image_id) {
-      // Get the specific preview image
-      primaryImage = db.prepare(`
-        SELECT * FROM artwork_images
-        WHERE id = ? AND artwork_id = ?
-      `).get(artwork.preview_image_id, artwork.id);
-    }
-
-    // If no preview image is set or the preview image doesn't exist, get the first image
-    if (!primaryImage) {
-      primaryImage = db.prepare(`
-        SELECT * FROM artwork_images
-        WHERE artwork_id = ?
-        ORDER BY created_at ASC
-        LIMIT 1
-      `).get(artwork.id);
-    }
-
-    return {
-      ...artwork,
-      primaryImage: primaryImage || null
-    };
-  });
+  const artworksWithImages = addPrimaryImages(artworks as any);
 
   if (filters.limit !== undefined) {
     return { items: artworksWithImages, total };
@@ -274,7 +241,7 @@ export function listArtworks(filters: {
 }
 
 export function listArtworkYears(): { year: number; count: number }[] {
-  // Use the same robust year extraction logic as in listArtworks
+  // Use the same robust year extraction logic as in listArtworks (centralized constant for maintainability)
   const sql = `
     WITH yrs AS (
       SELECT CAST(COALESCE(

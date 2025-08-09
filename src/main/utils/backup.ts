@@ -30,6 +30,6 @@ export function restore(sourceZip: string): Promise<void> {
     fs.createReadStream(sourceZip)
       .pipe(unzipper.Extract({ path: userData }))
       .on('close', () => resolve())
-      .on('error', (e) => reject(e));
+  .on('error', (e: unknown) => reject(e as any));
   });
 }

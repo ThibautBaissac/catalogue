@@ -1,4 +1,5 @@
 import { ipcMain } from 'electron';
+import { registerIpc } from './register';
 import {
   createArtwork,
   updateArtwork,
@@ -23,222 +24,77 @@ import { createPlace, listPlaces, updatePlace, deletePlace } from '../db/placeRe
 import { importImages, generateThumbnails, deleteImage } from '../utils/images';
 import { backup, restore } from '../utils/backup';
 
-function ok(data: any = null) {
-  return { success: true, data };
-}
-function fail(message: string) {
-  return { success: false, error: message };
-}
+registerIpc('artwork.create', (input: any) => {
+  if (!input.reference) throw new Error('Référence obligatoire');
+  const result = createArtwork(input);
+  return { id: result.lastInsertRowid };
+});
 
-ipcMain.handle('artwork.create', (event, input) => {
-  try {
-    if (!input.reference) return fail('Référence obligatoire');
-    const result = createArtwork(input);
-    return ok({ id: result.lastInsertRowid });
-  } catch (e: any) {
-    return fail(e.message);
+registerIpc('artwork.update', ({ id, updates }: any) => { updateArtwork(id, updates); });
+
+registerIpc('artwork.delete', ({ id }: any) => { deleteArtwork(id); });
+
+registerIpc('artwork.list', (filters: any) => {
+  const rowsOrObj = listArtworks(filters);
+  if (Array.isArray(rowsOrObj)) return rowsOrObj;
+  return { items: rowsOrObj.items, total: rowsOrObj.total, hasMore: rowsOrObj.total !== undefined && rowsOrObj.items.length + (filters.offset || 0) < rowsOrObj.total };
+});
+
+registerIpc('artwork.getFull', ({ id }: any) => {
+  const full = getArtworkFull(id);
+  if (!full) throw new Error('Œuvre introuvable');
+  return full;
+});
+
+registerIpc('artwork.listYears', () => listArtworkYears());
+
+registerIpc('collection.create', (input: any) => {
+  if (!input.name) throw new Error('Nom requis');
+  const r = createCollection(input);
+  return { id: r.lastInsertRowid };
+});
+
+registerIpc('collection.list', () => listCollections());
+
+registerIpc('collection.update', ({ id, updates }: any) => { updateCollection(id, updates); });
+
+registerIpc('collection.delete', ({ id }: any) => { deleteCollection(id); });
+
+registerIpc('pigment.list', () => listPigments());
+registerIpc('pigment.create', (input: any) => ({ id: createPigment(input).lastInsertRowid }));
+registerIpc('pigment.update', ({ id, updates }: any) => { updatePigment(id, updates); });
+registerIpc('pigment.delete', ({ id }: any) => { deletePigment(id); });
+
+registerIpc('paper.list', () => listPapers());
+registerIpc('paper.create', (input: any) => ({ id: createPaper(input).lastInsertRowid }));
+registerIpc('paper.update', ({ id, updates }: any) => { updatePaper(id, updates); });
+registerIpc('paper.delete', ({ id }: any) => { deletePaper(id); });
+
+registerIpc('type.list', () => listTypes());
+registerIpc('type.create', (input: any) => ({ id: createType(input).lastInsertRowid }));
+registerIpc('type.update', ({ id, updates }: any) => { updateType(id, updates); });
+registerIpc('type.delete', ({ id }: any) => { deleteType(id); });
+
+registerIpc('place.list', () => listPlaces());
+registerIpc('place.create', (input: any) => ({ id: createPlace(input).lastInsertRowid }));
+registerIpc('place.update', ({ id, updates }: any) => { updatePlace(id, updates); });
+registerIpc('place.delete', ({ id }: any) => { deletePlace(id); });
+
+registerIpc('artwork.addImage', async ({ artworkId, filePaths }: any) => {
+  for (const fp of filePaths) {
+    const img = await importImages(artworkId, fp);
+    await generateThumbnails(img as any);
   }
 });
 
-ipcMain.handle('artwork.update', (event, { id, updates }) => {
-  try {
-    updateArtwork(id, updates);
-    return ok();
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
+registerIpc('artwork.removeImage', ({ imageId }: any) => { deleteImage(imageId); });
 
-ipcMain.handle('artwork.delete', (event, { id }) => {
-  try {
-    deleteArtwork(id);
-    return ok();
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
+registerIpc('artwork.setPigments', ({ artworkId, pigmentIds }: any) => { setPigmentsForArtwork(artworkId, pigmentIds); });
 
-ipcMain.handle('artwork.list', (event, filters) => {
-  try {
-    const rowsOrObj = listArtworks(filters);
-    // rowsOrObj can be array or {items,total}
-    if (Array.isArray(rowsOrObj)) return ok(rowsOrObj);
-    return ok({ items: rowsOrObj.items, total: rowsOrObj.total, hasMore: rowsOrObj.total !== undefined && rowsOrObj.items.length + (filters.offset || 0) < rowsOrObj.total });
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
+registerIpc('artwork.setPapers', ({ artworkId, paperIds }: any) => { setPapersForArtwork(artworkId, paperIds); });
 
-ipcMain.handle('artwork.getFull', (event, { id }) => {
-  try {
-    const full = getArtworkFull(id);
-    if (!full) return fail('Œuvre introuvable');
-    return ok(full);
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
+registerIpc('artwork.setPreviewImage', ({ artworkId, imageId }: any) => { setPreviewImage(artworkId, imageId); });
 
-ipcMain.handle('artwork.listYears', () => {
-  try {
-    const years = listArtworkYears();
-    return ok(years);
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
+registerIpc('catalog.backup', async ({ destinationPath }: any) => { await backup(destinationPath); });
 
-ipcMain.handle('collection.create', (_, input) => {
-  try {
-    if (!input.name) return fail('Nom requis');
-    const r = createCollection(input);
-    return ok({ id: r.lastInsertRowid });
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
-
-ipcMain.handle('collection.list', () => {
-  try {
-    const all = listCollections();
-    return ok(all);
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
-
-ipcMain.handle('collection.update', (_, { id, updates }) => {
-  try {
-    updateCollection(id, updates);
-    return ok();
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
-
-ipcMain.handle('collection.delete', (_, { id }) => {
-  try {
-    deleteCollection(id);
-    return ok();
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
-
-ipcMain.handle('pigment.list', () => {
-  try { return ok(listPigments()); } catch (e: any) { return fail(e.message); }
-});
-ipcMain.handle('pigment.create', (_, input) => {
-  try { return ok({ id: createPigment(input).lastInsertRowid }); } catch (e: any) { return fail(e.message); }
-});
-ipcMain.handle('pigment.update', (_, { id, updates }) => {
-  try { updatePigment(id, updates); return ok(); } catch (e: any) { return fail(e.message); }
-});
-ipcMain.handle('pigment.delete', (_, { id }) => {
-  try { deletePigment(id); return ok(); } catch (e: any) { return fail(e.message); }
-});
-
-ipcMain.handle('paper.list', () => {
-  try { return ok(listPapers()); } catch (e: any) { return fail(e.message); }
-});
-ipcMain.handle('paper.create', (_, input) => {
-  try { return ok({ id: createPaper(input).lastInsertRowid }); } catch (e: any) { return fail(e.message); }
-});
-ipcMain.handle('paper.update', (_, { id, updates }) => {
-  try { updatePaper(id, updates); return ok(); } catch (e: any) { return fail(e.message); }
-});
-ipcMain.handle('paper.delete', (_, { id }) => {
-  try { deletePaper(id); return ok(); } catch (e: any) { return fail(e.message); }
-});
-
-ipcMain.handle('type.list', () => {
-  try { return ok(listTypes()); } catch (e: any) { return fail(e.message); }
-});
-ipcMain.handle('type.create', (_, input) => {
-  try { return ok({ id: createType(input).lastInsertRowid }); } catch (e: any) { return fail(e.message); }
-});
-ipcMain.handle('type.update', (_, { id, updates }) => {
-  try { updateType(id, updates); return ok(); } catch (e: any) { return fail(e.message); }
-});
-ipcMain.handle('type.delete', (_, { id }) => {
-  try { deleteType(id); return ok(); } catch (e: any) { return fail(e.message); }
-});
-
-ipcMain.handle('place.list', () => {
-  try { return ok(listPlaces()); } catch (e: any) { return fail(e.message); }
-});
-ipcMain.handle('place.create', (_, input) => {
-  try { return ok({ id: createPlace(input).lastInsertRowid }); } catch (e: any) { return fail(e.message); }
-});
-ipcMain.handle('place.update', (_, { id, updates }) => {
-  try { updatePlace(id, updates); return ok(); } catch (e: any) { return fail(e.message); }
-});
-ipcMain.handle('place.delete', (_, { id }) => {
-  try { deletePlace(id); return ok(); } catch (e: any) { return fail(e.message); }
-});
-
-ipcMain.handle('artwork.addImage', async (_, { artworkId, filePaths }) => {
-  try {
-    for (const fp of filePaths) {
-      const img = await importImages(artworkId, fp);
-      await generateThumbnails(img as any);
-    }
-    return ok();
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
-
-ipcMain.handle('artwork.removeImage', (_, { imageId }) => {
-  try {
-    deleteImage(imageId);
-    return ok();
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
-
-ipcMain.handle('artwork.setPigments', (_, { artworkId, pigmentIds }) => {
-  try {
-    setPigmentsForArtwork(artworkId, pigmentIds);
-    return ok();
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
-
-ipcMain.handle('artwork.setPapers', (_, { artworkId, paperIds }) => {
-  try {
-    setPapersForArtwork(artworkId, paperIds);
-    return ok();
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
-
-ipcMain.handle('artwork.setPreviewImage', (_, { artworkId, imageId }) => {
-  try {
-    setPreviewImage(artworkId, imageId);
-    return ok();
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
-
-ipcMain.handle('catalog.backup', async (_, { destinationPath }) => {
-  try {
-    await backup(destinationPath);
-    return ok();
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
-
-ipcMain.handle('catalog.restore', async (_, { sourceZip }) => {
-  try {
-    await restore(sourceZip);
-    return ok();
-  } catch (e: any) {
-    return fail(e.message);
-  }
-});
+registerIpc('catalog.restore', async ({ sourceZip }: any) => { await restore(sourceZip); });
