@@ -48,6 +48,7 @@ export interface ElectronAPI {
 
   backupCatalog: (dest: string) => Promise<void>;
   restoreCatalog: (src: string) => Promise<void>;
+  getDesktopPath: () => Promise<string>;
 
   // Helper function to convert file paths to custom protocol URLs
   getImageUrl: (filePath: string) => string | undefined;

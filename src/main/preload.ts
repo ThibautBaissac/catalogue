@@ -46,6 +46,8 @@ contextBridge.exposeInMainWorld('api', {
   backupCatalog: (dest: string) => wrap('catalog.backup')({ destinationPath: dest }),
   restoreCatalog: (src: string) => wrap('catalog.restore')({ sourceZip: src }),
 
+  getDesktopPath: () => wrap('system.desktopPath')(),
+
   // Helper function to convert file paths to custom protocol URLs
   getImageUrl: (filePath: string) => filePath ? `catalogue-image://${encodeURIComponent(filePath)}` : undefined,
 });

@@ -114,9 +114,11 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
 
   const handleBackup = async () => {
     try {
-      const userPath = `/Users/${process.env.USER || 'user'}/Desktop/catalogue-backup-${new Date().toISOString().split('T')[0]}.zip`;
-      await callApi(window.api.backupCatalog, userPath);
-      alert(`Sauvegarde créée : ${userPath}`);
+  const desktop = await callApi(window.api.getDesktopPath);
+  const filename = `catalogue-backup-${new Date().toISOString().split('T')[0]}.zip`;
+  const backupPath = `${desktop.replace(/\/$/, '')}/${filename}`;
+  await callApi(window.api.backupCatalog, backupPath);
+  alert(`Sauvegarde créée : ${backupPath}`);
     } catch (error) {
       console.error('Error creating backup:', error);
       alert('Erreur lors de la sauvegarde');

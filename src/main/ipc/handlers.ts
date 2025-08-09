@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron';
+import { ipcMain, app } from 'electron';
 import { registerIpc } from './register';
 import {
   createArtwork,
@@ -98,3 +98,6 @@ registerIpc('artwork.setPreviewImage', ({ artworkId, imageId }: any) => { setPre
 registerIpc('catalog.backup', async ({ destinationPath }: any) => { await backup(destinationPath); });
 
 registerIpc('catalog.restore', async ({ sourceZip }: any) => { await restore(sourceZip); });
+
+// System helpers
+registerIpc('system.desktopPath', () => app.getPath('desktop'));
