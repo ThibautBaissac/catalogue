@@ -10,15 +10,15 @@
   ],
   "asarUnpack": [
     "node_modules/sharp/**",
-    "node_modules/better-sqlite3/**"
+    "node_modules/better-sqlite3/**",
+    "node_modules/@img/**"
   ],
   "mac": {
     "target": ["dmg", "zip"],
-    "asarUnpack": [
-      "node_modules/sharp/**",
-      "node_modules/better-sqlite3/**"
-    ],
     "artifactName": "${productName}-${version}-${os}.${ext}"
   },
+  "extraResources": [
+    { "from": "node_modules/@img", "to": "node_modules/@img" }
+  ],
   "npmRebuild": true
 }

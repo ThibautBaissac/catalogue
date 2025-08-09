@@ -7,8 +7,9 @@ async function getSharp() {
     const mod = await import('sharp');
     _sharp = mod.default || (mod as any);
     return _sharp;
-  } catch (e) {
-    console.error('Failed to load sharp module. Ensure it is packaged correctly.', e);
+  } catch (e: any) {
+    console.error('[images:getSharp] Failed to load sharp module. Ensure it is packaged correctly.', e?.stack || e);
+    console.error('[images:getSharp] module.paths =', module.paths);
     throw new Error('Image processing module (sharp) failed to load. Try reinstalling dependencies or rebuilding the app.');
   }
 }
