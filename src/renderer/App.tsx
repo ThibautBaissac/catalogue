@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Sidebar from './components/Sidebar';
 import ArtworkList from './features/artworks/ArtworkList';
-import SearchBar from './features/search/SearchBar';
 import ArtworkDetailSidebar from './components/ArtworkDetailSidebar';
 import ArtworkEditor from './components/ArtworkEditor';
 import ArtworkViewer from './components/ArtworkViewer';
@@ -117,44 +116,12 @@ function App() {
         />
       </div>
 
-      {/* Main content */}
+      {/* Main content (header removed, toggle moved into list) */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Header with search and sidebar toggle */}
-        <div className="bg-dark-card border-b border-dark-border shadow-sm">
-          <div className="p-3 md:p-4 flex items-start gap-3">
-            {/* Sidebar toggle button - aligned with search input */}
-            <button
-              onClick={toggleSidebar}
-              className="flex items-center justify-center w-8 h-8 rounded-lg bg-dark-hover hover:bg-dark-border text-dark-text-secondary hover:text-dark-text-primary transition-all duration-200 mt-1"
-              title={sidebarVisible ? "Masquer la barre latérale" : "Afficher la barre latérale"}
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="2"/>
-                <path d="M9 3v18"/>
-              </svg>
-            </button>
-
-            {/* Search bar */}
-            <div className="flex-1">
-              <SearchBar />
-            </div>
-          </div>
-        </div>
-
-        {/* Content area */}
         <div className="flex-1 flex overflow-hidden">
           {/* Artwork list */}
           <div className="flex-1 px-3 md:px-4 overflow-auto custom-scrollbar">
-            <ArtworkList onEdit={handleEditArtwork} onView={handleViewArtwork} />
+            <ArtworkList onEdit={handleEditArtwork} onView={handleViewArtwork} onToggleSidebar={toggleSidebar} sidebarVisible={sidebarVisible} />
           </div>
 
           {/* Detail sidebar - Hidden on mobile when not selected */}
@@ -196,7 +163,7 @@ function App() {
         </div>
       )}
 
-      {/* Artwork viewer modal */}
+  {/* Artwork viewer modal */}
       {showViewer && viewingArtwork && (
         <ArtworkViewer
           artwork={viewingArtwork}

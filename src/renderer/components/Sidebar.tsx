@@ -16,6 +16,9 @@ interface SidebarProps {
 
 export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterByType, onFilterByPlace, onFilterByPigment, onFilterByPaper }: SidebarProps) {
   const { filters, setFilters } = useCatalogStore();
+  // Search & simple filters state (moved from former SearchBar)
+  const [query, setQuery] = useState('');
+  const [showFilters, setShowFilters] = useState(false);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [types, setTypes] = useState<Type[]>([]);
   const [places, setPlaces] = useState<Place[]>([]);
@@ -33,6 +36,16 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
   useEffect(() => {
     loadData();
   }, []);
+
+  // Debounced query update -> filters
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const newQuery = query.trim() || undefined;
+      if (filters.query === newQuery) return;
+      setFilters({ ...filters, query: newQuery });
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [query, filters.query]);
 
   const loadData = async () => {
     try {
@@ -171,6 +184,103 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
               <span>Nouvelle œuvre</span>
             </span>
           </button>
+        </div>
+
+        {/* Search & quick filters */}
+        <div className="px-4 pb-2 space-y-3 border-b border-dark-border">
+          <div className="relative">
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Rechercher..."
+              className="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2 pl-9 text-sm text-dark-text-primary placeholder-dark-text-muted focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            />
+            <div className="absolute left-3 top-2.5 text-dark-text-muted">🔍</div>
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowFilters(!showFilters)}
+              className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 border ${showFilters || (filters.noCollection||filters.noType||filters.noPlace||filters.noPigments||filters.noPapers) ? 'bg-blue-600/20 border-blue-500 text-blue-400' : 'border-dark-border text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'}`}
+            >
+              Filtres
+              {(filters.noCollection||filters.noType||filters.noPlace||filters.noPigments||filters.noPapers) && (
+                <span className="ml-1 bg-blue-500 text-white text-[10px] px-1 py-0.5 rounded-full">
+                  {(filters.noCollection?1:0)+(filters.noType?1:0)+(filters.noPlace?1:0)+(filters.noPigments?1:0)+(filters.noPapers?1:0)}
+                </span>
+              )}
+            </button>
+            {(query || filters.noCollection || filters.noType || filters.noPlace || filters.noPigments || filters.noPapers) && (
+              <button
+                onClick={() => { setQuery(''); setFilters({}); }}
+                className="px-3 py-2 text-xs text-dark-text-secondary hover:text-dark-text-primary border border-dark-border rounded-lg hover:bg-dark-hover transition-all duration-200"
+              >
+                Effacer
+              </button>
+            )}
+          </div>
+          {showFilters && (
+            <div className="bg-dark-card/50 border border-dark-border rounded-lg p-3 space-y-2">
+              <label className="block text-[11px] uppercase tracking-wide text-dark-text-muted">Afficher seulement sans...</label>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={() => setFilters({ ...filters, noCollection: !filters.noCollection })}
+                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noCollection ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'}`}
+                >Collection</button>
+                <button
+                  onClick={() => setFilters({ ...filters, noType: !filters.noType })}
+                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noType ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'}`}
+                >Type</button>
+                <button
+                  onClick={() => setFilters({ ...filters, noPlace: !filters.noPlace })}
+                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noPlace ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'}`}
+                >Lieu</button>
+                <button
+                  onClick={() => setFilters({ ...filters, noPigments: !filters.noPigments })}
+                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noPigments ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'}`}
+                >Pigments</button>
+                <button
+                  onClick={() => setFilters({ ...filters, noPapers: !filters.noPapers })}
+                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noPapers ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'}`}
+                >Papiers</button>
+              </div>
+            </div>
+          )}
+          {/* Active filter chips */}
+          {(filters.noCollection||filters.noType||filters.noPlace||filters.noPigments||filters.noPapers) && (
+            <div className="flex flex-wrap gap-2">
+              {filters.noCollection && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-orange-500/20 text-orange-400 text-[10px] rounded-full border border-orange-500/30">
+                  Sans collection
+                  <button onClick={() => setFilters({ ...filters, noCollection: false })} className="ml-1 hover:text-orange-300">×</button>
+                </span>
+              )}
+              {filters.noType && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-orange-500/20 text-orange-400 text-[10px] rounded-full border border-orange-500/30">
+                  Sans type
+                  <button onClick={() => setFilters({ ...filters, noType: false })} className="ml-1 hover:text-orange-300">×</button>
+                </span>
+              )}
+              {filters.noPlace && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-orange-500/20 text-orange-400 text-[10px] rounded-full border border-orange-500/30">
+                  Sans lieu
+                  <button onClick={() => setFilters({ ...filters, noPlace: false })} className="ml-1 hover:text-orange-300">×</button>
+                </span>
+              )}
+              {filters.noPigments && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-orange-500/20 text-orange-400 text-[10px] rounded-full border border-orange-500/30">
+                  Sans pigments
+                  <button onClick={() => setFilters({ ...filters, noPigments: false })} className="ml-1 hover:text-orange-300">×</button>
+                </span>
+              )}
+              {filters.noPapers && (
+                <span className="inline-flex items-center gap-1 px-2 py-1 bg-orange-500/20 text-orange-400 text-[10px] rounded-full border border-orange-500/30">
+                  Sans papiers
+                  <button onClick={() => setFilters({ ...filters, noPapers: false })} className="ml-1 hover:text-orange-300">×</button>
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Navigation sections */}

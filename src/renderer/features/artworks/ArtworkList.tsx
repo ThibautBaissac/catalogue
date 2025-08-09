@@ -6,9 +6,11 @@ import { Artwork } from '@shared/types';
 interface ArtworkListProps {
   onEdit: (artwork: Artwork) => void;
   onView: (artwork: Artwork) => void;
+  onToggleSidebar: () => void;
+  sidebarVisible: boolean;
 }
 
-export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
+export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVisible }: ArtworkListProps) {
   const { artworks, setArtworks, appendArtworks, resetArtworks, hasMore, totalArtworks, loadingArtworks, setLoadingArtworks, selectArtwork, selectedArtwork, viewMode, setViewMode, gridColumns, setGridColumns, filters, setFilters, clearFilters } = useCatalogStore();
   const parentRef = useRef<HTMLDivElement | null>(null);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -134,8 +136,27 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
 
   return (
     <div ref={parentRef} className="space-y-4">
-  <div className="flex justify-between items-center sticky top-0 z-20 bg-dark-bg border-b border-dark-border px-4 py-2">
+      <div className="flex justify-between items-center sticky top-0 z-20 bg-dark-card border-b border-dark-border px-4 py-2">
         <div className="flex items-center gap-3">
+          <button
+            onClick={onToggleSidebar}
+            className="flex items-center justify-center w-8 h-8 rounded-lg bg-dark-hover hover:bg-dark-border text-dark-text-secondary hover:text-dark-text-primary transition-all duration-200"
+            title={sidebarVisible ? 'Masquer la barre latérale' : 'Afficher la barre latérale'}
+          >
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <rect x="3" y="3" width="18" height="18" rx="2" />
+              <path d="M9 3v18" />
+            </svg>
+          </button>
           <h2 className="text-xl font-semibold text-dark-text-primary">
             Œuvres ({artworks.length}{totalArtworks > artworks.length ? ` / ${totalArtworks}` : ''})
           </h2>
@@ -194,7 +215,7 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
       </div>
 
       {viewMode === 'list' ? (
-        <div className="grid grid-cols-1 gap-4">
+        <div className="grid grid-cols-1 gap-4 px-4">
           {artworks.map((artwork) => (
             <div
               key={artwork.id}
