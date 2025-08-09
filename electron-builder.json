@@ -8,7 +8,17 @@
     "dist/**/*",
     "package.json"
   ],
+  "asarUnpack": [
+    "node_modules/sharp/**",
+    "node_modules/better-sqlite3/**"
+  ],
   "mac": {
-    "target": ["dmg", "zip"]
-  }
+    "target": ["dmg", "zip"],
+    "asarUnpack": [
+      "node_modules/sharp/**",
+      "node_modules/better-sqlite3/**"
+    ],
+    "artifactName": "${productName}-${version}-${os}.${ext}"
+  },
+  "npmRebuild": true
 }

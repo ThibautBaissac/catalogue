@@ -1,4 +1,17 @@
-import sharp from 'sharp';
+// Lazy import sharp to avoid crashing the whole app if the native module fails to load.
+// This lets the rest of the application start and we can surface a clearer error later.
+let _sharp: typeof import('sharp') | null = null;
+async function getSharp() {
+  if (_sharp) return _sharp;
+  try {
+    const mod = await import('sharp');
+    _sharp = mod.default || (mod as any);
+    return _sharp;
+  } catch (e) {
+    console.error('Failed to load sharp module. Ensure it is packaged correctly.', e);
+    throw new Error('Image processing module (sharp) failed to load. Try reinstalling dependencies or rebuilding the app.');
+  }
+}
 import crypto from 'crypto';
 import path from 'path';
 import fs from 'fs';
@@ -39,6 +52,7 @@ export async function generateThumbnails({ id, filePath }: { id: number; filePat
   const artworkId = db.prepare(`SELECT artwork_id FROM artwork_images WHERE id = ?`).get(id) as { artwork_id: number } | undefined;
   const thumbDir = artworkId ? getArtworkThumbsDir(artworkId.artwork_id) : path.join(path.dirname(filePath).replace('originals', 'thumbnails'));
   const thumbPath = path.join(thumbDir, path.basename(filePath, path.extname(filePath)) + '.jpg');
+  const sharp = await getSharp();
   await sharp(filePath)
     .resize({ width: 300 })
     .jpeg({ quality: 80 })
