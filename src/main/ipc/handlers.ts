@@ -60,8 +60,10 @@ ipcMain.handle('artwork.delete', (event, { id }) => {
 
 ipcMain.handle('artwork.list', (event, filters) => {
   try {
-    const rows = listArtworks(filters);
-    return ok(rows);
+    const rowsOrObj = listArtworks(filters);
+    // rowsOrObj can be array or {items,total}
+    if (Array.isArray(rowsOrObj)) return ok(rowsOrObj);
+    return ok({ items: rowsOrObj.items, total: rowsOrObj.total, hasMore: rowsOrObj.total !== undefined && rowsOrObj.items.length + (filters.offset || 0) < rowsOrObj.total });
   } catch (e: any) {
     return fail(e.message);
   }

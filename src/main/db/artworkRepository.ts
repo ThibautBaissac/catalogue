@@ -227,6 +227,18 @@ export function listArtworks(filters: {
 
   const artworks = db.prepare(sql).all(...params) as any[];
 
+  // total count (without limit/offset) for pagination when requested
+  let total: number | undefined;
+  if (filters.limit !== undefined) {
+    let countSql = 'SELECT COUNT(DISTINCT a.id) as cnt FROM artworks a';
+    if (filters.query) countSql += ' JOIN artworks_fts fts ON fts.rowid = a.id';
+    if (filters.pigments && filters.pigments.length) countSql += ' JOIN artwork_pigments ap ON ap.artwork_id = a.id';
+    if (filters.papers && filters.papers.length) countSql += ' JOIN artwork_papers ap2 ON ap2.artwork_id = a.id';
+    if (conditions.length) countSql += ' WHERE ' + conditions.join(' AND ');
+    const row = db.prepare(countSql).get(...params) as any;
+    total = row?.cnt ?? artworks.length;
+  }
+
   // For each artwork, get the preview image or the first image if no preview is set
   const artworksWithImages = artworks.map(artwork => {
     let primaryImage;
@@ -255,6 +267,9 @@ export function listArtworks(filters: {
     };
   });
 
+  if (filters.limit !== undefined) {
+    return { items: artworksWithImages, total };
+  }
   return artworksWithImages;
 }
 

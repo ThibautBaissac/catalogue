@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import { useCatalogStore } from '../../store/catalogStore';
 import { callApi } from '../../hooks/useApi';
 import { Artwork } from '@shared/types';
@@ -9,15 +9,22 @@ interface ArtworkListProps {
 }
 
 export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
-  const { artworks, setArtworks, selectArtwork, selectedArtwork, viewMode, setViewMode, gridColumns, setGridColumns, filters, setFilters, clearFilters } = useCatalogStore();
+  const { artworks, setArtworks, appendArtworks, resetArtworks, hasMore, totalArtworks, loadingArtworks, setLoadingArtworks, selectArtwork, selectedArtwork, viewMode, setViewMode, gridColumns, setGridColumns, filters, setFilters, clearFilters } = useCatalogStore();
   const parentRef = useRef<HTMLDivElement | null>(null);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const lengthRef = useRef(0);
+  lengthRef.current = artworks.length;
+  const PAGE_SIZE = 100;
+
+  // Reload when filters change (reset pagination)
+  useEffect(() => {
+    // Reset list instantly for UX before fetching new filter results
+    resetArtworks();
+    loadArtworks(true);
+  }, [filters]);
 
   useEffect(() => {
-    loadArtworks();
-  }, [filters]); // Re-load when filters change
-
-  useEffect(() => {
-    loadArtworks();
+    loadArtworks(true);
 
     // Listen for artwork updates
     const handleArtworkUpdate = () => {
@@ -31,14 +38,44 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
     };
   }, []);
 
-  const loadArtworks = async () => {
+  const loadArtworks = useCallback(async (reset = false) => {
+    if (loadingArtworks) return; // avoid duplicate loads
+    setLoadingArtworks(true);
     try {
-      const data = await callApi<Artwork[]>(window.api.listArtworks, filters);
-      setArtworks(data);
+  const currentLength = lengthRef.current; // stable ref
+      const offset = reset ? 0 : currentLength;
+      const payload = { ...filters, limit: PAGE_SIZE, offset } as any;
+      const resp: any = await callApi(window.api.listArtworks, payload);
+      // Backward compatibility if array returned
+      if (Array.isArray(resp)) {
+        if (reset) setArtworks(resp); else appendArtworks(resp);
+      } else {
+        const { items, total, hasMore: more } = resp;
+        if (reset) setArtworks(items, total); else appendArtworks(items, total);
+        if (!more) {
+          // ensure store knows no more pages
+        }
+      }
     } catch (error) {
       console.error('Error loading artworks:', error);
+    } finally {
+      setLoadingArtworks(false);
     }
-  };
+  }, [filters, loadingArtworks]);
+
+  // IntersectionObserver for infinite scroll
+  useEffect(() => {
+    if (!sentinelRef.current) return;
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && hasMore && !loadingArtworks) {
+          loadArtworks(false);
+        }
+      });
+    }, { root: null, rootMargin: '300px', threshold: 0 });
+    observer.observe(sentinelRef.current);
+    return () => observer.disconnect();
+  }, [hasMore, loadingArtworks, loadArtworks]);
 
   const handleArtworkClick = (artwork: Artwork) => {
     selectArtwork(artwork);
@@ -100,7 +137,7 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
   <div className="flex justify-between items-center sticky top-0 z-20 bg-dark-bg border-b border-dark-border px-4 py-2">
         <div className="flex items-center gap-3">
           <h2 className="text-xl font-semibold text-dark-text-primary">
-            Œuvres ({artworks.length})
+            Œuvres ({artworks.length}{totalArtworks > artworks.length ? ` / ${totalArtworks}` : ''})
           </h2>
           {hasActiveFilters() && (
             <button
@@ -289,6 +326,10 @@ export default function ArtworkList({ onEdit, onView }: ArtworkListProps) {
           ))}
         </div>
       )}
+      {/* Sentinel */}
+      <div ref={sentinelRef} className="h-10 flex items-center justify-center text-dark-text-muted text-sm">
+        {loadingArtworks ? 'Chargement...' : hasMore ? 'Faire défiler pour charger plus' : 'Toutes les œuvres sont chargées'}
+      </div>
     </div>
   );
 }

@@ -1,10 +1,17 @@
 import type { Artwork, ArtworkFilters, ArtworkFull, Collection, Pigment, Paper, Type, Place } from '@shared/types';
 
+// Paginated response for artworks
+export interface PaginatedArtworks {
+  items: Artwork[];
+  total: number;
+  hasMore: boolean;
+}
+
 export interface ElectronAPI {
   createArtwork: (data: Partial<Artwork>) => Promise<{ id: number }>;
   updateArtwork: (params: { id: number; updates: Partial<Artwork> }) => Promise<void>;
   deleteArtwork: (id: number) => Promise<void>;
-  listArtworks: (filters: ArtworkFilters) => Promise<Artwork[]>;
+  listArtworks: (filters: ArtworkFilters) => Promise<Artwork[] | PaginatedArtworks>; // backward compatible until all callers updated
   getArtworkFull: (id: number) => Promise<ArtworkFull>;
   listYears: () => Promise<{ year: number; count: number }[]>;
   setPigments: (params: { artworkId: number; pigmentIds: number[] }) => Promise<void>;

@@ -1,37 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { callApi } from '../../hooks/useApi';
 import { useCatalogStore } from '../../store/catalogStore';
 
 export default function SearchBar() {
   const [query, setQuery] = useState('');
   const [showFilters, setShowFilters] = useState(false);
 
-  const { setArtworks, filters, setFilters } = useCatalogStore();
+  const { filters, setFilters } = useCatalogStore();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      doSearch();
+      const newQuery = query.trim() || undefined;
+      if (filters.query === newQuery) return; // no change, avoid triggering reload
+      // Only update the query field to keep other filters intact
+      setFilters({ ...filters, query: newQuery });
     }, 300);
     return () => clearTimeout(timeout);
-  }, [query]);
-
-  const doSearch = async () => {
-    try {
-      const filters: any = {};
-
-      if (query.trim()) filters.query = query.trim();
-  // date filters removed; year-based filtering is handled via sidebar
-
-      const results = await callApi(window.api.listArtworks, filters);
-      setArtworks(results);
-    } catch (error) {
-      console.error('Error searching:', error);
-    }
-  };
+  }, [query, filters.query, setFilters]);
 
   const clearFilters = () => {
     setQuery('');
-    setFilters({});
+  setFilters({});
   };
 
   const hasActiveFilters = query ||

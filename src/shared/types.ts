@@ -66,6 +66,9 @@ export interface ArtworkFilters {
   noPlace?: boolean;
   noPigments?: boolean;
   noPapers?: boolean;
+  // Pagination (used for infinite scroll)
+  limit?: number;
+  offset?: number;
 }
 
 export interface ArtworkFull {
