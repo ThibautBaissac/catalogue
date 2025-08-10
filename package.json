@@ -12,7 +12,7 @@
     "lint": "eslint . --ext .ts,.tsx",
     "rebuild": "npx electron-builder install-app-deps",
     "postinstall": "electron-builder install-app-deps",
-    "generate:icon": "node scripts/generate-icon.js src/renderer/assets/images/logo.jpg"
+    "generate:icon": "node scripts/generate-icon.js src/renderer/assets/images/app_icon.jpg"
   },
   "dependencies": {
     "archiver": "^7.0.1",

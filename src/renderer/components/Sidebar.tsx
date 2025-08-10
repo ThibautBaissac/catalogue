@@ -153,13 +153,13 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
             <img
               src={logoImg}
               alt="Logo Pascal Thouvenin"
-              className="w-8 h-8 lg:w-10 lg:h-10 rounded-full object-cover"
+              className="h-10 object-cover"
               onError={(e) => {
                 // Fallback to initials if image fails to load
                 const target = e.currentTarget;
                 target.style.display = 'none';
                 const fallback = document.createElement('div');
-                fallback.className = 'w-8 h-8 lg:w-10 lg:h-10 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white text-xs font-bold';
+                fallback.className = 'w-8 h-8 rounded-full bg-gradient-to-br from-red-500 to-orange-500 flex items-center justify-center text-white text-xs font-bold';
                 fallback.textContent = 'PT';
                 target.parentNode?.insertBefore(fallback, target);
               }}
