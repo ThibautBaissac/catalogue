@@ -6,14 +6,14 @@ export default defineConfig({
   root: 'src/renderer',
   base: './',
   build: {
-  outDir: '../../dist/renderer',
-  emptyOutDir: true,
+    outDir: '../../dist/renderer',
+    emptyOutDir: true,
   },
   plugins: [react()],
   resolve: {
     alias: {
-  '@': resolve(__dirname, 'src/renderer'),
-  '@shared': resolve(__dirname, 'src/shared')
+      '@': resolve(__dirname, 'src/renderer'),
+      '@shared': resolve(__dirname, 'src/shared')
     }
   },
   server: {
