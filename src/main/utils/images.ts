@@ -74,25 +74,27 @@ export function deleteImage(imageId: number) {
     throw new Error('Image not found');
   }
 
-  // Safety: prevent deletion if it's the only image
+  // Determine how many images exist (used to decide preview reassignment)
   const { cnt } = db.prepare(`SELECT COUNT(*) as cnt FROM artwork_images WHERE artwork_id = ?`).get(imageRecord.artwork_id) as { cnt: number };
-  if (cnt <= 1) {
-    throw new Error("Cannot delete the only image of an artwork");
-  }
 
   // If this image is the current preview, decide a replacement before deletion
   try {
     const art = db.prepare(`SELECT preview_image_id FROM artworks WHERE id = ?`).get(imageRecord.artwork_id) as { preview_image_id: number | null } | undefined;
     if (art && art.preview_image_id === imageRecord.id) {
-      // Find another image to promote as preview (prefer the earliest by created_at)
-      const replacement = db.prepare(`
-        SELECT id FROM artwork_images
-        WHERE artwork_id = ? AND id != ?
-        ORDER BY created_at ASC
-        LIMIT 1
-      `).get(imageRecord.artwork_id, imageRecord.id) as { id: number } | undefined;
-      const newPreview = replacement ? replacement.id : null;
-      db.prepare(`UPDATE artworks SET preview_image_id = ? WHERE id = ?`).run(newPreview, imageRecord.artwork_id);
+      // If more than one image remains, assign a replacement; otherwise allow NULL (FK ON DELETE SET NULL also handles it)
+      if (cnt > 1) {
+        const replacement = db.prepare(`
+          SELECT id FROM artwork_images
+          WHERE artwork_id = ? AND id != ?
+          ORDER BY created_at ASC
+          LIMIT 1
+        `).get(imageRecord.artwork_id, imageRecord.id) as { id: number } | undefined;
+        const newPreview = replacement ? replacement.id : null;
+        db.prepare(`UPDATE artworks SET preview_image_id = ? WHERE id = ?`).run(newPreview, imageRecord.artwork_id);
+      } else {
+        // Explicitly clear; (redundant with FK ON DELETE SET NULL, but keeps intent clear)
+        db.prepare(`UPDATE artworks SET preview_image_id = NULL WHERE id = ?`).run(imageRecord.artwork_id);
+      }
     }
   } catch (e) {
     console.warn('Failed to update preview on image deletion:', e);

@@ -356,12 +356,6 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
   const handleDeleteImage = async (imageId: number, e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent changing the current image
 
-    // Prevent deletion if it's the only image (and therefore preview by rule)
-    if (artworkFull && artworkFull.images.length === 1) {
-      alert('Impossible de supprimer la seule image de l’œuvre.');
-      return;
-    }
-
     if (!window.confirm('Êtes-vous sûr de vouloir supprimer cette image ?')) {
       return;
     }
@@ -371,9 +365,9 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
       // Reload artwork data to get updated images
       await loadArtworkFull();
 
-      // Adjust current image index if necessary
-      if (artworkFull && currentImageIndex >= artworkFull.images.length) {
-        setCurrentImageIndex(Math.max(0, artworkFull.images.length - 1));
+      // Adjust current image index if necessary after state refresh (use stale artworkFull safely)
+      if (artworkFull && currentImageIndex >= artworkFull.images.length - 1) {
+        setCurrentImageIndex(Math.max(0, (artworkFull.images.length - 1) - 1));
       }
     } catch (error) {
       console.error('Error deleting image:', error);
