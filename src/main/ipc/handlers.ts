@@ -81,10 +81,13 @@ registerIpc('place.update', ({ id, updates }: any) => { updatePlace(id, updates)
 registerIpc('place.delete', ({ id }: any) => { deletePlace(id); });
 
 registerIpc('artwork.addImage', async ({ artworkId, filePaths }: any) => {
+  if (!Array.isArray(filePaths) || filePaths.length === 0) return null;
   for (const fp of filePaths) {
+    if (!fp) continue;
     const img = await importImages(artworkId, fp);
     await generateThumbnails(img as any);
   }
+  return null;
 });
 
 registerIpc('artwork.removeImage', ({ imageId }: any) => { deleteImage(imageId); });
@@ -121,4 +124,22 @@ registerIpc('system.showSaveDialog', async (opts: { defaultPath?: string } | und
   }));
   if (result.canceled) return null;
   return result.filePath || null;
+});
+
+// Generic open file dialog (used to pick images now that File.path is no longer exposed in recent Electron versions)
+registerIpc('system.openFileDialog', async (options: { filters?: { name: string; extensions: string[] }[]; properties?: any[] } | undefined) => {
+  const win = BrowserWindow.getFocusedWindow();
+  const result = await (win ? dialog.showOpenDialog(win, {
+    title: 'Choisir des fichiers',
+    buttonLabel: 'Sélectionner',
+    filters: options?.filters,
+    properties: (options?.properties || ['openFile']) as any,
+  }) : dialog.showOpenDialog({
+    title: 'Choisir des fichiers',
+    buttonLabel: 'Sélectionner',
+    filters: options?.filters,
+    properties: (options?.properties || ['openFile']) as any,
+  }));
+  if (result.canceled) return [];
+  return result.filePaths;
 });

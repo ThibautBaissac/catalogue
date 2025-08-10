@@ -50,6 +50,7 @@ export interface ElectronAPI {
   restoreCatalog: (src: string) => Promise<void>;
   getDesktopPath: () => Promise<string>;
   showSaveDialog: (defaultPath?: string) => Promise<string | null>;
+  openFileDialog: (options?: { filters?: { name: string; extensions: string[] }[]; properties?: string[] }) => Promise<string[]>;
   onBackupProgress: (cb: (p: { processedBytes: number; totalBytes?: number; processedFiles: number; totalFiles?: number; percent?: number }) => void) => () => void;
 
   // Helper function to convert file paths to custom protocol URLs

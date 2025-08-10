@@ -48,6 +48,7 @@ contextBridge.exposeInMainWorld('api', {
 
   getDesktopPath: () => wrap('system.desktopPath')(),
   showSaveDialog: (defaultPath?: string) => wrap('system.showSaveDialog')({ defaultPath }),
+  openFileDialog: (options?: { filters?: { name: string; extensions: string[] }[]; properties?: string[] }) => wrap('system.openFileDialog')(options),
   onBackupProgress: (cb: (p: { processedBytes: number; totalBytes?: number; processedFiles: number; totalFiles?: number; percent?: number }) => void) => {
     const listener = (_: any, data: any) => cb(data);
     ipcRenderer.on('catalog.backupProgress', listener);
