@@ -34,7 +34,8 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
 
     // Listen for artwork updates
     const handleArtworkUpdate = () => {
-      loadArtworks();
+      // Full refresh so updated preview/primaryImage is reflected; reset pagination
+      loadArtworks(true);
     };
 
     window.addEventListener('artwork-updated', handleArtworkUpdate);

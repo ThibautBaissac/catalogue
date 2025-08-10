@@ -369,6 +369,8 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
       if (artworkFull && currentImageIndex >= artworkFull.images.length - 1) {
         setCurrentImageIndex(Math.max(0, (artworkFull.images.length - 1) - 1));
       }
+  // Notify other views (list/grid) to update preview
+  window.dispatchEvent(new CustomEvent('artwork-updated'));
     } catch (error) {
       console.error('Error deleting image:', error);
     }

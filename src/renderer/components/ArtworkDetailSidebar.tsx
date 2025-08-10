@@ -74,6 +74,8 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
     try {
       await callApi(() => window.api.removeImage(imageId));
       load(); // Reload to show updated images
+  // Notify artwork list/grid to refresh preview thumbnail if needed
+  window.dispatchEvent(new CustomEvent('artwork-updated'));
     } catch (error) {
       console.error('Error deleting image:', error);
     }
