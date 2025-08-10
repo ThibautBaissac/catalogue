@@ -129,14 +129,14 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
   };
 
   return (
-    <div className="p-6 bg-dark-card text-dark-text-primary">
+  <div className="p-6 bg-neutral-800 text-neutral-100">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-xl font-semibold text-dark-text-primary">
+  <h2 className="text-xl font-semibold text-neutral-100">
           {isEdit ? 'Modifier l\'œuvre' : 'Nouvelle œuvre'}
         </h2>
         <button
           onClick={onCancel}
-          className="text-dark-text-secondary hover:text-dark-text-primary text-xl"
+          className="text-neutral-400 hover:text-neutral-100 text-xl"
         >
           ✕
         </button>
@@ -151,57 +151,57 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
+            <label className="block text-sm font-medium text-neutral-400 mb-1">
               Référence *
             </label>
             <input
               type="text"
               value={reference}
               onChange={(e) => setReference(e.target.value)}
-              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full bg-neutral-700/60 border border-neutral-600 rounded-md px-3 py-2 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
+            <label className="block text-sm font-medium text-neutral-400 mb-1">
               Titre
             </label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full bg-neutral-700/60 border border-neutral-600 rounded-md px-3 py-2 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         </div>
 
           <div>
-            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
+            <label className="block text-sm font-medium text-neutral-400 mb-1">
               Propriétaire
             </label>
             <input
               type="text"
               value={owner}
               onChange={(e) => setOwner(e.target.value)}
-              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full bg-neutral-700/60 border border-neutral-600 rounded-md px-3 py-2 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
         <div>
-          <label className="block text-sm font-medium text-dark-text-secondary mb-1">
+          <label className="block text-sm font-medium text-neutral-400 mb-1">
             Description
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             rows={3}
-            className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+            className="w-full bg-neutral-700/60 border border-neutral-600 rounded-md px-3 py-2 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
           />
         </div>
 
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
+            <label className="block text-sm font-medium text-neutral-400 mb-1">
               Largeur (cm)
             </label>
             <input
@@ -209,11 +209,11 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
               step="0.1"
               value={width}
               onChange={(e) => setWidth(e.target.value)}
-              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full bg-neutral-700/60 border border-neutral-600 rounded-md px-3 py-2 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
+            <label className="block text-sm font-medium text-neutral-400 mb-1">
               Hauteur (cm)
             </label>
             <input
@@ -221,31 +221,31 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
               step="0.1"
               value={height}
               onChange={(e) => setHeight(e.target.value)}
-              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full bg-neutral-700/60 border border-neutral-600 rounded-md px-3 py-2 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
+            <label className="block text-sm font-medium text-neutral-400 mb-1">
               Date
             </label>
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-secondary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full bg-neutral-700/60 border border-neutral-600 rounded-md px-3 py-2 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-4">
           <div>
-            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
+            <label className="block text-sm font-medium text-neutral-400 mb-1">
               Collection
             </label>
             <select
               value={collectionId}
               onChange={(e) => setCollectionId(e.target.value)}
-              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full bg-neutral-700/60 border border-neutral-600 rounded-md px-3 py-2 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">Aucune collection</option>
               {collections.map(collection => (
@@ -257,13 +257,13 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
+            <label className="block text-sm font-medium text-neutral-400 mb-1">
               Type
             </label>
             <select
               value={typeId}
               onChange={(e) => setTypeId(e.target.value)}
-              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full bg-neutral-700/60 border border-neutral-600 rounded-md px-3 py-2 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">Aucun type</option>
               {types.map(type => (
@@ -275,13 +275,13 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-dark-text-secondary mb-1">
+            <label className="block text-sm font-medium text-neutral-400 mb-1">
               Lieu
             </label>
             <select
               value={placeId}
               onChange={(e) => setPlaceId(e.target.value)}
-              className="w-full bg-dark-hover border border-dark-border rounded-md px-3 py-2 text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full bg-neutral-700/60 border border-neutral-600 rounded-md px-3 py-2 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">Aucun lieu</option>
               {places.map(place => (
@@ -295,17 +295,17 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-dark-text-secondary mb-2">
+            <label className="block text-sm font-medium text-neutral-400 mb-2">
               Pigments
             </label>
-            <div className="max-h-32 overflow-y-auto bg-dark-hover border border-dark-border rounded-md p-2">
+            <div className="max-h-32 overflow-y-auto bg-neutral-700/60 border border-neutral-600 rounded-md p-2">
               {pigments.map(pigment => (
-                <label key={pigment.id} className="flex items-center space-x-2 py-1 text-dark-text-primary hover:bg-dark-border/50 rounded px-1">
+                <label key={pigment.id} className="flex items-center space-x-2 py-1 text-neutral-100 hover:bg-neutral-600/60 rounded px-1">
                   <input
                     type="checkbox"
                     checked={selectedPigments.includes(pigment.id)}
                     onChange={() => togglePigment(pigment.id)}
-                    className="rounded border-dark-border bg-dark-hover text-blue-500 focus:ring-blue-500 focus:ring-offset-0"
+                    className="rounded border-neutral-600 bg-neutral-700/60 text-blue-500 focus:ring-blue-500 focus:ring-offset-0"
                   />
                   <span className="text-sm">{pigment.name}</span>
                 </label>
@@ -314,17 +314,17 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-dark-text-secondary mb-2">
+            <label className="block text-sm font-medium text-neutral-400 mb-2">
               Papiers
             </label>
-            <div className="max-h-32 overflow-y-auto bg-dark-hover border border-dark-border rounded-md p-2">
+            <div className="max-h-32 overflow-y-auto bg-neutral-700/60 border border-neutral-600 rounded-md p-2">
               {papers.map(paper => (
-                <label key={paper.id} className="flex items-center space-x-2 py-1 text-dark-text-primary hover:bg-dark-border/50 rounded px-1">
+                <label key={paper.id} className="flex items-center space-x-2 py-1 text-neutral-100 hover:bg-neutral-600/60 rounded px-1">
                   <input
                     type="checkbox"
                     checked={selectedPapers.includes(paper.id)}
                     onChange={() => togglePaper(paper.id)}
-                    className="rounded border-dark-border bg-dark-hover text-blue-500 focus:ring-blue-500 focus:ring-offset-0"
+                    className="rounded border-neutral-600 bg-neutral-700/60 text-blue-500 focus:ring-blue-500 focus:ring-offset-0"
                   />
                   <span className="text-sm">{paper.name}</span>
                 </label>
@@ -337,7 +337,7 @@ export default function ArtworkEditor({ initial, onSaved, onCancel }: ArtworkEdi
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 border border-dark-border text-dark-text-secondary rounded-md hover:bg-dark-hover hover:text-dark-text-primary transition-colors"
+            className="px-4 py-2 border border-neutral-600 text-neutral-400 rounded-md hover:bg-neutral-700/60 hover:text-neutral-100 transition-colors"
           >
             Annuler
           </button>

@@ -509,15 +509,15 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
       </div>
 
       {/* Info sidebar */}
-      <div className="w-full lg:w-80 bg-dark-card border-t lg:border-t-0 lg:border-l border-dark-border overflow-y-auto max-h-1/3 lg:max-h-full">
+  <div className="w-full lg:w-80 bg-neutral-800 border-t lg:border-t-0 lg:border-l border-neutral-700 overflow-y-auto max-h-1/3 lg:max-h-full">
         <div className="p-6">
           {/* Header */}
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-dark-text-primary mb-2">
+            <h1 className="text-2xl font-bold text-neutral-100 mb-2">
               {artwork.title || artwork.reference}
             </h1>
             {artwork.title && (
-              <div className="text-sm text-dark-text-muted font-mono">
+              <div className="text-sm text-neutral-500 font-mono">
                 {artwork.reference}
               </div>
             )}
@@ -526,8 +526,8 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
           {/* Description */}
           {artwork.description && (
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-dark-text-primary mb-2">Description</h3>
-              <p className="text-dark-text-secondary leading-relaxed">
+              <h3 className="text-sm font-semibold text-neutral-100 mb-2">Description</h3>
+              <p className="text-neutral-300 leading-relaxed">
                 {artwork.description}
               </p>
             </div>
@@ -535,26 +535,26 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
 
           {/* Zoom Controls */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-dark-text-primary mb-3">Zoom</h3>
+            <h3 className="text-sm font-semibold text-neutral-100 mb-3">Zoom</h3>
             <div className="space-y-3">
               {/* Zoom buttons */}
               <div className="flex gap-2">
                 <button
                   onClick={handleZoomOut}
-                  className="flex-1 bg-dark-hover hover:bg-dark-border text-dark-text-secondary hover:text-dark-text-primary px-3 py-2 rounded text-sm transition-colors"
+                  className="flex-1 bg-neutral-700/60 hover:bg-neutral-600/60 text-neutral-400 hover:text-neutral-100 px-3 py-2 rounded text-sm transition-colors"
                   disabled={zoom <= 0.01}
                 >
                   Zoom -
                 </button>
                 <button
                   onClick={handleResetZoom}
-                  className="flex-1 bg-dark-hover hover:bg-dark-border text-dark-text-secondary hover:text-dark-text-primary px-3 py-2 rounded text-sm transition-colors"
+                  className="flex-1 bg-neutral-700/60 hover:bg-neutral-600/60 text-neutral-400 hover:text-neutral-100 px-3 py-2 rounded text-sm transition-colors"
                 >
                   Ajuster
                 </button>
                 <button
                   onClick={handleZoomIn}
-                  className="flex-1 bg-dark-hover hover:bg-dark-border text-dark-text-secondary hover:text-dark-text-primary px-3 py-2 rounded text-sm transition-colors"
+                  className="flex-1 bg-neutral-700/60 hover:bg-neutral-600/60 text-neutral-400 hover:text-neutral-100 px-3 py-2 rounded text-sm transition-colors"
                   disabled={zoom >= 2.0}
                 >
                   Zoom +
@@ -570,11 +570,11 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
                   step="0.01"
                   value={zoom}
                   onChange={(e) => handleZoomChange(parseFloat(e.target.value))}
-                  className="w-full h-2 bg-dark-hover rounded-lg appearance-none cursor-pointer slider"
+                  className="w-full h-2 bg-neutral-700/60 rounded-lg appearance-none cursor-pointer slider"
                 />
-                <div className="flex justify-between text-xs text-dark-text-muted mt-1">
+                <div className="flex justify-between text-xs text-neutral-500 mt-1">
                   <span>1%</span>
-                  <span className="text-dark-text-secondary">{Math.round(zoom * 100)}%</span>
+                  <span className="text-neutral-400">{Math.round(zoom * 100)}%</span>
                   <span>200%</span>
                 </div>
               </div>
@@ -589,7 +589,7 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
                 const canPan = scaledWidth > containerRect.width || scaledHeight > containerRect.height;
 
                 return canPan ? (
-                  <div className="text-xs text-dark-text-muted">
+                  <div className="text-xs text-neutral-500">
                     💡 Cliquez et glissez pour déplacer l'image
                   </div>
                 ) : null;
@@ -599,19 +599,19 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
 
           {/* Details */}
           <div className="mb-6 space-y-3">
-            <h3 className="text-sm font-semibold text-dark-text-primary">Détails</h3>
+            <h3 className="text-sm font-semibold text-neutral-100">Détails</h3>
 
             {artwork.owner && (
               <div className="flex items-center gap-2 text-sm">
-                <span className="text-dark-text-muted">👤</span>
-                <span className="text-dark-text-secondary">{artwork.owner}</span>
+                <span className="text-neutral-500">👤</span>
+                <span className="text-neutral-400">{artwork.owner}</span>
               </div>
             )}
 
             {artwork.width && artwork.height && (
               <div className="flex items-center gap-2 text-sm">
-                <span className="text-dark-text-muted">📏</span>
-                <span className="text-dark-text-secondary">
+                <span className="text-neutral-500">📏</span>
+                <span className="text-neutral-400">
                   {artwork.width} × {artwork.height} cm
                 </span>
               </div>
@@ -619,22 +619,22 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
 
             {artwork.date && (
               <div className="flex items-center gap-2 text-sm">
-                <span className="text-dark-text-muted">📅</span>
-                <span className="text-dark-text-secondary">{artwork.date}</span>
+                <span className="text-neutral-500">📅</span>
+                <span className="text-neutral-400">{artwork.date}</span>
               </div>
             )}
 
             {artworkFull.collection && (
               <div className="flex items-center gap-2 text-sm">
-                <span className="text-dark-text-muted">📚</span>
-                <span className="text-dark-text-secondary">{artworkFull.collection.name}</span>
+                <span className="text-neutral-500">📚</span>
+                <span className="text-neutral-400">{artworkFull.collection.name}</span>
               </div>
             )}
 
             {artworkFull.type && (
               <div className="flex items-center gap-2 text-sm">
-                <span className="text-dark-text-muted">🏷️</span>
-                <span className="text-dark-text-secondary">{artworkFull.type.name}</span>
+                <span className="text-neutral-500">🏷️</span>
+                <span className="text-neutral-400">{artworkFull.type.name}</span>
               </div>
             )}
 
@@ -643,7 +643,7 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
           {/* Pigments */}
           {artworkFull.pigments.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-dark-text-primary mb-3">Pigments</h3>
+              <h3 className="text-sm font-semibold text-neutral-100 mb-3">Pigments</h3>
               <div className="flex flex-wrap gap-2">
                 {artworkFull.pigments.map(pigment => (
                   <span
@@ -660,7 +660,7 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
           {/* Papers */}
           {artworkFull.papers.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-dark-text-primary mb-3">Papiers</h3>
+              <h3 className="text-sm font-semibold text-neutral-100 mb-3">Papiers</h3>
               <div className="flex flex-wrap gap-2">
                 {artworkFull.papers.map(paper => (
                   <span
@@ -677,7 +677,7 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
           {/* Thumbnail gallery */}
           {artworkFull.images.length > 1 && (
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-dark-text-primary mb-3">
+              <h3 className="text-sm font-semibold text-neutral-100 mb-3">
                 Images ({artworkFull.images.length})
               </h3>
               <div className="grid grid-cols-4 gap-2">
@@ -694,7 +694,7 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
                       className={`w-full aspect-square rounded overflow-hidden border-2 transition-colors ${
                         index === currentImageIndex
                           ? 'border-blue-500'
-                          : 'border-dark-border hover:border-dark-border-light'
+                          : 'border-neutral-700 hover:border-neutral-500'
                       }`}
                     >
                       <img
@@ -742,18 +742,18 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
           {/* Single image preview info (no toggle; single image is always preview) */}
           {artworkFull.images.length === 1 && (
             <div className="mb-6">
-              <h3 className="text-sm font-semibold text-dark-text-primary mb-3">
+        <h3 className="text-sm font-semibold text-neutral-100 mb-3">
                 Image de prévisualisation
               </h3>
-              <div className="flex items-center gap-3 p-3 bg-dark-bg-secondary rounded-lg">
+        <div className="flex items-center gap-3 p-3 bg-neutral-700/40 rounded-lg">
                 <div className="flex-shrink-0">
                   <img
                     src={window.api.getImageUrl(artworkFull.images[0].thumbnail_path || artworkFull.images[0].file_path)}
                     alt="Image"
-                    className="w-12 h-12 object-contain rounded border border-dark-border"
+          className="w-12 h-12 object-contain rounded border border-neutral-700"
                   />
                 </div>
-                <div className="flex-1 text-sm text-dark-text-secondary">
+        <div className="flex-1 text-sm text-neutral-400">
                   Cette image est utilisée comme prévisualisation
                 </div>
               </div>
@@ -770,19 +770,19 @@ export default function ArtworkViewer({ artwork, onClose, onEdit, initialImageIn
             </button>
             <button
               onClick={onClose}
-              className="px-4 py-2 bg-dark-hover hover:bg-dark-border text-dark-text-secondary hover:text-dark-text-primary rounded-lg transition-colors"
+              className="px-4 py-2 bg-neutral-700/60 hover:bg-neutral-600/60 text-neutral-400 hover:text-neutral-100 rounded-lg transition-colors"
             >
               Fermer
             </button>
           </div>
 
           {/* Keyboard shortcuts help */}
-          <div className="text-xs text-dark-text-muted border-t border-dark-border pt-4">
+      <div className="text-xs text-neutral-500 border-t border-neutral-700 pt-4">
             <div className="font-semibold mb-2">Raccourcis clavier :</div>
             <div className="space-y-1">
-              <div>• <kbd className="px-1 py-0.5 bg-dark-hover rounded text-xs">←</kbd> <kbd className="px-1 py-0.5 bg-dark-hover rounded text-xs">→</kbd> Navigation images</div>
-              <div>• <kbd className="px-1 py-0.5 bg-dark-hover rounded text-xs">Ctrl</kbd> + <kbd className="px-1 py-0.5 bg-dark-hover rounded text-xs">molette</kbd> Zoom</div>
-              <div>• <kbd className="px-1 py-0.5 bg-dark-hover rounded text-xs">Échap</kbd> Fermer</div>
+        <div>• <kbd className="px-1 py-0.5 bg-neutral-700/60 rounded text-xs">←</kbd> <kbd className="px-1 py-0.5 bg-neutral-700/60 rounded text-xs">→</kbd> Navigation images</div>
+        <div>• <kbd className="px-1 py-0.5 bg-neutral-700/60 rounded text-xs">Ctrl</kbd> + <kbd className="px-1 py-0.5 bg-neutral-700/60 rounded text-xs">molette</kbd> Zoom</div>
+        <div>• <kbd className="px-1 py-0.5 bg-neutral-700/60 rounded text-xs">Échap</kbd> Fermer</div>
             </div>
           </div>
         </div>

@@ -228,12 +228,12 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
 
   if (artworks.length === 0) {
     return (
-      <div className="flex items-center justify-center h-64 text-dark-text-muted">
+  <div className="flex items-center justify-center h-64 text-neutral-500">
         <div className="text-center">
           <div className="text-6xl mb-4 opacity-50">🎨</div>
           {hasActiveFilters() ? (
             <>
-              <div className="text-lg mb-2 text-dark-text-secondary">Aucune œuvre correspondant aux filtres</div>
+              <div className="text-lg mb-2 text-neutral-400">Aucune œuvre correspondant aux filtres</div>
               <div className="text-sm mb-4">Essayez de modifier vos critères de recherche</div>
               <button
                 onClick={clearFilters}
@@ -244,7 +244,7 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
             </>
           ) : (
             <>
-              <div className="text-lg mb-2 text-dark-text-secondary">Aucune œuvre dans votre catalogue</div>
+              <div className="text-lg mb-2 text-neutral-400">Aucune œuvre dans votre catalogue</div>
               <div className="text-sm">Cliquez sur "Nouvelle œuvre" pour commencer</div>
             </>
           )}
@@ -255,12 +255,12 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
 
   return (
     <div ref={parentRef} className="space-y-4">
-      <div className="flex justify-between items-start sticky top-0 z-20 bg-dark-card border-b border-dark-border px-4 py-2">
+  <div className="flex justify-between items-start sticky top-0 z-20 bg-neutral-800 border-b border-neutral-700 px-4 py-2">
         <div className="flex flex-col gap-1 flex-1 min-w-0">
           <div className="flex items-center gap-3 flex-wrap">
           <button
             onClick={onToggleSidebar}
-            className="flex items-center justify-center w-8 h-8 rounded-lg bg-dark-hover hover:bg-dark-border text-dark-text-secondary hover:text-dark-text-primary transition-all duration-200"
+            className="flex items-center justify-center w-8 h-8 rounded-lg bg-neutral-700/60 hover:bg-neutral-600 text-neutral-400 hover:text-neutral-100 transition-all duration-200"
             title={sidebarVisible ? 'Masquer la barre latérale' : 'Afficher la barre latérale'}
           >
             <svg
@@ -277,13 +277,13 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
               <path d="M9 3v18" />
             </svg>
           </button>
-            <h2 className="text-xl font-semibold text-dark-text-primary whitespace-nowrap">
+            <h2 className="text-xl font-semibold text-neutral-100 whitespace-nowrap">
               Œuvres ({artworks.length}{totalArtworks > artworks.length ? ` / ${totalArtworks}` : ''})
             </h2>
             {(lookupsLoading) && (
               <div className="flex items-center gap-2 flex-wrap animate-pulse">
                 {Array.from({ length: 3 }).map((_,i)=>(
-                  <span key={i} className="h-6 w-28 rounded-full bg-dark-hover border border-dark-border" />
+                  <span key={i} className="h-6 w-28 rounded-full bg-neutral-700/60 border border-neutral-700" />
                 ))}
               </div>
             )}
@@ -292,7 +292,7 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
                 {activeFilterChips.map(chip => (
                   <span
                     key={chip.key}
-                    className={`group inline-flex items-center max-w-xs truncate px-2 py-1 text-[11px] rounded-full border cursor-default select-none transition-all duration-200 
+                    className={`group inline-flex items-center max-w-xs truncate px-2 py-1 text-[11px] rounded-full border cursor-default select-none transition-all duration-200
                       ${chip.color === 'blue' ? 'bg-blue-500/15 text-blue-300 border-blue-500/30' : ''}
                       ${chip.color === 'green' ? 'bg-green-500/15 text-green-300 border-green-500/30' : ''}
                       ${chip.color === 'red' ? 'bg-red-500/15 text-red-300 border-red-500/30' : ''}
@@ -328,7 +328,7 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
             className={`px-3 py-1.5 rounded-lg text-sm transition-all duration-200 ${
               viewMode === 'list'
                 ? 'bg-blue-500 text-white'
-                : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'
+                : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700/60 border border-neutral-700'
             }`}
           >
             Liste
@@ -338,27 +338,27 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
             className={`px-3 py-1.5 rounded-lg text-sm transition-all duration-200 ${
               viewMode === 'grid'
                 ? 'bg-blue-500 text-white'
-                : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'
+                : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700/60 border border-neutral-700'
             }`}
           >
             Grille
           </button>
 
           {viewMode === 'grid' && (
-            <div className="flex items-center gap-2 ml-4 pl-4 border-l border-dark-border">
-              <span className="text-sm text-dark-text-secondary">Colonnes:</span>
+            <div className="flex items-center gap-2 ml-4 pl-4 border-l border-neutral-700">
+              <span className="text-sm text-neutral-400">Colonnes:</span>
               <input
                 type="range"
                 min="2"
                 max="10"
                 value={gridColumns}
                 onChange={(e) => setGridColumns(parseInt(e.target.value))}
-                className="w-20 h-2 bg-dark-border rounded-lg appearance-none cursor-pointer slider"
+                className="w-20 h-2 bg-neutral-700 rounded-lg appearance-none cursor-pointer slider"
                 style={{
                   background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${((gridColumns - 1) / 9) * 100}%, #374151 ${((gridColumns - 1) / 9) * 100}%, #374151 100%)`
                 }}
               />
-              <span className="text-sm text-dark-text-primary font-mono min-w-[1.5rem] text-center">
+              <span className="text-sm text-neutral-100 font-mono min-w-[1.5rem] text-center">
                 {gridColumns}
               </span>
             </div>
@@ -371,14 +371,14 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
           {artworks.map((artwork) => (
             <div
               key={artwork.id}
-              className={`border border-dark-border rounded-lg p-4 flex items-center gap-4 hover:shadow-xl transition-all duration-200 cursor-pointer bg-dark-card ${
+              className={`border border-neutral-700 rounded-lg p-4 flex items-center gap-4 hover:shadow-xl transition-all duration-200 cursor-pointer bg-neutral-800 ${
                 selectedArtwork?.id === artwork.id
                   ? 'ring-2 ring-blue-500 bg-blue-500/10 border-blue-500/50'
-                  : 'hover:bg-dark-hover hover:border-dark-border-light'
+                  : 'hover:bg-neutral-700/60 hover:border-neutral-600'
               }`}
               onClick={() => handleArtworkClick(artwork)}
             >
-              <div className="w-16 h-16 bg-dark-bg flex-shrink-0 flex items-center justify-center rounded border border-dark-border overflow-hidden">
+              <div className="w-16 h-16 bg-neutral-900 flex-shrink-0 flex items-center justify-center rounded border border-neutral-700 overflow-hidden">
                 {artwork.primaryImage?.thumbnail_path ? (
                   <img
                     src={window.api.getImageUrl(artwork.primaryImage.thumbnail_path)}
@@ -391,21 +391,21 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
                     }}
                   />
                 ) : null}
-                <div className={`text-xs text-dark-text-muted font-mono ${artwork.primaryImage?.thumbnail_path ? 'hidden' : ''}`}>
+                <div className={`text-xs text-neutral-500 font-mono ${artwork.primaryImage?.thumbnail_path ? 'hidden' : ''}`}>
                   {artwork.reference}
                 </div>
               </div>
 
               <div className="flex-1 min-w-0">
-                <div className="font-semibold text-dark-text-primary truncate">
+                <div className="font-semibold text-neutral-100 truncate">
                   {artwork.title || artwork.reference}
                 </div>
                 {artwork.description && (
-                  <div className="text-sm text-dark-text-secondary line-clamp-2 mt-1">
+                  <div className="text-sm text-neutral-400 line-clamp-2 mt-1">
                     {artwork.description}
                   </div>
                 )}
-                <div className="flex items-center gap-4 mt-2 text-xs text-dark-text-muted">
+                <div className="flex items-center gap-4 mt-2 text-xs text-neutral-500">
                   {artwork.width && artwork.height && (
                     <span className="flex items-center gap-1">
                       📏 {artwork.width} × {artwork.height} cm
@@ -441,14 +441,14 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
           {artworks.map((artwork) => (
             <div
               key={artwork.id}
-              className={`border border-dark-border rounded-lg p-3 hover:shadow-xl transition-all duration-200 cursor-pointer bg-dark-card aspect-square flex flex-col min-w-[150px] ${
+              className={`border border-neutral-700 rounded-lg p-3 hover:shadow-xl transition-all duration-200 cursor-pointer bg-neutral-800 aspect-square flex flex-col min-w-[150px] ${
                 selectedArtwork?.id === artwork.id
                   ? 'ring-2 ring-blue-500 bg-blue-500/10 border-blue-500/50'
-                  : 'hover:bg-dark-hover hover:border-dark-border-light'
+                  : 'hover:bg-neutral-700/60 hover:border-neutral-600'
               }`}
               onClick={() => handleArtworkClick(artwork)}
             >
-              <div className="flex-1 flex items-center justify-center bg-dark-bg rounded border border-dark-border mb-2 overflow-hidden min-h-[100px]">
+              <div className="flex-1 flex items-center justify-center bg-neutral-900 rounded border border-neutral-700 mb-2 overflow-hidden min-h-[100px]">
                 {artwork.primaryImage?.thumbnail_path ? (
                   <img
                     src={window.api.getImageUrl(artwork.primaryImage.thumbnail_path)}
@@ -461,18 +461,18 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
                     }}
                   />
                 ) : null}
-                <div className={`text-xs text-dark-text-muted font-mono text-center p-2 ${artwork.primaryImage?.thumbnail_path ? 'hidden' : ''}`}>
+                <div className={`text-xs text-neutral-500 font-mono text-center p-2 ${artwork.primaryImage?.thumbnail_path ? 'hidden' : ''}`}>
                   {artwork.reference}
                 </div>
               </div>
 
               <div className="flex-shrink-0">
-                <div className="font-semibold text-dark-text-primary text-sm truncate mb-1">
+                <div className="font-semibold text-neutral-100 text-sm truncate mb-1">
                   {artwork.title || artwork.reference}
                 </div>
 
                 <div className="flex items-center justify-between">
-                  <div className="text-xs text-dark-text-muted">
+                  <div className="text-xs text-neutral-500">
                     {artwork.width && artwork.height && (
                       <span>{artwork.width}×{artwork.height}cm</span>
                     )}
@@ -500,7 +500,7 @@ export default function ArtworkList({ onEdit, onView, onToggleSidebar, sidebarVi
         </div>
       )}
       {/* Sentinel */}
-      <div ref={sentinelRef} className="h-10 flex items-center justify-center text-dark-text-muted text-sm">
+  <div ref={sentinelRef} className="h-10 flex items-center justify-center text-neutral-500 text-sm">
         {loadingArtworks ? 'Chargement...' : hasMore ? 'Faire défiler pour charger plus' : 'Toutes les œuvres sont chargées'}
       </div>
     </div>

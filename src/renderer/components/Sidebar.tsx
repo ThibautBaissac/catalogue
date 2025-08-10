@@ -146,10 +146,10 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
 
   return (
     <>
-      <aside className="w-64 lg:w-72 h-full bg-dark-card border-r border-dark-border flex flex-col shadow-xl">
+  <aside className="w-64 lg:w-72 h-full bg-neutral-800 border-r border-neutral-700 flex flex-col shadow-xl text-neutral-200">
         {/* Header */}
-        <div className="p-4 lg:p-6 border-b border-dark-border">
-          <h1 className="font-bold text-lg lg:text-xl text-dark-text-primary flex items-center gap-3">
+  <div className="p-4 lg:p-6 border-b border-neutral-700">
+          <h1 className="font-bold text-lg lg:text-xl text-neutral-100 flex items-center gap-3">
             <img
               src={logoImg}
               alt="Logo Pascal Thouvenin"
@@ -182,21 +182,21 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
         </div>
 
         {/* Search & quick filters */}
-        <div className="px-4 pb-2 space-y-3 border-b border-dark-border">
+  <div className="px-4 pb-2 space-y-3 border-b border-neutral-700">
           <div className="relative">
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Rechercher..."
-              className="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2 pl-9 text-sm text-dark-text-primary placeholder-dark-text-muted focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              className="w-full bg-neutral-900 border border-neutral-700 rounded-lg px-4 py-2 pl-9 text-sm text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
             />
-            <div className="absolute left-3 top-2.5 text-dark-text-muted">🔍</div>
+            <div className="absolute left-3 top-2.5 text-neutral-500">🔍</div>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 border ${showFilters || (filters.noCollection||filters.noType||filters.noPlace||filters.noPigments||filters.noPapers) ? 'bg-blue-600/20 border-blue-500 text-blue-400' : 'border-dark-border text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'}`}
+              className={`flex-1 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 border ${showFilters || (filters.noCollection||filters.noType||filters.noPlace||filters.noPigments||filters.noPapers) ? 'bg-blue-600/20 border-blue-500 text-blue-400' : 'border-neutral-700 text-neutral-400 hover:bg-neutral-700/60 hover:text-neutral-100'}`}
             >
               Filtres
               {(filters.noCollection||filters.noType||filters.noPlace||filters.noPigments||filters.noPapers) && (
@@ -208,35 +208,35 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
             {(query || filters.noCollection || filters.noType || filters.noPlace || filters.noPigments || filters.noPapers) && (
               <button
                 onClick={() => { setQuery(''); setFilters({}); }}
-                className="px-3 py-2 text-xs text-dark-text-secondary hover:text-dark-text-primary border border-dark-border rounded-lg hover:bg-dark-hover transition-all duration-200"
+                className="px-3 py-2 text-xs text-neutral-400 hover:text-neutral-100 border border-neutral-700 rounded-lg hover:bg-neutral-700/60 transition-all duration-200"
               >
                 Effacer
               </button>
             )}
           </div>
           {showFilters && (
-            <div className="bg-dark-card/50 border border-dark-border rounded-lg p-3 space-y-2">
-              <label className="block text-[11px] uppercase tracking-wide text-dark-text-muted">Afficher seulement sans...</label>
+            <div className="bg-neutral-800/70 border border-neutral-700 rounded-lg p-3 space-y-2">
+              <label className="block text-[11px] uppercase tracking-wide text-neutral-500">Afficher seulement sans...</label>
               <div className="flex flex-wrap gap-2">
                 <button
                   onClick={() => setFilters({ ...filters, noCollection: !filters.noCollection })}
-                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noCollection ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'}`}
+                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noCollection ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700/60 border border-neutral-700'}`}
                 >Collection</button>
                 <button
                   onClick={() => setFilters({ ...filters, noType: !filters.noType })}
-                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noType ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'}`}
+                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noType ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700/60 border border-neutral-700'}`}
                 >Type</button>
                 <button
                   onClick={() => setFilters({ ...filters, noPlace: !filters.noPlace })}
-                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noPlace ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'}`}
+                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noPlace ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700/60 border border-neutral-700'}`}
                 >Lieu</button>
                 <button
                   onClick={() => setFilters({ ...filters, noPigments: !filters.noPigments })}
-                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noPigments ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'}`}
+                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noPigments ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700/60 border border-neutral-700'}`}
                 >Pigments</button>
                 <button
                   onClick={() => setFilters({ ...filters, noPapers: !filters.noPapers })}
-                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noPapers ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'}`}
+                  className={`px-2 py-1 text-xs rounded-md transition-all duration-200 ${filters.noPapers ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40' : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700/60 border border-neutral-700'}`}
                 >Papiers</button>
               </div>
             </div>
@@ -283,7 +283,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
           {/* Years */}
           <div className="mb-2">
             <div
-              className="px-3 py-2.5 rounded-lg hover:bg-dark-hover cursor-pointer flex items-center justify-between font-medium text-dark-text-primary transition-colors group"
+              className="px-3 py-2.5 rounded-lg hover:bg-neutral-700/60 cursor-pointer flex items-center justify-between font-medium text-neutral-100 transition-colors group"
               onClick={() => toggleSection('years')}
             >
               <span className="flex items-center gap-2">
@@ -292,7 +292,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                   {yearsRange.length}
                 </span>
               </span>
-              <span className="text-xs text-dark-text-muted transition-transform duration-200" style={{
+              <span className="text-xs text-neutral-500 transition-transform duration-200" style={{
                 transform: yearsOpen ? 'rotate(180deg)' : 'rotate(0deg)'
               }}>
                 ▼
@@ -301,7 +301,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
             {yearsOpen && (
               <div className="ml-6 mt-2 space-y-1">
                 {yearsRange.length === 0 ? (
-                  <div className="px-3 py-2 text-xs text-dark-text-muted italic">Aucune année</div>
+                  <div className="px-3 py-2 text-xs text-neutral-500 italic">Aucune année</div>
                 ) : (
                   yearsRange.map(({ year, count }) => {
                     const active = filters.years?.includes(year);
@@ -311,7 +311,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                         className={`px-3 py-2 text-sm cursor-pointer rounded-md transition-colors flex items-center justify-between ${
                           active
                             ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40'
-                            : 'text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'
+                            : 'text-neutral-400 hover:bg-neutral-700/60 hover:text-neutral-100'
                         }`}
                         onClick={() => toggleYear(year)}
                       >
@@ -327,7 +327,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
           {/* Collections */}
           <div className="mb-2">
             <div
-              className="px-3 py-2.5 rounded-lg hover:bg-dark-hover cursor-pointer flex items-center justify-between font-medium text-dark-text-primary transition-colors group"
+              className="px-3 py-2.5 rounded-lg hover:bg-neutral-700/60 cursor-pointer flex items-center justify-between font-medium text-neutral-100 transition-colors group"
               onClick={() => toggleSection('collections')}
             >
               <span className="flex items-center gap-2">
@@ -347,7 +347,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                 >
                   ⚙️
                 </button>
-                <span className="text-xs text-dark-text-muted transition-transform duration-200" style={{
+                <span className="text-xs text-neutral-500 transition-transform duration-200" style={{
                   transform: collectionsOpen ? 'rotate(180deg)' : 'rotate(0deg)'
                 }}>
                   ▼
@@ -357,7 +357,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
             {collectionsOpen && (
               <div className="ml-6 mt-2 space-y-1">
                 {collections.length === 0 ? (
-                  <div className="px-3 py-2 text-xs text-dark-text-muted italic">
+                  <div className="px-3 py-2 text-xs text-neutral-500 italic">
                     Aucune collection
                   </div>
                 ) : (
@@ -372,7 +372,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                         className={`px-3 py-2 text-sm cursor-pointer rounded-md transition-colors ${
                           isActive
                             ? 'bg-blue-500/20 text-blue-300 border border-blue-500/40'
-                            : 'text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'
+                            : 'text-neutral-400 hover:bg-neutral-700/60 hover:text-neutral-100'
                         }`}
                         onClick={() => onFilterByCollection(collection.id)}
                       >
@@ -393,7 +393,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
           {/* Types */}
           <div className="mb-2">
             <div
-              className="px-3 py-2.5 rounded-lg hover:bg-dark-hover cursor-pointer flex items-center justify-between font-medium text-dark-text-primary transition-colors group"
+              className="px-3 py-2.5 rounded-lg hover:bg-neutral-700/60 cursor-pointer flex items-center justify-between font-medium text-neutral-100 transition-colors group"
               onClick={() => toggleSection('types')}
             >
               <span className="flex items-center gap-2">
@@ -413,7 +413,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                 >
                   ⚙️
                 </button>
-                <span className="text-xs text-dark-text-muted transition-transform duration-200" style={{
+                <span className="text-xs text-neutral-500 transition-transform duration-200" style={{
                   transform: typesOpen ? 'rotate(180deg)' : 'rotate(0deg)'
                 }}>
                   ▼
@@ -423,7 +423,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
             {typesOpen && (
               <div className="ml-6 mt-2 space-y-1">
                 {types.length === 0 ? (
-                  <div className="px-3 py-2 text-xs text-dark-text-muted italic">
+                  <div className="px-3 py-2 text-xs text-neutral-500 italic">
                     Aucun type
                   </div>
                 ) : (
@@ -438,7 +438,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                         className={`px-3 py-2 text-sm cursor-pointer rounded-md transition-colors ${
                           isActive
                             ? 'bg-green-500/20 text-green-300 border border-green-500/40'
-                            : 'text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'
+                            : 'text-neutral-400 hover:bg-neutral-700/60 hover:text-neutral-100'
                         }`}
                         onClick={() => onFilterByType(type.id)}
                       >
@@ -459,7 +459,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
           {/* Pigments */}
           <div className="mb-2">
             <div
-              className="px-3 py-2.5 rounded-lg hover:bg-dark-hover cursor-pointer flex items-center justify-between font-medium text-dark-text-primary transition-colors group"
+              className="px-3 py-2.5 rounded-lg hover:bg-neutral-700/60 cursor-pointer flex items-center justify-between font-medium text-neutral-100 transition-colors group"
               onClick={() => toggleSection('pigments')}
             >
               <span className="flex items-center gap-2">
@@ -479,7 +479,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                 >
                   ⚙️
                 </button>
-                <span className="text-xs text-dark-text-muted transition-transform duration-200" style={{
+                <span className="text-xs text-neutral-500 transition-transform duration-200" style={{
                   transform: pigmentsOpen ? 'rotate(180deg)' : 'rotate(0deg)'
                 }}>
                   ▼
@@ -489,7 +489,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
             {pigmentsOpen && (
               <div className="ml-6 mt-2 space-y-1">
                 {pigments.length === 0 ? (
-                  <div className="px-3 py-2 text-xs text-dark-text-muted italic">
+                  <div className="px-3 py-2 text-xs text-neutral-500 italic">
                     Aucun pigment
                   </div>
                 ) : (
@@ -504,7 +504,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                         className={`px-3 py-2 text-sm cursor-pointer rounded-md transition-colors ${
                           isActive
                             ? 'bg-red-500/20 text-red-300 border border-red-500/40'
-                            : 'text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'
+                            : 'text-neutral-400 hover:bg-neutral-700/60 hover:text-neutral-100'
                         }`}
                         onClick={() => onFilterByPigment(pigment.id)}
                       >
@@ -525,7 +525,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
           {/* Papers */}
           <div className="mb-2">
             <div
-              className="px-3 py-2.5 rounded-lg hover:bg-dark-hover cursor-pointer flex items-center justify-between font-medium text-dark-text-primary transition-colors group"
+              className="px-3 py-2.5 rounded-lg hover:bg-neutral-700/60 cursor-pointer flex items-center justify-between font-medium text-neutral-100 transition-colors group"
               onClick={() => toggleSection('papers')}
             >
               <span className="flex items-center gap-2">
@@ -545,7 +545,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                 >
                   ⚙️
                 </button>
-                <span className="text-xs text-dark-text-muted transition-transform duration-200" style={{
+                <span className="text-xs text-neutral-500 transition-transform duration-200" style={{
                   transform: papersOpen ? 'rotate(180deg)' : 'rotate(0deg)'
                 }}>
                   ▼
@@ -555,7 +555,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
             {papersOpen && (
               <div className="ml-6 mt-2 space-y-1">
                 {papers.length === 0 ? (
-                  <div className="px-3 py-2 text-xs text-dark-text-muted italic">
+                  <div className="px-3 py-2 text-xs text-neutral-500 italic">
                     Aucun papier
                   </div>
                 ) : (
@@ -570,7 +570,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                         className={`px-3 py-2 text-sm cursor-pointer rounded-md transition-colors ${
                           isActive
                             ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/40'
-                            : 'text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'
+                            : 'text-neutral-400 hover:bg-neutral-700/60 hover:text-neutral-100'
                         }`}
                         onClick={() => onFilterByPaper(paper.id)}
                       >
@@ -591,7 +591,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
           {/* Places */}
           <div className="mb-2">
             <div
-              className="px-3 py-2.5 rounded-lg hover:bg-dark-hover cursor-pointer flex items-center justify-between font-medium text-dark-text-primary transition-colors group"
+              className="px-3 py-2.5 rounded-lg hover:bg-neutral-700/60 cursor-pointer flex items-center justify-between font-medium text-neutral-100 transition-colors group"
               onClick={() => toggleSection('places')}
             >
               <span className="flex items-center gap-2">
@@ -611,7 +611,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                 >
                   ⚙️
                 </button>
-                <span className="text-xs text-dark-text-muted transition-transform duration-200" style={{
+                <span className="text-xs text-neutral-500 transition-transform duration-200" style={{
                   transform: placesOpen ? 'rotate(180deg)' : 'rotate(0deg)'
                 }}>
                   ▼
@@ -621,7 +621,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
             {placesOpen && (
               <div className="ml-6 mt-2 space-y-1">
                 {places.length === 0 ? (
-                  <div className="px-3 py-2 text-xs text-dark-text-muted italic">
+                  <div className="px-3 py-2 text-xs text-neutral-500 italic">
                     Aucun Lieu
                   </div>
                 ) : (
@@ -635,7 +635,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
                         key={place.id}
                         className={`px-3 py-2 text-sm cursor-pointer rounded-md transition-colors ${isActive
                             ? 'bg-green-500/20 text-green-300 border border-green-500/40'
-                            : 'text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'
+                            : 'text-neutral-400 hover:bg-neutral-700/60 hover:text-neutral-100'
                           }`}
                         onClick={() => onFilterByPlace(place.id)}
                       >
@@ -655,18 +655,18 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
         </nav>
 
         {/* Footer actions */}
-        <div className="p-4 border-t border-dark-border space-y-2">
+  <div className="p-4 border-t border-neutral-700 space-y-2">
           <div className="space-y-2">
             <button
               onClick={handleBackup}
               disabled={isBackingUp}
-              className={`w-full text-sm py-2.5 px-3 rounded-lg transition-all duration-200 flex items-center gap-2 ${isBackingUp ? 'bg-dark-hover text-dark-text-muted cursor-default' : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover'}`}
+              className={`w-full text-sm py-2.5 px-3 rounded-lg transition-all duration-200 flex items-center gap-2 ${isBackingUp ? 'bg-neutral-700/60 text-neutral-500 cursor-default' : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700/60'}`}
             >
               <span>💾</span>
               <span>{isBackingUp ? 'Sauvegarde en cours...' : 'Sauvegarde'}</span>
             </button>
             {backupProgress && (
-              <div className="w-full bg-dark-hover rounded h-2 overflow-hidden">
+              <div className="w-full bg-neutral-700/60 rounded h-2 overflow-hidden">
                 <div
                   className="h-full bg-indigo-500 transition-all duration-200"
                   style={{ width: `${backupProgress.percent ?? 0}%` }}
@@ -676,7 +676,7 @@ export default function Sidebar({ onNewArtwork, onFilterByCollection, onFilterBy
           </div>
           <button
             onClick={handleRestore}
-            className="w-full text-sm text-dark-text-secondary hover:text-dark-text-primary py-2.5 px-3 hover:bg-dark-hover rounded-lg transition-all duration-200 flex items-center gap-2"
+            className="w-full text-sm text-neutral-400 hover:text-neutral-100 py-2.5 px-3 hover:bg-neutral-700/60 rounded-lg transition-all duration-200 flex items-center gap-2"
           >
             <span>📁</span>
             <span>Restauration</span>

@@ -103,7 +103,7 @@ function App() {
   };
 
   return (
-    <div className="flex h-screen bg-dark-bg text-dark-text-primary">
+  <div className="flex h-screen bg-neutral-900 text-neutral-100">
       {/* Sidebar - Always visible with toggle */}
       <div className={`${sidebarVisible ? 'block' : 'hidden'} h-full transition-all duration-300`}>
         <Sidebar
@@ -140,7 +140,7 @@ function App() {
 
       {/* Mobile detail overlay */}
       {selectedArtwork && !showEditor && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-dark-bg">
+  <div className="lg:hidden fixed inset-0 z-50 bg-neutral-900">
           <ArtworkDetailSidebar
             artworkId={selectedArtwork.id}
             onClose={clearSelection}
@@ -153,7 +153,7 @@ function App() {
       {/* Editor modal - Full screen on mobile */}
       {showEditor && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-dark-card rounded-xl shadow-2xl w-full max-w-4xl max-h-[95vh] overflow-auto">
+          <div className="bg-neutral-800 rounded-xl shadow-2xl w-full max-w-4xl max-h-[95vh] overflow-auto border border-neutral-700">
             <ArtworkEditor
               initial={editingArtwork}
               onSaved={handleArtworkSaved}

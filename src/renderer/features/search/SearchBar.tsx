@@ -35,9 +35,9 @@ export default function SearchBar() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rechercher par titre, référence ou description..."
-            className="w-full bg-dark-bg border border-dark-border rounded-lg px-4 py-2 pl-10 text-dark-text-primary placeholder-dark-text-muted focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            className="w-full bg-neutral-900 border border-neutral-700 rounded-lg px-4 py-2 pl-10 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           />
-          <div className="absolute left-3 top-2.5 text-dark-text-muted">
+          <div className="absolute left-3 top-2.5 text-neutral-500">
             🔍
           </div>
         </div>
@@ -47,7 +47,7 @@ export default function SearchBar() {
           className={`px-4 py-2 border rounded-lg transition-all duration-200 font-medium ${
             showFilters || hasActiveFilters
               ? 'bg-blue-600/20 border-blue-500 text-blue-400 shadow-lg'
-              : 'border-dark-border text-dark-text-secondary hover:bg-dark-hover hover:text-dark-text-primary'
+              : 'border-neutral-700 text-neutral-400 hover:bg-neutral-700/60 hover:text-neutral-100'
           }`}
         >
           Filtres {hasActiveFilters && (
@@ -62,7 +62,7 @@ export default function SearchBar() {
         {hasActiveFilters && (
           <button
             onClick={clearFilters}
-            className="px-3 py-2 text-sm text-dark-text-secondary hover:text-dark-text-primary border border-dark-border rounded-lg hover:bg-dark-hover transition-all duration-200"
+            className="px-3 py-2 text-sm text-neutral-400 hover:text-neutral-100 border border-neutral-700 rounded-lg hover:bg-neutral-700/60 transition-all duration-200"
           >
             Effacer
           </button>
@@ -70,10 +70,10 @@ export default function SearchBar() {
       </div>
 
   {showFilters && (
-        <div className="bg-dark-card border border-dark-border rounded-lg p-4 shadow-xl">
+  <div className="bg-neutral-800 border border-neutral-700 rounded-lg p-4 shadow-xl">
           {/* "No" filters section */}
           <div>
-            <label className="block text-sm font-medium text-dark-text-primary mb-3">
+            <label className="block text-sm font-medium text-neutral-100 mb-3">
               Afficher seulement les œuvres sans...
             </label>
             <div className="flex flex-wrap gap-2">
@@ -82,7 +82,7 @@ export default function SearchBar() {
                 className={`px-3 py-1.5 text-sm rounded-lg transition-all duration-200 ${
                   filters.noCollection
                     ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40'
-                    : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'
+                    : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700/60 border border-neutral-700'
                 }`}
               >
                 Collection
@@ -92,7 +92,7 @@ export default function SearchBar() {
                 className={`px-3 py-1.5 text-sm rounded-lg transition-all duration-200 ${
                   filters.noType
                     ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40'
-                    : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'
+                    : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700/60 border border-neutral-700'
                 }`}
               >
                 Type
@@ -102,7 +102,7 @@ export default function SearchBar() {
                 className={`px-3 py-1.5 text-sm rounded-lg transition-all duration-200 ${
                   filters.noPlace
                     ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40'
-                    : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'
+                    : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700/60 border border-neutral-700'
                 }`}
               >
                 Lieu
@@ -112,7 +112,7 @@ export default function SearchBar() {
                 className={`px-3 py-1.5 text-sm rounded-lg transition-all duration-200 ${
                   filters.noPigments
                     ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40'
-                    : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'
+                    : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700/60 border border-neutral-700'
                 }`}
               >
                 Pigments
@@ -122,7 +122,7 @@ export default function SearchBar() {
                 className={`px-3 py-1.5 text-sm rounded-lg transition-all duration-200 ${
                   filters.noPapers
                     ? 'bg-orange-500/20 text-orange-400 border border-orange-500/40'
-                    : 'text-dark-text-secondary hover:text-dark-text-primary hover:bg-dark-hover border border-dark-border'
+                    : 'text-neutral-400 hover:text-neutral-100 hover:bg-neutral-700/60 border border-neutral-700'
                 }`}
               >
                 Papiers

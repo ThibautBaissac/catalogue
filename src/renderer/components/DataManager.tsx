@@ -135,11 +135,11 @@ export default function DataManager({ type, onClose }: DataManagerProps) {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-dark-card rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-dark-border">
+  <div className="bg-neutral-800 rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden flex flex-col border border-neutral-700">
         {/* Header */}
-        <div className="p-6 border-b border-dark-border">
+  <div className="p-6 border-b border-neutral-700">
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-semibold text-dark-text-primary flex items-center gap-2">
+            <h2 className="text-xl font-semibold text-neutral-100 flex items-center gap-2">
               <span className="text-2xl">
                 {type === 'collections' ? '📚' : type === 'pigments' ? '🎨' : '📄'}
               </span>
@@ -147,7 +147,7 @@ export default function DataManager({ type, onClose }: DataManagerProps) {
             </h2>
             <button
               onClick={onClose}
-              className="text-dark-text-muted hover:text-dark-text-primary text-xl w-8 h-8 flex items-center justify-center rounded-lg hover:bg-dark-hover transition-colors"
+              className="text-neutral-500 hover:text-neutral-100 text-xl w-8 h-8 flex items-center justify-center rounded-lg hover:bg-neutral-700/60 transition-colors"
             >
               ✕
             </button>
@@ -157,8 +157,8 @@ export default function DataManager({ type, onClose }: DataManagerProps) {
         <div className="flex-1 overflow-auto custom-scrollbar">
           <div className="p-6">
             {/* Create new item */}
-            <form onSubmit={handleCreate} className="mb-6 p-4 bg-dark-bg rounded-lg border border-dark-border">
-              <h3 className="text-sm font-medium text-dark-text-primary mb-3 flex items-center gap-2">
+            <form onSubmit={handleCreate} className="mb-6 p-4 bg-neutral-900 rounded-lg border border-neutral-700">
+              <h3 className="text-sm font-medium text-neutral-100 mb-3 flex items-center gap-2">
                 <span>✨</span>
                 Ajouter un nouveau {type.slice(0, -1)}
               </h3>
@@ -168,7 +168,7 @@ export default function DataManager({ type, onClose }: DataManagerProps) {
                   value={newItemName}
                   onChange={(e) => setNewItemName(e.target.value)}
                   placeholder="Nom"
-                  className="w-full bg-dark-card border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-muted focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                  className="w-full bg-neutral-800 border border-neutral-700 rounded-md px-3 py-2 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                   required
                 />
                 <textarea
@@ -176,7 +176,7 @@ export default function DataManager({ type, onClose }: DataManagerProps) {
                   onChange={(e) => setNewItemDescription(e.target.value)}
                   placeholder="Description (optionnelle)"
                   rows={2}
-                  className="w-full bg-dark-card border border-dark-border rounded-md px-3 py-2 text-dark-text-primary placeholder-dark-text-muted focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
+                  className="w-full bg-neutral-800 border border-neutral-700 rounded-md px-3 py-2 text-neutral-100 placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
                 />
                 <button
                   type="submit"
@@ -190,17 +190,17 @@ export default function DataManager({ type, onClose }: DataManagerProps) {
 
             {/* Items list */}
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-dark-text-primary mb-3 flex items-center gap-2">
+              <h3 className="text-sm font-medium text-neutral-100 mb-3 flex items-center gap-2">
                 <span>📋</span>
                 {title} existants ({items.length})
               </h3>
 
               {loading ? (
-                <div className="text-center text-dark-text-muted py-8">
+                <div className="text-center text-neutral-500 py-8">
                   <div className="animate-pulse">Chargement...</div>
                 </div>
               ) : items.length === 0 ? (
-                <div className="text-center text-dark-text-muted py-8 bg-dark-bg rounded-lg border border-dark-border">
+                <div className="text-center text-neutral-500 py-8 bg-neutral-900 rounded-lg border border-neutral-700">
                   <div className="text-4xl mb-2 opacity-50">
                     {type === 'collections' ? '📚' : type === 'pigments' ? '🎨' : '📄'}
                   </div>
@@ -209,20 +209,20 @@ export default function DataManager({ type, onClose }: DataManagerProps) {
               ) : (
                 <div className="space-y-2 max-h-96 overflow-y-auto custom-scrollbar">
                   {items.map((item) => (
-                    <div key={item.id} className="bg-dark-bg border border-dark-border rounded-lg p-4 hover:border-dark-border-light transition-colors">
+                    <div key={item.id} className="bg-neutral-900 border border-neutral-700 rounded-lg p-4 hover:border-neutral-600 transition-colors">
                       {editingItem?.id === item.id ? (
                         <div className="space-y-3">
                           <input
                             type="text"
                             value={editingItem.name}
                             onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
-                            className="w-full bg-dark-card border border-dark-border rounded-md px-3 py-2 text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            className="w-full bg-neutral-800 border border-neutral-700 rounded-md px-3 py-2 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                           />
                           <textarea
                             value={editingItem.description || ''}
                             onChange={(e) => setEditingItem({ ...editingItem, description: e.target.value })}
                             rows={2}
-                            className="w-full bg-dark-card border border-dark-border rounded-md px-3 py-2 text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
+                            className="w-full bg-neutral-800 border border-neutral-700 rounded-md px-3 py-2 text-neutral-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
                           />
                           <div className="flex gap-2">
                             <button
@@ -242,12 +242,12 @@ export default function DataManager({ type, onClose }: DataManagerProps) {
                       ) : (
                         <div className="flex justify-between items-start">
                           <div className="flex-1">
-                            <div className="font-medium text-dark-text-primary">{item.name}</div>
+                            <div className="font-medium text-neutral-100">{item.name}</div>
                             {item.description && (
-                              <div className="text-sm text-dark-text-secondary mt-1">{item.description}</div>
+                              <div className="text-sm text-neutral-400 mt-1">{item.description}</div>
                             )}
                             {type === 'collections' && item.date && (
-                              <div className="text-xs text-dark-text-muted mt-1 flex items-center gap-1">
+                              <div className="text-xs text-neutral-500 mt-1 flex items-center gap-1">
                                 📅 {item.date}
                               </div>
                             )}
@@ -277,10 +277,10 @@ export default function DataManager({ type, onClose }: DataManagerProps) {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-dark-border">
+  <div className="p-4 border-t border-neutral-700">
           <button
             onClick={onClose}
-            className="w-full bg-dark-hover hover:bg-dark-border text-dark-text-primary py-2 rounded-lg transition-colors"
+            className="w-full bg-neutral-700/60 hover:bg-neutral-600 text-neutral-100 py-2 rounded-lg transition-colors"
           >
             Fermer
           </button>

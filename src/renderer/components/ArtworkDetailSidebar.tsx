@@ -89,9 +89,9 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
 
   if (loading) {
     return (
-      <aside className="w-80 p-4 bg-white dark:bg-dark-card border-l dark:border-dark-border">
+  <aside className="w-80 p-4 bg-neutral-800 border-l border-neutral-700">
         <div className="flex items-center justify-center h-32">
-          <div className="text-gray-500 dark:text-dark-text-secondary">Chargement...</div>
+          <div className="text-neutral-500">Chargement...</div>
         </div>
       </aside>
     );
@@ -99,9 +99,9 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
 
   if (!full) {
     return (
-      <aside className="w-80 p-4 bg-white dark:bg-dark-card border-l dark:border-dark-border">
+  <aside className="w-80 p-4 bg-neutral-800 border-l border-neutral-700">
         <div className="flex items-center justify-center h-32">
-          <div className="text-gray-500 dark:text-dark-text-secondary">Erreur de chargement</div>
+          <div className="text-neutral-500">Erreur de chargement</div>
         </div>
       </aside>
     );
@@ -110,15 +110,15 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
   const { artwork, images, pigments, papers, collection, type, place } = full;
 
   return (
-    <aside className="w-80 h-full bg-white dark:bg-dark-card border-l dark:border-dark-border flex flex-col">
-      <div className="p-4 border-b dark:border-dark-border">
+  <aside className="w-80 h-full bg-neutral-800 border-l border-neutral-700 flex flex-col">
+  <div className="p-4 border-b border-neutral-700">
         <div className="flex justify-between items-start">
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-dark-text-primary truncate">
+          <h2 className="text-lg font-semibold text-neutral-100 truncate">
             {artwork.reference}
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-400 dark:text-dark-text-secondary hover:text-gray-600 dark:hover:text-dark-text-primary text-xl ml-2"
+            className="text-neutral-400 hover:text-neutral-200 text-xl ml-2"
           >
             ✕
           </button>
@@ -130,29 +130,29 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
         <div className="space-y-3">
           {artwork.title && (
             <div>
-              <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Titre</span>
-              <div className="text-sm text-gray-900 dark:text-dark-text-primary">{artwork.title}</div>
+              <span className="text-sm font-medium text-neutral-500">Titre</span>
+              <div className="text-sm text-neutral-100">{artwork.title}</div>
             </div>
           )}
 
           {artwork.owner && (
             <div>
-              <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Propriétaire</span>
-              <div className="text-sm text-gray-900 dark:text-dark-text-primary">{artwork.owner}</div>
+              <span className="text-sm font-medium text-neutral-500">Propriétaire</span>
+              <div className="text-sm text-neutral-100">{artwork.owner}</div>
             </div>
           )}
 
           {artwork.description && (
             <div>
-              <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Description</span>
-              <div className="text-sm text-gray-700 dark:text-dark-text-secondary">{artwork.description}</div>
+              <span className="text-sm font-medium text-neutral-500">Description</span>
+              <div className="text-sm text-neutral-300">{artwork.description}</div>
             </div>
           )}
 
           {(artwork.width || artwork.height) && (
             <div>
-              <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Dimensions</span>
-              <div className="text-sm text-gray-900 dark:text-dark-text-primary">
+              <span className="text-sm font-medium text-neutral-500">Dimensions</span>
+              <div className="text-sm text-neutral-100">
                 {artwork.width && artwork.height
                   ? `${artwork.width} × ${artwork.height} cm`
                   : `${artwork.width || artwork.height} cm`
@@ -163,29 +163,29 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
 
           {artwork.date && (
             <div>
-              <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Date</span>
-              <div className="text-sm text-gray-900 dark:text-dark-text-primary">{artwork.date}</div>
+              <span className="text-sm font-medium text-neutral-500">Date</span>
+              <div className="text-sm text-neutral-100">{artwork.date}</div>
             </div>
           )}
 
           {collection && (
             <div>
-              <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Collection</span>
-              <div className="text-sm text-gray-900 dark:text-dark-text-primary">{collection.name}</div>
+              <span className="text-sm font-medium text-neutral-500">Collection</span>
+              <div className="text-sm text-neutral-100">{collection.name}</div>
             </div>
           )}
 
           {type && (
             <div>
-              <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Type</span>
-              <div className="text-sm text-gray-900 dark:text-dark-text-primary">{type.name}</div>
+              <span className="text-sm font-medium text-neutral-500">Type</span>
+              <div className="text-sm text-neutral-100">{type.name}</div>
             </div>
           )}
 
           {place && (
             <div>
-              <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Lieu</span>
-              <div className="text-sm text-gray-900 dark:text-dark-text-primary">{place.name}</div>
+              <span className="text-sm font-medium text-neutral-500">Lieu</span>
+              <div className="text-sm text-neutral-100">{place.name}</div>
             </div>
           )}
         </div>
@@ -193,12 +193,12 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
         {/* Pigments */}
         {pigments.length > 0 && (
           <div>
-            <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Pigments</span>
+            <span className="text-sm font-medium text-neutral-500">Pigments</span>
             <div className="flex flex-wrap gap-1 mt-1">
               {pigments.map((pigment: any) => (
                 <span
                   key={pigment.id}
-                  className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-2 py-1 rounded"
+                  className="text-xs bg-blue-500/20 text-blue-300 px-2 py-1 rounded"
                 >
                   {pigment.name}
                 </span>
@@ -210,12 +210,12 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
         {/* Papers */}
         {papers.length > 0 && (
           <div>
-            <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">Papiers</span>
+            <span className="text-sm font-medium text-neutral-500">Papiers</span>
             <div className="flex flex-wrap gap-1 mt-1">
               {papers.map((paper: any) => (
                 <span
                   key={paper.id}
-                  className="text-xs bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-2 py-1 rounded"
+                  className="text-xs bg-green-500/20 text-green-300 px-2 py-1 rounded"
                 >
                   {paper.name}
                 </span>
@@ -227,10 +227,10 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
         {/* Images */}
         <div>
           <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-gray-500 dark:text-dark-text-secondary">
+            <span className="text-sm font-medium text-neutral-500">
               Images ({images.length})
             </span>
-            <label className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 cursor-pointer">
+            <label className="text-xs text-blue-400 hover:text-blue-300 cursor-pointer">
               + Ajouter
               <input
                 type="file"
@@ -247,7 +247,7 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
               {images.map((image: any, index: number) => (
                 <div
                   key={image.id}
-                  className="relative aspect-square bg-gray-100 dark:bg-dark-hover rounded border dark:border-dark-border overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 dark:hover:ring-blue-400 transition-all group"
+                  className="relative aspect-square bg-neutral-700/60 rounded border border-neutral-700 overflow-hidden cursor-pointer hover:ring-2 hover:ring-blue-500 transition-all group"
                   onClick={() => handleImageClick(index)}
                 >
                   {image.thumbnail_path ? (
@@ -257,7 +257,7 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
                       className="w-full h-full object-contain"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-xs text-gray-500 dark:text-dark-text-muted">
+                    <div className="w-full h-full flex items-center justify-center text-xs text-neutral-500">
                       Image
                     </div>
                   )}
@@ -274,7 +274,7 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
               ))}
             </div>
           ) : (
-            <div className="text-sm text-gray-500 dark:text-dark-text-secondary mt-2">
+            <div className="text-sm text-neutral-500 mt-2">
               Aucune image
             </div>
           )}
@@ -282,24 +282,24 @@ export default function ArtworkDetailSidebar({ artworkId, onClose, onEdit, onVie
       </div>
 
       {/* Actions */}
-      <div className="p-4 border-t dark:border-dark-border space-y-2">
+  <div className="p-4 border-t border-neutral-700 space-y-2">
         {onViewArtwork && (
           <button
             onClick={() => onViewArtwork(artwork)}
-            className="w-full bg-green-600 dark:bg-green-700 text-white py-2 px-4 rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors"
+            className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"
           >
             Voir
           </button>
         )}
         <button
           onClick={onEdit}
-          className="w-full bg-blue-600 dark:bg-blue-700 text-white py-2 px-4 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors"
         >
           Éditer
         </button>
         <button
           onClick={handleDelete}
-          className="w-full border-2 border-red-600 dark:border-red-500 text-red-600 dark:text-red-500 py-2 px-4 rounded-lg hover:bg-red-600 hover:text-white dark:hover:bg-red-500 dark:hover:text-white transition-colors"
+          className="w-full border-2 border-red-600 text-red-600 py-2 px-4 rounded-lg hover:bg-red-600 hover:text-white transition-colors"
         >
           Supprimer
         </button>

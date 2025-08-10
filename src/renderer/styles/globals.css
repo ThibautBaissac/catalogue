@@ -1,16 +1,15 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+/* Tailwind v4 source directives (content scanning) */
+@source "../index.html";
+@source "../**/*.{js,jsx,ts,tsx,html}";
+
+/* If you also need to scan other areas (e.g. main process templates) add more @source lines */
 
 html, body {
   height: 100%;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
-}
-
-/* Dark theme base */
-.dark {
-  color-scheme: dark;
+  color-scheme: dark; /* Always dark */
 }
 
 /* Utility classes for line clamping */
